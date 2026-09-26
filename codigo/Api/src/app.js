@@ -6,6 +6,7 @@ const clienteRoutes = require('./routes/clienteRoutes');
 const rutasProveedores = require('./routes/rutasProveedores');
 const rutasProductos = require('./routes/rutasProductos');
 const rutasVentas = require('./routes/rutasVentas');
+const rutasReportes = require('./routes/rutasReportes');
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use('/clientes', clienteRoutes);
 app.use('/proveedores', rutasProveedores);
 app.use('/productos', rutasProductos);
 app.use('/ventas', rutasVentas);
+app.use('/reportes', rutasReportes);
 
 const PORT = process.env.PORT;
 
