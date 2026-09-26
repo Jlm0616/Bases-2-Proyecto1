@@ -181,7 +181,8 @@ BEGIN
         FROM Cmp_OrdenesCompra AS PO
         JOIN Prov_Proveedores AS P ON P.SupplierID = PO.SupplierID
         CROSS APPLY (
-            SELECT SUM(POL.OrderedOuters * POL.ExpectedUnitPricePerOuter) AS MontoTotal
+            SELECT 
+                SUM(POL.OrderedOuters * POL.ExpectedUnitPricePerOuter) AS MontoTotal
             FROM Cmp_LineasOrdenCompra AS POL
             WHERE POL.PurchaseOrderID = PO.PurchaseOrderID
         ) AS M
