@@ -3,7 +3,10 @@ const router = express.Router();
 
 const {
   listarVentas,
-  detalleVenta
+  detalleVenta,
+  insertarVenta,
+  actualizarVenta,
+  eliminarVenta
 } = require('../controllers/controladorVentas');
 
 router.post('/buscar', listarVentas);
