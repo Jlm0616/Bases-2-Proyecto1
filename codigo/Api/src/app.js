@@ -25,6 +25,7 @@ app.use('/productos', rutasProductos);
 app.use('/ventas', rutasVentas);
 app.use('/reportes', rutasReportes);
 
+
 const PORT = process.env.PORT;
 
 app.listen(PORT, () => {

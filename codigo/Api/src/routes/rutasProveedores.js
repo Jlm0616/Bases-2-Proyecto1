@@ -11,7 +11,6 @@ const {
 
 router.post('/buscar', listarProveedores);
 router.get('/:id', detalleProveedor);
-
 router.post('/', insertarProveedor);
 router.put('/:id', actualizarProveedor);
 router.delete('/:id', eliminarProveedor);

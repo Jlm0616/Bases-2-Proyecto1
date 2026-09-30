@@ -11,7 +11,6 @@ const {
 
 router.post('/buscar', listarProductos);
 router.get('/:id', detalleProducto);
-
 router.post('/', insertarProducto);
 router.put('/:id', actualizarProducto);
 router.delete('/:id', eliminarProducto);

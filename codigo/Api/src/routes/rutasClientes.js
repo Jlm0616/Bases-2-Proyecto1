@@ -11,7 +11,6 @@ const {
 
 router.post('/buscar', listarClientes);
 router.get('/:id', detalleCliente);
-
 router.post('/', insertarCliente);
 router.put('/:id', actualizarCliente);
 router.delete('/:id', eliminarCliente);
