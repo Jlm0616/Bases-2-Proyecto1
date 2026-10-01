@@ -1,8 +1,9 @@
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();
+console.log(process.env.PORT);
 
-const clienteRoutes = require('./routes/clienteRoutes');
+const clienteRoutes = require('./routes/rutasClientes');
 const rutasProveedores = require('./routes/rutasProveedores');
 const rutasProductos = require('./routes/rutasProductos');
 const rutasVentas = require('./routes/rutasVentas');
