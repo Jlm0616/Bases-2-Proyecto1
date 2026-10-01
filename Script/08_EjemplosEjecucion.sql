@@ -8,6 +8,10 @@ GO
 -- Proyecto 1 - Bases de Datos 2
 -- Contiene un EXEC de ejemplo para cada procedimiento almacenado
 -- usado en la aplicacion (modulos, reportes y CRUD transaccional)
+--
+-- IDEMPOTENTE: se puede ejecutar múltiples veces sin efectos
+-- acumulativos. Al final restaura el stock consumido por la
+-- prueba de Vta_sp_InsertarVenta.
 -- ============================================================
 
 -- ============================================================
@@ -170,4 +174,20 @@ EXEC Rpt_sp_RotacionInventario @Anio = 2015;
 
 PRINT '--- Rpt_sp_MetodoEnvioFavoritoPorZona (Reporte 10) ---';
 EXEC Rpt_sp_MetodoEnvioFavoritoPorZona @Anio = 2015;
+GO
+
+-- ============================================================
+-- LIMPIEZA: restaurar stock consumido por la prueba de ventas
+-- (Vta_sp_InsertarVenta descuenta QuantityOnHand de los
+--  productos 1 y 2 en 5 y 3 unidades respectivamente)
+-- ============================================================
+PRINT '--- Restaurando stock consumido por las pruebas ---';
+UPDATE Inv_ExistenciasArticulo
+SET QuantityOnHand = QuantityOnHand + 5
+WHERE StockItemID = 1;
+
+UPDATE Inv_ExistenciasArticulo
+SET QuantityOnHand = QuantityOnHand + 3
+WHERE StockItemID = 2;
+PRINT '--- Stock restaurado ---';
 GO

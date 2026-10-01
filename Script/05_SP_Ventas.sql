@@ -5,6 +5,7 @@ GO
 -- SP: Listar ventas con filtros acumulativos
 -- Filtros: cliente (texto libre), rango de fechas, rango de monto
 -- Orden por defecto: nombre del cliente ascendente
+-- FIX: COALESCE para facturas sin líneas (MontoTotal = 0 en lugar de NULL)
 -- ============================================
 CREATE OR ALTER PROCEDURE Vta_sp_ListarVentas
     @NombreCliente   NVARCHAR(100)  = NULL,
@@ -26,8 +27,7 @@ BEGIN
     LEFT JOIN Cli_Clientes AS C     ON C.CustomerID       = I.CustomerID
     LEFT JOIN Gen_MetodosEntrega AS DM ON DM.DeliveryMethodID = I.DeliveryMethodID
     CROSS APPLY (
-        SELECT 
-            SUM(IL.ExtendedPrice) AS MontoTotal
+        SELECT COALESCE(SUM(IL.ExtendedPrice), 0) AS MontoTotal
         FROM Vta_LineasFactura AS IL
         WHERE IL.InvoiceID = I.InvoiceID
     ) AS M
@@ -42,6 +42,7 @@ GO
 
 -- ============================================
 -- SP: Detalle de una venta específica (encabezado + líneas)
+-- (sin cambios respecto al original)
 -- ============================================
 CREATE OR ALTER PROCEDURE Vta_sp_DetalleVenta
     @InvoiceID INT

@@ -5,6 +5,7 @@ GO
 -- REPORTE 1: Montos altos/bajos/promedio a proveedores
 -- Agrupado por proveedor y categoria, con ROLLUP
 -- Filtros: nombre proveedor (texto libre), categoria (texto libre)
+-- FIX: COALESCE para órdenes sin líneas (MontoTotal = 0 en lugar de NULL)
 -- ============================================
 CREATE OR ALTER PROCEDURE Rpt_sp_MontosProveedores
     @NombreProveedor NVARCHAR(100) = NULL,
@@ -23,8 +24,7 @@ BEGIN
     JOIN Prov_Proveedores AS P ON P.SupplierID = PO.SupplierID
     JOIN Prov_CategoriasProveedor AS PC ON PC.SupplierCategoryID = P.SupplierCategoryID
     CROSS APPLY (
-        SELECT 
-            SUM(POL.OrderedOuters * POL.ExpectedUnitPricePerOuter) AS MontoTotal
+        SELECT COALESCE(SUM(POL.OrderedOuters * POL.ExpectedUnitPricePerOuter), 0) AS MontoTotal
         FROM Cmp_LineasOrdenCompra AS POL
         WHERE POL.PurchaseOrderID = PO.PurchaseOrderID
     ) AS M
@@ -39,6 +39,7 @@ GO
 -- REPORTE 2: Montos altos/bajos/promedio a clientes
 -- Agrupado por cliente y categoria, con ROLLUP
 -- Filtros: nombre cliente (texto libre), categoria (texto libre)
+-- FIX: COALESCE en MontoTotal + excluir notas de crédito
 -- ============================================
 CREATE OR ALTER PROCEDURE Rpt_sp_MontosClientes
     @NombreCliente NVARCHAR(100) = NULL,
@@ -57,12 +58,12 @@ BEGIN
     JOIN Cli_Clientes AS C ON C.CustomerID = I.CustomerID
     JOIN Cli_CategoriasCliente AS CC ON CC.CustomerCategoryID = C.CustomerCategoryID
     CROSS APPLY (
-        SELECT 
-            SUM(IL.ExtendedPrice) AS MontoTotal
+        SELECT COALESCE(SUM(IL.ExtendedPrice), 0) AS MontoTotal
         FROM Vta_LineasFactura AS IL
         WHERE IL.InvoiceID = I.InvoiceID
     ) AS M
-    WHERE (@NombreCliente IS NULL OR C.CustomerName LIKE '%' + @NombreCliente + '%')
+    WHERE I.IsCreditNote = 0
+      AND (@NombreCliente IS NULL OR C.CustomerName LIKE '%' + @NombreCliente + '%')
       AND (@Categoria IS NULL OR CC.CustomerCategoryName LIKE '%' + @Categoria + '%')
     GROUP BY ROLLUP (CC.CustomerCategoryName, C.CustomerName)
     ORDER BY CC.CustomerCategoryName, C.CustomerName;
@@ -72,6 +73,7 @@ GO
 -- ============================================
 -- REPORTE 3: Top 5 productos por ganancia en ventas, por año
 -- Filtro: año
+-- FIX: excluir notas de crédito
 -- ============================================
 CREATE OR ALTER PROCEDURE Rpt_sp_Top5ProductosPorGanancia
     @Anio INT = NULL
@@ -88,7 +90,8 @@ BEGIN
         FROM Vta_LineasFactura AS IL
         JOIN Vta_Facturas AS I    ON I.InvoiceID = IL.InvoiceID
         JOIN Inv_Articulos AS SI  ON SI.StockItemID = IL.StockItemID
-        WHERE (@Anio IS NULL OR YEAR(I.InvoiceDate) = @Anio)
+        WHERE I.IsCreditNote = 0
+          AND (@Anio IS NULL OR YEAR(I.InvoiceDate) = @Anio)
         GROUP BY YEAR(I.InvoiceDate), SI.StockItemID, SI.StockItemName
     ),
     Ranking AS (
@@ -113,6 +116,7 @@ GO
 -- ============================================
 -- REPORTE 4: Top 5 clientes por cantidad de facturas, por año
 -- Filtro: rango de años
+-- FIX: COALESCE en MontoTotal + excluir notas de crédito
 -- ============================================
 CREATE OR ALTER PROCEDURE Rpt_sp_Top5ClientesPorFacturas
     @AnioInicio INT = NULL,
@@ -131,11 +135,12 @@ BEGIN
         FROM Vta_Facturas AS I
         JOIN Cli_Clientes AS C ON C.CustomerID = I.CustomerID
         CROSS APPLY (
-            SELECT SUM(IL.ExtendedPrice) AS MontoTotal
+            SELECT COALESCE(SUM(IL.ExtendedPrice), 0) AS MontoTotal
             FROM Vta_LineasFactura AS IL
             WHERE IL.InvoiceID = I.InvoiceID
         ) AS M
-        WHERE (@AnioInicio IS NULL OR YEAR(I.InvoiceDate) >= @AnioInicio)
+        WHERE I.IsCreditNote = 0
+          AND (@AnioInicio IS NULL OR YEAR(I.InvoiceDate) >= @AnioInicio)
           AND (@AnioFin    IS NULL OR YEAR(I.InvoiceDate) <= @AnioFin)
         GROUP BY YEAR(I.InvoiceDate), C.CustomerID, C.CustomerName
     ),
@@ -163,6 +168,7 @@ GO
 -- ============================================
 -- REPORTE 5: Top 5 proveedores por cantidad de ordenes de compra, por año
 -- Filtro: rango de años
+-- FIX: COALESCE en MontoTotal (órdenes sin líneas)
 -- ============================================
 CREATE OR ALTER PROCEDURE Rpt_sp_Top5ProveedoresPorOrdenes
     @AnioInicio INT = NULL,
@@ -181,8 +187,7 @@ BEGIN
         FROM Cmp_OrdenesCompra AS PO
         JOIN Prov_Proveedores AS P ON P.SupplierID = PO.SupplierID
         CROSS APPLY (
-            SELECT 
-                SUM(POL.OrderedOuters * POL.ExpectedUnitPricePerOuter) AS MontoTotal
+            SELECT COALESCE(SUM(POL.OrderedOuters * POL.ExpectedUnitPricePerOuter), 0) AS MontoTotal
             FROM Cmp_LineasOrdenCompra AS POL
             WHERE POL.PurchaseOrderID = PO.PurchaseOrderID
         ) AS M
@@ -215,6 +220,7 @@ GO
 -- REPORTE 6: Matriz de ventas por categoria de producto y año
 -- Filas: categoria de producto (StockGroup)
 -- Columnas: año
+-- FIX: OUTER APPLY TOP 1 para M:N + excluir notas de crédito
 -- ============================================
 CREATE OR ALTER PROCEDURE Rpt_sp_MatrizVentasPorCategoria
 AS
@@ -233,9 +239,15 @@ BEGIN
             YEAR(I.InvoiceDate)  AS Anio,
             IL.ExtendedPrice     AS Monto
         FROM Vta_LineasFactura AS IL
-        JOIN Vta_Facturas AS I           ON I.InvoiceID = IL.InvoiceID
-        JOIN Inv_ArticuloGrupo AS AG     ON AG.StockItemID = IL.StockItemID
-        JOIN Inv_GruposArticulo AS SG    ON SG.StockGroupID = AG.StockGroupID
+        JOIN Vta_Facturas AS I ON I.InvoiceID = IL.InvoiceID
+        OUTER APPLY (
+            SELECT TOP 1 SG2.StockGroupName
+            FROM Inv_ArticuloGrupo AG2
+            JOIN Inv_GruposArticulo SG2 ON SG2.StockGroupID = AG2.StockGroupID
+            WHERE AG2.StockItemID = IL.StockItemID
+            ORDER BY SG2.StockGroupName
+        ) AS SG
+        WHERE I.IsCreditNote = 0
     ) AS Origen
     PIVOT (
         SUM(Monto) FOR Anio IN ([2013], [2014], [2015], [2016])
@@ -246,9 +258,7 @@ GO
 
 -- ============================================
 -- REPORTE 7: Seguimiento de compras por cliente (resumen mensual)
--- Monto total por mes, primera y ultima factura del mes,
--- cantidad total comprada y cantidad minima/maxima por linea
--- Filtros: año, mes, categoria de producto
+-- FIX: EXISTS en filtro + excluir notas de crédito
 -- ============================================
 CREATE OR ALTER PROCEDURE Rpt_sp_SeguimientoComprasCliente
     @Anio       INT           = NULL,
@@ -262,32 +272,34 @@ BEGIN
         C.CustomerID                       AS IdCliente,
         C.CustomerName                     AS NombreCliente,
         YEAR(I.InvoiceDate)                AS Anio,
-        MONTH(I.InvoiceDate)                AS Mes,
-        MIN(I.InvoiceDate)                  AS PrimeraFacturaDelMes,
-        MAX(I.InvoiceDate)                  AS UltimaFacturaDelMes,
-        SUM(IL.ExtendedPrice)               AS MontoTotalComprado,
-        SUM(IL.Quantity)                    AS CantidadTotalComprada,
-        MIN(IL.Quantity)                    AS CantidadMinimaPorLinea,
-        MAX(IL.Quantity)                    AS CantidadMaximaPorLinea
+        MONTH(I.InvoiceDate)               AS Mes,
+        MIN(I.InvoiceDate)                 AS PrimeraFacturaDelMes,
+        MAX(I.InvoiceDate)                 AS UltimaFacturaDelMes,
+        SUM(IL.ExtendedPrice)              AS MontoTotalComprado,
+        SUM(IL.Quantity)                   AS CantidadTotalComprada,
+        MIN(IL.Quantity)                   AS CantidadMinimaPorLinea,
+        MAX(IL.Quantity)                   AS CantidadMaximaPorLinea
     FROM Vta_LineasFactura AS IL
-    JOIN Vta_Facturas AS I            ON I.InvoiceID = IL.InvoiceID
-    JOIN Cli_Clientes AS C            ON C.CustomerID = I.CustomerID
-    JOIN Inv_ArticuloGrupo AS AG      ON AG.StockItemID = IL.StockItemID
-    JOIN Inv_GruposArticulo AS SG     ON SG.StockGroupID = AG.StockGroupID
-    WHERE (@Anio      IS NULL OR YEAR(I.InvoiceDate) = @Anio)
-      AND (@Mes       IS NULL OR MONTH(I.InvoiceDate) = @Mes)
-      AND (@Categoria IS NULL OR SG.StockGroupName LIKE '%' + @Categoria + '%')
+    JOIN Vta_Facturas AS I  ON I.InvoiceID = IL.InvoiceID
+    JOIN Cli_Clientes AS C  ON C.CustomerID = I.CustomerID
+    WHERE I.IsCreditNote = 0
+      AND (@Anio IS NULL OR YEAR(I.InvoiceDate) = @Anio)
+      AND (@Mes  IS NULL OR MONTH(I.InvoiceDate) = @Mes)
+      AND (@Categoria IS NULL OR EXISTS (
+              SELECT 1
+              FROM Inv_ArticuloGrupo AS AG
+              JOIN Inv_GruposArticulo AS SG ON SG.StockGroupID = AG.StockGroupID
+              WHERE AG.StockItemID = IL.StockItemID
+                AND SG.StockGroupName LIKE '%' + @Categoria + '%'
+          ))
     GROUP BY C.CustomerID, C.CustomerName, YEAR(I.InvoiceDate), MONTH(I.InvoiceDate)
     ORDER BY C.CustomerName, Anio, Mes;
 END
 GO
 
-
 -- ============================================
 -- REPORTE 8: Seguimiento de compras a proveedores (resumen mensual)
--- Monto total por mes, primera y ultima orden del mes,
--- cantidad total comprada y cantidad minima/maxima por linea
--- Filtros: año, mes, categoria de producto
+-- FIX: EXISTS en filtro (no JOIN que duplicaba)
 -- ============================================
 CREATE OR ALTER PROCEDURE Rpt_sp_SeguimientoComprasProveedor
     @Anio       INT           = NULL,
@@ -301,21 +313,25 @@ BEGIN
         P.SupplierID                        AS IdProveedor,
         P.SupplierName                      AS NombreProveedor,
         YEAR(PO.OrderDate)                  AS Anio,
-        MONTH(PO.OrderDate)                  AS Mes,
-        MIN(PO.OrderDate)                    AS PrimeraOrdenDelMes,
-        MAX(PO.OrderDate)                    AS UltimaOrdenDelMes,
+        MONTH(PO.OrderDate)                 AS Mes,
+        MIN(PO.OrderDate)                   AS PrimeraOrdenDelMes,
+        MAX(PO.OrderDate)                   AS UltimaOrdenDelMes,
         SUM(POL.OrderedOuters * POL.ExpectedUnitPricePerOuter) AS MontoTotalComprado,
-        SUM(POL.OrderedOuters)                AS CantidadTotalComprada,
-        MIN(POL.OrderedOuters)                AS CantidadMinimaPorLinea,
-        MAX(POL.OrderedOuters)                AS CantidadMaximaPorLinea
+        SUM(POL.OrderedOuters)              AS CantidadTotalComprada,
+        MIN(POL.OrderedOuters)              AS CantidadMinimaPorLinea,
+        MAX(POL.OrderedOuters)              AS CantidadMaximaPorLinea
     FROM Cmp_LineasOrdenCompra AS POL
-    JOIN Cmp_OrdenesCompra AS PO      ON PO.PurchaseOrderID = POL.PurchaseOrderID
-    JOIN Prov_Proveedores AS P        ON P.SupplierID = PO.SupplierID
-    JOIN Inv_ArticuloGrupo AS AG      ON AG.StockItemID = POL.StockItemID
-    JOIN Inv_GruposArticulo AS SG     ON SG.StockGroupID = AG.StockGroupID
-    WHERE (@Anio      IS NULL OR YEAR(PO.OrderDate) = @Anio)
-      AND (@Mes       IS NULL OR MONTH(PO.OrderDate) = @Mes)
-      AND (@Categoria IS NULL OR SG.StockGroupName LIKE '%' + @Categoria + '%')
+    JOIN Cmp_OrdenesCompra AS PO ON PO.PurchaseOrderID = POL.PurchaseOrderID
+    JOIN Prov_Proveedores AS P   ON P.SupplierID = PO.SupplierID
+    WHERE (@Anio IS NULL OR YEAR(PO.OrderDate) = @Anio)
+      AND (@Mes  IS NULL OR MONTH(PO.OrderDate) = @Mes)
+      AND (@Categoria IS NULL OR EXISTS (
+              SELECT 1
+              FROM Inv_ArticuloGrupo AS AG
+              JOIN Inv_GruposArticulo AS SG ON SG.StockGroupID = AG.StockGroupID
+              WHERE AG.StockItemID = POL.StockItemID
+                AND SG.StockGroupName LIKE '%' + @Categoria + '%'
+          ))
     GROUP BY P.SupplierID, P.SupplierName, YEAR(PO.OrderDate), MONTH(PO.OrderDate)
     ORDER BY P.SupplierName, Anio, Mes;
 END
@@ -323,9 +339,8 @@ GO
 
 -- ============================================
 -- REPORTE 9: Rotacion de inventario promedio por producto
--- Se mide como el promedio de dias transcurridos entre ventas
--- consecutivas del mismo producto (a menor promedio, mayor rotacion)
--- Filtros: categoria, año, proveedor
+-- FIX: OUTER APPLY TOP 1 para un solo grupo por producto
+--      (antes el LAG() se rompía por el M:N)
 -- ============================================
 CREATE OR ALTER PROCEDURE Rpt_sp_RotacionInventario
     @Categoria  NVARCHAR(100) = NULL,
@@ -344,11 +359,16 @@ BEGIN
             I.InvoiceDate,
             LAG(I.InvoiceDate) OVER (PARTITION BY SI.StockItemID ORDER BY I.InvoiceDate) AS FechaVentaAnterior
         FROM Vta_LineasFactura AS IL
-        JOIN Vta_Facturas AS I         ON I.InvoiceID = IL.InvoiceID
-        JOIN Inv_Articulos AS SI       ON SI.StockItemID = IL.StockItemID
-        JOIN Prov_Proveedores AS PR    ON PR.SupplierID = SI.SupplierID
-        LEFT JOIN Inv_ArticuloGrupo AS AG  ON AG.StockItemID = SI.StockItemID
-        LEFT JOIN Inv_GruposArticulo AS SG ON SG.StockGroupID = AG.StockGroupID
+        JOIN Vta_Facturas AS I       ON I.InvoiceID = IL.InvoiceID
+        JOIN Inv_Articulos AS SI     ON SI.StockItemID = IL.StockItemID
+        JOIN Prov_Proveedores AS PR  ON PR.SupplierID = SI.SupplierID
+        OUTER APPLY (
+            SELECT TOP 1 SG2.StockGroupName
+            FROM Inv_ArticuloGrupo AG2
+            JOIN Inv_GruposArticulo SG2 ON SG2.StockGroupID = AG2.StockGroupID
+            WHERE AG2.StockItemID = SI.StockItemID
+            ORDER BY SG2.StockGroupName
+        ) AS SG
         WHERE (@Anio      IS NULL OR YEAR(I.InvoiceDate) = @Anio)
           AND (@Categoria IS NULL OR SG.StockGroupName LIKE '%' + @Categoria + '%')
           AND (@Proveedor IS NULL OR PR.SupplierName LIKE '%' + @Proveedor + '%')
@@ -366,11 +386,11 @@ BEGIN
 END
 GO
 
-
 -- ============================================
 -- REPORTE 10: Metodo de envio favorito por zona
 -- Zona = ciudad de entrega del cliente
--- Filtros: año, mes, categoria de cliente, categoria de producto, producto
+-- FIX: excluir notas de crédito
+--      (el COUNT(DISTINCT I.InvoiceID) ya evita el duplicado M:N)
 -- ============================================
 CREATE OR ALTER PROCEDURE Rpt_sp_MetodoEnvioFavoritoPorZona
     @Anio             INT           = NULL,
@@ -396,7 +416,8 @@ BEGIN
         JOIN Inv_Articulos AS SI            ON SI.StockItemID = IL.StockItemID
         LEFT JOIN Inv_ArticuloGrupo AS AG   ON AG.StockItemID = SI.StockItemID
         LEFT JOIN Inv_GruposArticulo AS SG  ON SG.StockGroupID = AG.StockGroupID
-        WHERE (@Anio              IS NULL OR YEAR(I.InvoiceDate) = @Anio)
+        WHERE I.IsCreditNote = 0
+          AND (@Anio              IS NULL OR YEAR(I.InvoiceDate) = @Anio)
           AND (@Mes               IS NULL OR MONTH(I.InvoiceDate) = @Mes)
           AND (@CategoriaCliente  IS NULL OR CC.CustomerCategoryName LIKE '%' + @CategoriaCliente + '%')
           AND (@CategoriaProducto IS NULL OR SG.StockGroupName LIKE '%' + @CategoriaProducto + '%')

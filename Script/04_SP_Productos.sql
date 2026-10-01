@@ -2,9 +2,21 @@ USE WideWorldImporters;
 GO
 
 -- ============================================
+-- 04 - SP Productos
+-- Procedimientos:
+--   Inv_sp_ListarProductos   (FIX: M:N con STRING_AGG)
+--   Inv_sp_DetalleProducto   (sin cambios)
+-- Dependencias: Inv_Articulos, Inv_ArticuloGrupo,
+--               Inv_GruposArticulo, Inv_ExistenciasArticulo,
+--               Prov_Proveedores, Inv_Colores, Inv_TiposEmpaque
+-- ============================================
+
+-- ============================================
 -- SP: Listar productos con filtros acumulativos
--- Filtros: nombre (texto libre), grupo (seleccion)
+-- Filtros: nombre (texto libre), grupo (selección)
 -- Orden por defecto: nombre del producto ascendente
+-- FIX: agrupa múltiples grupos por producto con STRING_AGG
+--      (antes: un producto con 3 grupos aparecía 3 veces)
 -- ============================================
 CREATE OR ALTER PROCEDURE Inv_sp_ListarProductos
     @Nombre    NVARCHAR(100) = NULL,
@@ -14,22 +26,30 @@ BEGIN
     SET NOCOUNT ON;
 
     SELECT
-        SI.StockItemID              AS IdProducto,
-        SI.StockItemName            AS NombreProducto,
-        SG.StockGroupName           AS GrupoProducto,
-        H.QuantityOnHand            AS CantidadEnInventario
+        SI.StockItemID                                  AS IdProducto,
+        SI.StockItemName                                AS NombreProducto,
+        STRING_AGG(SG.StockGroupName, ', ')
+            WITHIN GROUP (ORDER BY SG.StockGroupName)   AS GrupoProducto,
+        MAX(H.QuantityOnHand)                           AS CantidadEnInventario
     FROM Inv_Articulos AS SI
-    LEFT JOIN Inv_ArticuloGrupo AS AG ON AG.StockItemID  = SI.StockItemID
-    LEFT JOIN Inv_GruposArticulo AS SG ON SG.StockGroupID = AG.StockGroupID
-    LEFT JOIN Inv_ExistenciasArticulo AS H ON H.StockItemID = SI.StockItemID
+    LEFT JOIN Inv_ArticuloGrupo      AS AG ON AG.StockItemID  = SI.StockItemID
+    LEFT JOIN Inv_GruposArticulo     AS SG ON SG.StockGroupID = AG.StockGroupID
+    LEFT JOIN Inv_ExistenciasArticulo AS H ON H.StockItemID   = SI.StockItemID
     WHERE (@Nombre  IS NULL OR SI.StockItemName LIKE '%' + @Nombre + '%')
-      AND (@GrupoID IS NULL OR AG.StockGroupID = @GrupoID)
+      AND (@GrupoID IS NULL OR EXISTS (
+              SELECT 1
+              FROM Inv_ArticuloGrupo AS AG2
+              WHERE AG2.StockItemID = SI.StockItemID
+                AND AG2.StockGroupID = @GrupoID
+          ))
+    GROUP BY SI.StockItemID, SI.StockItemName
     ORDER BY SI.StockItemName ASC;
 END
 GO
 
 -- ============================================
 -- SP: Detalle de un producto específico
+-- (sin cambios)
 -- ============================================
 CREATE OR ALTER PROCEDURE Inv_sp_DetalleProducto
     @StockItemID INT
