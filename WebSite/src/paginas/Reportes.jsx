@@ -1,11 +1,12 @@
-import React from 'react';
-
-const Reportes = () => {
+function Reportes() {
   return (
-    <div className="pagina-reportes">
-      <h1>Reportes</h1>
-    </div>
+    <main className="contenido-inicio">
+      <section className="encabezado-pagina">
+        <h2>Reportes</h2>
+        <p>Consulta de reportes del sistema.</p>
+      </section>
+    </main>
   );
-};
+}
 
 export default Reportes;

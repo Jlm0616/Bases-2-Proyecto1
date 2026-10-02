@@ -1,11 +1,12 @@
-import React from 'react';
-
-const Ventas = () => {
+function Ventas() {
   return (
-    <div className="pagina-ventas">
-      <h1>Ventas</h1>
-    </div>
+    <main className="contenido-inicio">
+      <section className="encabezado-pagina">
+        <h2>Ventas</h2>
+        <p>Administración de ventas.</p>
+      </section>
+    </main>
   );
-};
+}
 
 export default Ventas;

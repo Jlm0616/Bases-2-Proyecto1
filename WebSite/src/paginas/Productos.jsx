@@ -1,11 +1,12 @@
-import React from 'react';
-
-const Productos = () => {
+function Productos() {
   return (
-    <div className="pagina-productos">
-      <h1>Productos</h1>
-    </div>
+    <main className="contenido-inicio">
+      <section className="encabezado-pagina">
+        <h2>Productos</h2>
+        <p>Administración de productos.</p>
+      </section>
+    </main>
   );
-};
+}
 
 export default Productos;

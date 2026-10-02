@@ -1,15 +1,11 @@
-import React from 'react';
-
-const TarjetaResumen = ({ titulo, valor, icono }) => {
+function TarjetaResumen({ titulo, valor, descripcion }) {
   return (
     <div className="tarjeta-resumen">
-      <div className="tarjeta-icono">{icono}</div>
-      <div className="tarjeta-contenido">
-        <h3>{titulo}</h3>
-        <p>{valor}</p>
-      </div>
+      <p className="tarjeta-titulo">{titulo}</p>
+      <h2>{valor}</h2>
+      <span>{descripcion}</span>
     </div>
   );
-};
+}
 
 export default TarjetaResumen;

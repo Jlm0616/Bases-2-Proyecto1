@@ -1,0 +1,47 @@
+.barra-lateral {
+  width: 250px;
+  height: 100vh;
+  background-color: #111827;
+  color: white;
+  position: fixed;
+  left: 0;
+  top: 0;
+  padding: 25px 18px;
+}
+
+.logo {
+  padding: 0 12px 30px 12px;
+  border-bottom: 1px solid #374151;
+}
+
+.logo h2 {
+  font-size: 22px;
+}
+
+.logo span {
+  color: #9ca3af;
+  font-size: 14px;
+}
+
+.menu {
+  margin-top: 25px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.menu a {
+  padding: 12px 14px;
+  border-radius: 8px;
+  color: #d1d5db;
+}
+
+.menu a:hover {
+  background-color: #1f2937;
+  color: white;
+}
+
+.menu a.activo {
+  background-color: #2563eb;
+  color: white;
+}

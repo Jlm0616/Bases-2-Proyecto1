@@ -1,11 +1,12 @@
-import React from 'react';
-
-const Proveedores = () => {
+function Proveedores() {
   return (
-    <div className="pagina-proveedores">
-      <h1>Proveedores</h1>
-    </div>
+    <main className="contenido-inicio">
+      <section className="encabezado-pagina">
+        <h2>Proveedores</h2>
+        <p>Administración de proveedores.</p>
+      </section>
+    </main>
   );
-};
+}
 
 export default Proveedores;

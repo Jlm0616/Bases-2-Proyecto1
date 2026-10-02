@@ -1,10 +1,16 @@
-import React from 'react';
-
-const BarraSuperior = () => {
+function BarraSuperior() {
   return (
-    <div className="barra-superior">
-    </div>
+    <header className="barra-superior">
+      <div>
+        <h1>Panel administrativo</h1>
+        <p>WideWorldImporters</p>
+      </div>
+
+      <div className="usuario">
+        <span>Administrador</span>
+      </div>
+    </header>
   );
-};
+}
 
 export default BarraSuperior;
