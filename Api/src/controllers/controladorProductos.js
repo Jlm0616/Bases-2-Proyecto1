@@ -80,16 +80,16 @@ async function insertarProducto(req, res) {
       .input('UnitPackageID', sql.Int, idEmpaqueUnidad)
       .input('OuterPackageID', sql.Int, idEmpaqueExterior)
       .input('LastEditedBy', sql.Int, idEditadoPor)
-      .input('ColorID', sql.Int, idColor)
-      .input('Marca', sql.NVarChar(50), marca)
-      .input('Talla', sql.NVarChar(20), talla)
-      .input('LeadTimeDays', sql.Int, diasEntrega)
-      .input('QuantityPerOuter', sql.Int, cantidadPorEmpaque)
-      .input('IsChillerStock', sql.Bit, esRefrigerado)
-      .input('TaxRate', sql.Decimal(18, 3), impuesto)
-      .input('UnitPrice', sql.Decimal(18, 2), precioUnitario)
-      .input('PrecioVenta', sql.Decimal(18, 2), precioVenta)
-      .input('Peso', sql.Decimal(18, 3), peso)
+      .input('ColorID', sql.Int, idColor || null)
+      .input('Marca', sql.NVarChar(50), marca || null)
+      .input('Talla', sql.NVarChar(20), talla || null)
+      .input('LeadTimeDays', sql.Int, diasEntrega || 7)
+      .input('QuantityPerOuter', sql.Int, cantidadPorEmpaque || 1)
+      .input('IsChillerStock', sql.Bit, esRefrigerado || 0)
+      .input('TaxRate', sql.Decimal(18, 3), impuesto || 15)
+      .input('UnitPrice', sql.Decimal(18, 2), precioUnitario || 0)
+      .input('PrecioVenta', sql.Decimal(18, 2), precioVenta || null)
+      .input('Peso', sql.Decimal(18, 3), peso || 0)
       .output('NuevoID', sql.Int);
 
     const resultado = await solicitud.execute('Inv_sp_InsertarProducto');
@@ -116,10 +116,18 @@ async function actualizarProducto(req, res) {
     const {
       nombreProducto,
       idProveedor,
+      idEmpaqueUnidad,
+      idEmpaqueExterior,
       precioUnitario,
       precioVenta,
       impuesto,
-      idEditadoPor
+      idEditadoPor,
+      idColor,
+      marca,
+      talla,
+      diasEntrega,
+      cantidadPorEmpaque,
+      peso
     } = req.body;
 
     const conexion = await conectarBD();
@@ -129,10 +137,18 @@ async function actualizarProducto(req, res) {
       .input('StockItemID', sql.Int, idProducto)
       .input('NombreProducto', sql.NVarChar(100), nombreProducto)
       .input('SupplierID', sql.Int, idProveedor)
-      .input('UnitPrice', sql.Decimal(18, 2), precioUnitario)
-      .input('PrecioVenta', sql.Decimal(18, 2), precioVenta)
-      .input('TaxRate', sql.Decimal(18, 3), impuesto)
+      .input('UnitPackageID', sql.Int, idEmpaqueUnidad || null)
+      .input('OuterPackageID', sql.Int, idEmpaqueExterior || null)
+      .input('UnitPrice', sql.Decimal(18, 2), precioUnitario || 0)
+      .input('PrecioVenta', sql.Decimal(18, 2), precioVenta || null)
+      .input('TaxRate', sql.Decimal(18, 3), impuesto || 15)
       .input('LastEditedBy', sql.Int, idEditadoPor)
+      .input('ColorID', sql.Int, idColor || null)
+      .input('Marca', sql.NVarChar(50), marca || null)
+      .input('Talla', sql.NVarChar(20), talla || null)
+      .input('LeadTimeDays', sql.Int, diasEntrega || null)
+      .input('QuantityPerOuter', sql.Int, cantidadPorEmpaque || null)
+      .input('Peso', sql.Decimal(18, 3), peso || null)
       .execute('Inv_sp_ActualizarProducto');
 
     res.json(resultado.recordset[0]);

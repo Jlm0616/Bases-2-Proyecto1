@@ -87,17 +87,27 @@ GO
 
 -- ============================================
 -- SP: Actualizar producto existente
+-- Acepta los mismos campos que Insertar (formulario completo)
 -- FIX: también sincroniza LastCostPrice en Inv_ExistenciasArticulo
 --      para que el cálculo de LineProfit en ventas use el costo real.
+-- NOTA: SearchDetails es una columna computada → no se puede actualizar.
 -- ============================================
 CREATE OR ALTER PROCEDURE Inv_sp_ActualizarProducto
-    @StockItemID    INT,
-    @NombreProducto NVARCHAR(100),
-    @SupplierID     INT,
-    @UnitPrice      DECIMAL(18,2),
-    @PrecioVenta    DECIMAL(18,2)   = NULL,
-    @TaxRate        DECIMAL(18,3)   = 15.000,
-    @LastEditedBy   INT
+    @StockItemID        INT,
+    @NombreProducto     NVARCHAR(100),
+    @SupplierID         INT,
+    @UnitPackageID      INT             = NULL,
+    @OuterPackageID     INT             = NULL,
+    @UnitPrice          DECIMAL(18,2)   = 0,
+    @PrecioVenta        DECIMAL(18,2)   = NULL,
+    @TaxRate            DECIMAL(18,3)   = 15.000,
+    @LastEditedBy       INT,
+    @ColorID            INT             = NULL,
+    @Marca              NVARCHAR(50)    = NULL,
+    @Talla              NVARCHAR(20)    = NULL,
+    @LeadTimeDays       INT             = NULL,
+    @QuantityPerOuter   INT             = NULL,
+    @Peso               DECIMAL(18,3)   = NULL
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -114,22 +124,27 @@ BEGIN
 
         BEGIN TRANSACTION;
 
-        -- 1) Actualizar el artículo (maestro)
         DECLARE @Actualizados TABLE (StockItemID INT);
 
         UPDATE Inv_Articulos
         SET
             StockItemName           = @NombreProducto,
             SupplierID              = @SupplierID,
+            UnitPackageID           = ISNULL(@UnitPackageID, UnitPackageID),
+            OuterPackageID          = ISNULL(@OuterPackageID, OuterPackageID),
             UnitPrice               = @UnitPrice,
             RecommendedRetailPrice  = @PrecioVenta,
             TaxRate                 = @TaxRate,
+            ColorID                 = ISNULL(@ColorID, ColorID),
+            Brand                   = ISNULL(@Marca, Brand),
+            Size                    = ISNULL(@Talla, Size),
+            LeadTimeDays            = ISNULL(@LeadTimeDays, LeadTimeDays),
+            QuantityPerOuter        = ISNULL(@QuantityPerOuter, QuantityPerOuter),
+            TypicalWeightPerUnit    = ISNULL(@Peso, TypicalWeightPerUnit),
             LastEditedBy            = @LastEditedBy
         OUTPUT INSERTED.StockItemID INTO @Actualizados
         WHERE StockItemID = @StockItemID;
 
-        -- 2) Sincronizar el costo en el inventario (crítico para LineProfit en ventas)
-        --    Si no existiera la fila de inventario (caso borde), se crea.
         IF EXISTS (SELECT 1 FROM Inv_ExistenciasArticulo WHERE StockItemID = @StockItemID)
         BEGIN
             UPDATE Inv_ExistenciasArticulo

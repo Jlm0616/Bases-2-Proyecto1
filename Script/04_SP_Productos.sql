@@ -4,8 +4,8 @@ GO
 -- ============================================
 -- 04 - SP Productos
 -- Procedimientos:
---   Inv_sp_ListarProductos   (FIX: M:N con STRING_AGG)
---   Inv_sp_DetalleProducto   (sin cambios)
+--   Inv_sp_ListarProductos
+--   Inv_sp_DetalleProducto  (con IDs para edición)
 -- Dependencias: Inv_Articulos, Inv_ArticuloGrupo,
 --               Inv_GruposArticulo, Inv_ExistenciasArticulo,
 --               Prov_Proveedores, Inv_Colores, Inv_TiposEmpaque
@@ -13,10 +13,7 @@ GO
 
 -- ============================================
 -- SP: Listar productos con filtros acumulativos
--- Filtros: nombre (texto libre), grupo (selección)
--- Orden por defecto: nombre del producto ascendente
 -- FIX: agrupa múltiples grupos por producto con STRING_AGG
---      (antes: un producto con 3 grupos aparecía 3 veces)
 -- ============================================
 CREATE OR ALTER PROCEDURE Inv_sp_ListarProductos
     @Nombre    NVARCHAR(100) = NULL,
@@ -49,7 +46,8 @@ GO
 
 -- ============================================
 -- SP: Detalle de un producto específico
--- (sin cambios)
+-- Devuelve IDs + nombres para poder preseleccionar
+-- los <select> del formulario de edición.
 -- ============================================
 CREATE OR ALTER PROCEDURE Inv_sp_DetalleProducto
     @StockItemID INT
@@ -60,9 +58,13 @@ BEGIN
     SELECT
         SI.StockItemID                AS IdProducto,
         SI.StockItemName              AS NombreProducto,
+        SI.SupplierID                 AS IdProveedor,
         PR.SupplierName               AS NombreProveedor,
+        SI.ColorID                    AS IdColor,
         COL.ColorName                 AS Color,
+        SI.UnitPackageID              AS IdUnidadEmpaquetamiento,
         UP.PackageTypeName            AS UnidadEmpaquetamiento,
+        SI.OuterPackageID             AS IdEmpaquetamiento,
         OP.PackageTypeName            AS Empaquetamiento,
         SI.QuantityPerOuter           AS CantidadEmpaquetamiento,
         SI.Brand                      AS Marca,
