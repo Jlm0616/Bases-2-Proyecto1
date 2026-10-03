@@ -133,6 +133,101 @@ async function listarGruposCompra(req, res) {
   }
 }
 
+async function listarAniosVentas(req, res) {
+  try {
+    const conexion = await conectarBD();
+
+    const resultado = await conexion
+      .request()
+      .execute("Flt_sp_ListarAniosVentas");
+
+    res.json(resultado.recordset);
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      mensaje: "Error al listar años de ventas",
+      error: error.message,
+    });
+  }
+}
+
+async function listarAniosCompras(req, res) {
+  try {
+    const conexion = await conectarBD();
+
+    const resultado = await conexion
+      .request()
+      .execute("Flt_sp_ListarAniosCompras");
+
+    res.json(resultado.recordset);
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      mensaje: "Error al listar años de compras",
+      error: error.message,
+    });
+  }
+}
+
+async function listarCategoriasProducto(req, res) {
+  try {
+    const conexion = await conectarBD();
+
+    const resultado = await conexion
+      .request()
+      .execute("Flt_sp_ListarCategoriasProducto");
+
+    res.json(resultado.recordset);
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      mensaje: "Error al listar categorías de producto",
+      error: error.message,
+    });
+  }
+}
+
+async function listarProveedores(req, res) {
+  try {
+    const conexion = await conectarBD();
+
+    const resultado = await conexion
+      .request()
+      .execute("Flt_sp_ListarProveedores");
+
+    res.json(resultado.recordset);
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      mensaje: "Error al listar proveedores",
+      error: error.message,
+    });
+  }
+}
+
+async function listarProductos(req, res) {
+  try {
+    const conexion = await conectarBD();
+
+    const resultado = await conexion
+      .request()
+      .execute("Flt_sp_ListarProductos");
+
+    res.json(resultado.recordset);
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      mensaje: "Error al listar productos",
+      error: error.message,
+    });
+  }
+}
+
 module.exports = {
   listarCategoriasCliente,
   listarMetodosEntrega,
@@ -141,4 +236,9 @@ module.exports = {
   listarPersonas,
   listarCiudades,
   listarGruposCompra,
+  listarAniosVentas,
+  listarAniosCompras,
+  listarCategoriasProducto,
+  listarProveedores,
+  listarProductos,
 };

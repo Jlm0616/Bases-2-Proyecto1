@@ -137,3 +137,103 @@ BEGIN
     ORDER BY SG.StockGroupName ASC;
 END
 GO
+
+USE WideWorldImporters;
+GO
+
+-- ============================================
+-- SP: Listar años disponibles en ventas
+-- Uso: cargar opciones de año en reportes de ventas
+-- Orden por defecto: año ascendente
+-- ============================================
+
+CREATE OR ALTER PROCEDURE Flt_sp_ListarAniosVentas
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT DISTINCT
+        YEAR(I.InvoiceDate) AS Anio
+    FROM Vta_Facturas AS I
+    ORDER BY Anio ASC;
+END
+GO
+
+
+-- ============================================
+-- SP: Listar años disponibles en compras
+-- Uso: cargar opciones de año en reportes de compras
+-- Orden por defecto: año ascendente
+-- ============================================
+
+CREATE OR ALTER PROCEDURE Flt_sp_ListarAniosCompras
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT DISTINCT
+        YEAR(PO.OrderDate) AS Anio
+    FROM Cmp_OrdenesCompra AS PO
+    ORDER BY Anio ASC;
+END
+GO
+
+
+-- ============================================
+-- SP: Listar categorias o grupos de productos
+-- Uso: cargar opciones de categoria de producto
+-- Orden por defecto: nombre del grupo ascendente
+-- ============================================
+
+CREATE OR ALTER PROCEDURE Flt_sp_ListarCategoriasProducto
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        SG.StockGroupID     AS IdCategoriaProducto,
+        SG.StockGroupName   AS NombreCategoriaProducto
+    FROM Inv_GruposArticulo AS SG
+    ORDER BY SG.StockGroupName ASC;
+END
+GO
+
+
+-- ============================================
+-- SP: Listar proveedores
+-- Uso: cargar opciones de proveedor en reportes
+-- Orden por defecto: nombre del proveedor ascendente
+-- ============================================
+
+CREATE OR ALTER PROCEDURE Flt_sp_ListarProveedores
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        S.SupplierID     AS IdProveedor,
+        S.SupplierName   AS NombreProveedor
+    FROM Prov_Proveedores AS S
+    ORDER BY S.SupplierName ASC;
+END
+GO
+
+
+-- ============================================
+-- SP: Listar productos
+-- Uso: cargar opciones de producto en reportes
+-- Orden por defecto: nombre del producto ascendente
+-- ============================================
+
+CREATE OR ALTER PROCEDURE Flt_sp_ListarProductos
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        SI.StockItemID     AS IdProducto,
+        SI.StockItemName   AS NombreProducto
+    FROM Inv_Articulos AS SI
+    ORDER BY SI.StockItemName ASC;
+END
+GO

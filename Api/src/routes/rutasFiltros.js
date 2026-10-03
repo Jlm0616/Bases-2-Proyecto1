@@ -8,6 +8,11 @@ const {
   listarPersonas,
   listarCiudades,
   listarGruposCompra,
+  listarAniosVentas,
+  listarAniosCompras,
+  listarCategoriasProducto,
+  listarProveedores,
+  listarProductos,
 } = require("../controllers/controladorFiltros");
 
 const router = express.Router();
@@ -19,5 +24,11 @@ router.get("/grupos-productos", listarGruposProductos);
 router.get("/personas", listarPersonas);
 router.get("/ciudades", listarCiudades);
 router.get("/grupos-compra", listarGruposCompra);
+
+router.get("/anios-ventas", listarAniosVentas);
+router.get("/anios-compras", listarAniosCompras);
+router.get("/categorias-producto", listarCategoriasProducto);
+router.get("/proveedores", listarProveedores);
+router.get("/productos", listarProductos);
 
 module.exports = router;
