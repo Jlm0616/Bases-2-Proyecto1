@@ -5,7 +5,7 @@ async function montosProveedores(req, res) {
     const {
       nombreProveedor,
       categoria
-    } = req.body;
+    } = { ...(req.body || {}), ...(req.query || {}) };
 
     const conexion = await conectarBD();
 
@@ -32,7 +32,7 @@ async function montosClientes(req, res) {
     const {
       nombreCliente,
       categoria
-    } = req.body;
+    } = { ...(req.body || {}), ...(req.query || {}) };
 
     const conexion = await conectarBD();
 
@@ -56,7 +56,7 @@ async function montosClientes(req, res) {
 
 async function top5ProductosGanancia(req, res) {
   try {
-    const { año } = req.body;
+    const { año } = { ...(req.body || {}), ...(req.query || {}) };
 
     const conexion = await conectarBD();
 
@@ -82,7 +82,7 @@ async function top5ClientesFacturas(req, res) {
     const {
       añoInicio,
       añoFin
-    } = req.body;
+    } = { ...(req.body || {}), ...(req.query || {}) };
 
     const conexion = await conectarBD();
 
@@ -109,7 +109,7 @@ async function top5ProveedoresOrdenes(req, res) {
     const {
       añoInicio,
       añoFin
-    } = req.body;
+    } = { ...(req.body || {}), ...(req.query || {}) };
 
     const conexion = await conectarBD();
 
@@ -157,7 +157,7 @@ async function seguimientoComprasCliente(req, res) {
       año,
       mes,
       categoria
-    } = req.body;
+    } = { ...(req.body || {}), ...(req.query || {}) };
 
     const conexion = await conectarBD();
 
@@ -186,7 +186,7 @@ async function seguimientoComprasProveedor(req, res) {
       año,
       mes,
       categoria
-    } = req.body;
+    } = { ...(req.body || {}), ...(req.query || {}) };
 
     const conexion = await conectarBD();
 
@@ -215,7 +215,7 @@ async function rotacionInventario(req, res) {
       categoria,
       año,
       proveedor
-    } = req.body;
+    } = { ...(req.body || {}), ...(req.query || {}) };
 
     const conexion = await conectarBD();
 
@@ -246,7 +246,7 @@ async function metodoEnvioFavoritoPorZona(req, res) {
       categoriaCliente,
       categoriaProducto,
       producto
-    } = req.body;
+    } = { ...(req.body || {}), ...(req.query || {}) };
 
     const conexion = await conectarBD();
 

@@ -6,7 +6,7 @@ async function listarClientes(req, res) {
       nombre = null,
       idCategoria = null,
       idMetodoEntrega = null
-    } = req.body;
+    } = { ...(req.body || {}), ...(req.query || {}) };
 
     const conexion = await conectarBD();
 
@@ -81,13 +81,13 @@ async function insertarCliente(req, res) {
       .input('PrimaryContactID', sql.Int, idContactoPrimario)
       .input('DeliveryCityID', sql.Int, idCiudadEntrega)
       .input('LastEditedBy', sql.Int, idEditadoPor)
-      .input('PostalCityID', sql.Int, idCiudadPostal)
-      .input('BuyingGroupID', sql.Int, idGrupoCompra)
-      .input('PhoneNumber', sql.NVarChar(20), telefono)
-      .input('DeliveryAddressLine1', sql.NVarChar(60), direccionEntregaLinea1)
-      .input('DeliveryPostalCode', sql.NVarChar(10), codigoPostalEntrega)
-      .input('PostalAddressLine1', sql.NVarChar(60), direccionPostalLinea1)
-      .input('PostalPostalCode', sql.NVarChar(10), codigoPostal)
+      .input('PostalCityID', sql.Int, idCiudadPostal || null)
+      .input('BuyingGroupID', sql.Int, idGrupoCompra || null)
+      .input('PhoneNumber', sql.NVarChar(20), telefono || 'Sin definir')
+      .input('DeliveryAddressLine1', sql.NVarChar(60), direccionEntregaLinea1 || 'Sin definir')
+      .input('DeliveryPostalCode', sql.NVarChar(10), codigoPostalEntrega || '00000')
+      .input('PostalAddressLine1', sql.NVarChar(60), direccionPostalLinea1 || 'Sin definir')
+      .input('PostalPostalCode', sql.NVarChar(10), codigoPostal || '00000')
       .output('NuevoID', sql.Int);
 
     const resultado = await solicitud.execute('Cli_sp_InsertarCliente');
@@ -116,9 +116,15 @@ async function actualizarCliente(req, res) {
       idCategoria,
       idMetodoEntrega,
       idEditadoPor,
+      idContactoPrimario,
+      idCiudadEntrega,
+      idCiudadPostal,
+      idGrupoCompra,
       telefono,
       direccionEntregaLinea1,
-      codigoPostalEntrega
+      codigoPostalEntrega,
+      direccionPostalLinea1,
+      codigoPostal
     } = req.body;
 
     const conexion = await conectarBD();
@@ -130,9 +136,15 @@ async function actualizarCliente(req, res) {
       .input('CategoriaID', sql.Int, idCategoria)
       .input('MetodoEntregaID', sql.Int, idMetodoEntrega)
       .input('LastEditedBy', sql.Int, idEditadoPor)
-      .input('PhoneNumber', sql.NVarChar(20), telefono)
-      .input('DeliveryAddressLine1', sql.NVarChar(60), direccionEntregaLinea1)
-      .input('DeliveryPostalCode', sql.NVarChar(10), codigoPostalEntrega)
+      .input('PrimaryContactID', sql.Int, idContactoPrimario || null)
+      .input('DeliveryCityID', sql.Int, idCiudadEntrega || null)
+      .input('PostalCityID', sql.Int, idCiudadPostal || null)
+      .input('BuyingGroupID', sql.Int, idGrupoCompra || null)
+      .input('PhoneNumber', sql.NVarChar(20), telefono || 'Sin definir')
+      .input('DeliveryAddressLine1', sql.NVarChar(60), direccionEntregaLinea1 || 'Sin definir')
+      .input('DeliveryPostalCode', sql.NVarChar(10), codigoPostalEntrega || '00000')
+      .input('PostalAddressLine1', sql.NVarChar(60), direccionPostalLinea1 || 'Sin definir')
+      .input('PostalPostalCode', sql.NVarChar(10), codigoPostal || '00000')
       .execute('Cli_sp_ActualizarCliente');
 
     res.json(resultado.recordset[0]);

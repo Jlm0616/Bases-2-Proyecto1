@@ -98,3 +98,42 @@ BEGIN
     ORDER BY G.BuyingGroupName ASC;
 END
 GO
+
+-- ============================================
+-- SP: Listar categorias de proveedores
+-- Uso: cargar opciones del filtro de categoria de proveedor
+-- Orden por defecto: nombre de la categoria ascendente
+-- ============================================
+
+CREATE OR ALTER PROCEDURE Flt_sp_ListarCategoriasProveedor
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        PC.SupplierCategoryID     AS IdCategoria,
+        PC.SupplierCategoryName   AS NombreCategoria
+    FROM Prov_CategoriasProveedor AS PC
+    ORDER BY PC.SupplierCategoryName ASC;
+END
+GO
+
+
+-- ============================================
+-- SP: Listar grupos de productos
+-- Uso: cargar opciones del filtro de grupo de producto
+-- Orden por defecto: nombre del grupo ascendente
+-- ============================================
+
+CREATE OR ALTER PROCEDURE Flt_sp_ListarGruposProductos
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        SG.StockGroupID      AS IdGrupo,
+        SG.StockGroupName    AS NombreGrupo
+    FROM Inv_GruposArticulo AS SG
+    ORDER BY SG.StockGroupName ASC;
+END
+GO

@@ -237,3 +237,276 @@
   padding: 30px;
   color: #6b7280;
 }
+
+/* ============================================
+   MODAL
+   ============================================ */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal-contenido {
+  background-color: white;
+  border-radius: 12px;
+  padding: 28px;
+  max-width: 720px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+}
+
+.modal-cerrar {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  color: #6b7280;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.modal-cerrar:hover {
+  background-color: #f3f4f6;
+  color: #111827;
+}
+
+/* ============================================
+   DETALLE DEL CLIENTE
+   ============================================ */
+.detalle-cliente h3 {
+  margin-bottom: 6px;
+  font-size: 22px;
+  color: #111827;
+}
+
+.detalle-cliente .subtitulo {
+  color: #6b7280;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.detalle-cliente .grid-detalle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 24px;
+}
+
+.detalle-cliente .campo {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  border-bottom: 1px solid #f1f5f9;
+  padding-bottom: 8px;
+}
+
+.detalle-cliente .campo-etiqueta {
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.detalle-cliente .campo-valor {
+  font-size: 14px;
+  color: #111827;
+  word-break: break-word;
+}
+
+.detalle-cliente .campo-valor a {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.detalle-cliente .campo-valor a:hover {
+  text-decoration: underline;
+}
+
+.detalle-cliente .campo-ancho {
+  grid-column: 1 / -1;
+}
+
+@media (max-width: 600px) {
+  .detalle-cliente .grid-detalle {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================
+   FORMULARIO DEL CLIENTE
+   ============================================ */
+.formulario-cliente h3 {
+  margin-bottom: 20px;
+  font-size: 22px;
+  color: #111827;
+}
+
+.formulario-cliente .formulario-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px 20px;
+}
+
+.formulario-cliente .campo-formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.formulario-cliente .campo-formulario.ancho-completo {
+  grid-column: 1 / -1;
+}
+
+.formulario-cliente label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.formulario-cliente input,
+.formulario-cliente select {
+  height: 40px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 0 12px;
+  background-color: white;
+  font-size: 14px;
+  outline: none;
+}
+
+.formulario-cliente input:focus,
+.formulario-cliente select:focus {
+  border-color: #2563eb;
+}
+
+.formulario-cliente .botones-formulario {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.formulario-cliente .boton-cancelar {
+  height: 42px;
+  padding: 0 18px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  background-color: white;
+  color: #374151;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.formulario-cliente .boton-cancelar:hover {
+  background-color: #f3f4f6;
+}
+
+.formulario-cliente .boton-guardar {
+  height: 42px;
+  padding: 0 18px;
+  border-radius: 8px;
+  border: none;
+  background-color: #2563eb;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.formulario-cliente .boton-guardar:hover {
+  background-color: #1d4ed8;
+}
+
+.formulario-cliente .boton-guardar:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+  .formulario-cliente .formulario-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================
+   MODAL ELIMINAR (confirmación)
+   ============================================ */
+.confirmar-eliminar {
+  text-align: center;
+  padding: 8px 0;
+}
+
+.confirmar-eliminar h3 {
+  font-size: 20px;
+  margin-bottom: 12px;
+  color: #111827;
+}
+
+.confirmar-eliminar p {
+  color: #6b7280;
+  font-size: 14px;
+  margin-bottom: 24px;
+}
+
+.confirmar-eliminar .nombre-cliente-eliminar {
+  font-weight: 600;
+  color: #111827;
+}
+
+.botones-eliminar {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.boton-cancelar-eliminar {
+  height: 42px;
+  padding: 0 20px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  background-color: white;
+  color: #374151;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.boton-cancelar-eliminar:hover {
+  background-color: #f3f4f6;
+}
+
+.boton-confirmar-eliminar {
+  height: 42px;
+  padding: 0 20px;
+  border-radius: 8px;
+  border: none;
+  background-color: #dc2626;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.boton-confirmar-eliminar:hover {
+  background-color: #b91c1c;
+}
+
+.boton-confirmar-eliminar:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

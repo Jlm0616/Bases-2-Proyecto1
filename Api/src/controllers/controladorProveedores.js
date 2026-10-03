@@ -5,7 +5,7 @@ async function listarProveedores(req, res) {
     const {
       nombre = null,
       idCategoria = null
-    } = req.body;
+    } = { ...(req.body || {}), ...(req.query || {}) };
 
     const conexion = await conectarBD();
 

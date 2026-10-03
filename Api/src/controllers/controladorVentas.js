@@ -8,7 +8,7 @@ async function listarVentas(req, res) {
       fechaFin,
       montoMinimo,
       montoMaximo
-    } = req.body;
+    } = { ...(req.body || {}), ...(req.query || {}) };
 
     const conexion = await conectarBD();
 

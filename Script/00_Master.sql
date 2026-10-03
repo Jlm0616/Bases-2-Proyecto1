@@ -26,7 +26,7 @@ PRINT '============================================';
 -- 01 - Sinónimos
 -- ------------------------------------------------------------
 PRINT '';
-PRINT '>>> [01/11] Creando sinonimos...';
+PRINT '>>> [01/12] Creando sinonimos...';
 :r .\01_Sinonimos.sql
 GO
 
@@ -34,7 +34,7 @@ GO
 -- 02 - SPs de Clientes (listar + detalle)
 -- ------------------------------------------------------------
 PRINT '';
-PRINT '>>> [02/11] Creando SPs de Clientes...';
+PRINT '>>> [02/12] Creando SPs de Clientes...';
 :r .\02_SP_Clientes.sql
 GO
 
@@ -42,7 +42,7 @@ GO
 -- 03 - SPs de Proveedores (listar + detalle)
 -- ------------------------------------------------------------
 PRINT '';
-PRINT '>>> [03/11] Creando SPs de Proveedores...';
+PRINT '>>> [03/12] Creando SPs de Proveedores...';
 :r .\03_SP_Proveedores.sql
 GO
 
@@ -50,7 +50,7 @@ GO
 -- 04 - SPs de Productos (listar + detalle)
 -- ------------------------------------------------------------
 PRINT '';
-PRINT '>>> [04/11] Creando SPs de Productos...';
+PRINT '>>> [04/12] Creando SPs de Productos...';
 :r .\04_SP_Productos.sql
 GO
 
@@ -58,7 +58,7 @@ GO
 -- 05 - SPs de Ventas (listar + detalle)
 -- ------------------------------------------------------------
 PRINT '';
-PRINT '>>> [05/11] Creando SPs de Ventas...';
+PRINT '>>> [05/12] Creando SPs de Ventas...';
 :r .\05_SP_Ventas.sql
 GO
 
@@ -66,7 +66,7 @@ GO
 -- 06 - SPs de Reportes (10 reportes)
 -- ------------------------------------------------------------
 PRINT '';
-PRINT '>>> [06/11] Creando SPs de Reportes...';
+PRINT '>>> [06/12] Creando SPs de Reportes...';
 :r .\06_SP_Reportes.sql
 GO
 
@@ -74,7 +74,7 @@ GO
 -- 07a - CRUD Clientes
 -- ------------------------------------------------------------
 PRINT '';
-PRINT '>>> [07a/11] Creando CRUD de Clientes...';
+PRINT '>>> [07a/12] Creando CRUD de Clientes...';
 :r .\07a_CRUD_Clientes.sql
 GO
 
@@ -82,7 +82,7 @@ GO
 -- 07b - CRUD Proveedores
 -- ------------------------------------------------------------
 PRINT '';
-PRINT '>>> [07b/11] Creando CRUD de Proveedores...';
+PRINT '>>> [07b/12] Creando CRUD de Proveedores...';
 :r .\07b_CRUD_Proveedores.sql
 GO
 
@@ -90,7 +90,7 @@ GO
 -- 07c - CRUD Productos
 -- ------------------------------------------------------------
 PRINT '';
-PRINT '>>> [07c/11] Creando CRUD de Productos...';
+PRINT '>>> [07c/12] Creando CRUD de Productos...';
 :r .\07c_CRUD_Productos.sql
 GO
 
@@ -98,15 +98,23 @@ GO
 -- 07d - CRUD Ventas (incluye CREATE TYPE TipoLineasFactura)
 -- ------------------------------------------------------------
 PRINT '';
-PRINT '>>> [07d/11] Creando CRUD de Ventas y TVP...';
+PRINT '>>> [07d/12] Creando CRUD de Ventas y TVP...';
 :r .\07d_CRUD_Ventas.sql
 GO
 
 -- ------------------------------------------------------------
--- 08 - Ejemplos de ejecución (opcional)
+-- 08a - SPs de Filtros (catálogos para <select> del front)
 -- ------------------------------------------------------------
 PRINT '';
-PRINT '>>> [08/11] Ejecutando ejemplos de prueba...';
+PRINT '>>> [08a/12] Creando SPs de Filtros...';
+:r .\08_SP_Filtros.sql
+GO
+
+-- ------------------------------------------------------------
+-- 08b - Ejemplos de ejecución (opcional)
+-- ------------------------------------------------------------
+PRINT '';
+PRINT '>>> [08b/12] Ejecutando ejemplos de prueba...';
 :r .\08_EjemplosEjecucion.sql
 GO
 

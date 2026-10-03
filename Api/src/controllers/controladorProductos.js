@@ -5,7 +5,7 @@ async function listarProductos(req, res) {
     const {
       nombre = null,
       idGrupo = null
-    } = req.body;
+    } = { ...(req.body || {}), ...(req.query || {}) };
 
     const conexion = await conectarBD();
 

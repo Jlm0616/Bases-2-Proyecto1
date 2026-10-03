@@ -94,9 +94,15 @@ CREATE OR ALTER PROCEDURE Cli_sp_ActualizarCliente
     @CategoriaID          INT,
     @MetodoEntregaID      INT,
     @LastEditedBy         INT,
-    @PhoneNumber          NVARCHAR(20)  = 'Sin definir',
-    @DeliveryAddressLine1 NVARCHAR(60)  = 'Sin definir',
-    @DeliveryPostalCode   NVARCHAR(10)  = '00000'
+    @PrimaryContactID     INT             = NULL,
+    @DeliveryCityID       INT             = NULL,
+    @PostalCityID         INT             = NULL,
+    @BuyingGroupID        INT             = NULL,
+    @PhoneNumber          NVARCHAR(20)    = 'Sin definir',
+    @DeliveryAddressLine1 NVARCHAR(60)    = 'Sin definir',
+    @DeliveryPostalCode   NVARCHAR(10)    = '00000',
+    @PostalAddressLine1   NVARCHAR(60)    = 'Sin definir',
+    @PostalPostalCode     NVARCHAR(10)    = '00000'
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -117,10 +123,16 @@ BEGIN
             CustomerName          = @NombreCliente,
             CustomerCategoryID    = @CategoriaID,
             DeliveryMethodID      = @MetodoEntregaID,
+            PrimaryContactPersonID = ISNULL(@PrimaryContactID, PrimaryContactPersonID),
+            DeliveryCityID        = ISNULL(@DeliveryCityID, DeliveryCityID),
+            PostalCityID          = ISNULL(@PostalCityID, PostalCityID),
+            BuyingGroupID         = ISNULL(@BuyingGroupID, BuyingGroupID),
             PhoneNumber           = @PhoneNumber,
             FaxNumber             = @PhoneNumber,
             DeliveryAddressLine1  = @DeliveryAddressLine1,
             DeliveryPostalCode    = @DeliveryPostalCode,
+            PostalAddressLine1    = @PostalAddressLine1,
+            PostalPostalCode      = @PostalPostalCode,
             LastEditedBy          = @LastEditedBy
         OUTPUT INSERTED.CustomerID INTO @Actualizados
         WHERE CustomerID = @CustomerID;

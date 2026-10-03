@@ -9,7 +9,12 @@ const {
   eliminarVenta
 } = require('../controllers/controladorVentas');
 
+// Listar (POST con body y GET con query, ambos soportados)
 router.post('/buscar', listarVentas);
+router.get('/', listarVentas);
+router.get('/buscar', listarVentas);
+
+// Rutas con :id al final (más específicas primero)
 router.get('/:id', detalleVenta);
 router.post('/', insertarVenta);
 router.put('/:id', actualizarVenta);
