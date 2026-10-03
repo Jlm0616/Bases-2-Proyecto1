@@ -29,6 +29,8 @@ GO
 
 -- ============================================
 -- SP: Detalle de un proveedor específico
+-- Devuelve IDs + nombres para preseleccionar
+-- los <select> del formulario de edición.
 -- ============================================
 CREATE OR ALTER PROCEDURE Prov_sp_DetalleProveedor
     @SupplierID INT
@@ -40,10 +42,15 @@ BEGIN
         P.SupplierID                     AS IdProveedor,
         P.SupplierReference              AS CodigoProveedor,
         P.SupplierName                   AS NombreProveedor,
+        P.SupplierCategoryID             AS IdCategoria,
         PC.SupplierCategoryName          AS CategoriaProveedor,
+        P.PrimaryContactPersonID         AS IdContactoPrimario,
         pContacto.FullName               AS ContactoPrimario,
+        P.AlternateContactPersonID       AS IdContactoAlternativo,
         aContacto.FullName               AS ContactoAlternativo,
+        P.DeliveryMethodID               AS IdMetodoEntrega,
         DM.DeliveryMethodName            AS MetodoEntrega,
+        P.DeliveryCityID                 AS IdCiudadEntrega,
         CIU.CityName                     AS CiudadEntrega,
         P.DeliveryPostalCode             AS CodigoPostalEntrega,
         P.PhoneNumber                    AS Telefono,
@@ -53,6 +60,7 @@ BEGIN
         P.DeliveryAddressLine2           AS DireccionEntregaLinea2,
         P.PostalAddressLine1             AS DireccionPostalLinea1,
         P.PostalAddressLine2             AS DireccionPostalLinea2,
+        P.PostalPostalCode               AS CodigoPostalPostal,
         P.DeliveryLocation.STAsText()    AS UbicacionEntregaMapa,
         P.BankAccountName                AS NombreBanco,
         P.BankAccountNumber              AS NumeroCuentaCorriente,

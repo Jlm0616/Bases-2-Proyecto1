@@ -43,6 +43,11 @@ function Clientes() {
   const [ciudades, setCiudades] = useState([]);
   const [gruposCompra, setGruposCompra] = useState([]);
 
+  // Búsquedas de datalist (texto que escribe el usuario)
+  const [busquedaContacto, setBusquedaContacto] = useState("");
+  const [busquedaCiudadEntrega, setBusquedaCiudadEntrega] = useState("");
+  const [busquedaCiudadPostal, setBusquedaCiudadPostal] = useState("");
+
   // Tabla
   const [clientes, setClientes] = useState([]);
   const [cargando, setCargando] = useState(false);
@@ -66,12 +71,12 @@ function Clientes() {
   const [clienteEliminando, setClienteEliminando] = useState(null);
   const [eliminando, setEliminando] = useState(false);
 
-  async function cargarClientes() {
+  async function cargarClientes(filtrosOverride) {
     try {
       setCargando(true);
       setError("");
 
-      const filtros = {
+      const filtros = filtrosOverride || {
         nombre: nombre,
         idCategoria: categoria === "" ? null : Number(categoria),
         idMetodoEntrega:
@@ -113,31 +118,66 @@ function Clientes() {
     }
   }
 
+  // Carga inicial (solo una vez)
   useEffect(() => {
-    cargarClientes();
+    cargarClientes({
+      nombre: "",
+      idCategoria: null,
+      idMetodoEntrega: null,
+    });
     cargarCatalogos();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // DEBOUNCE: buscar automáticamente 400ms después de la última tecla
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      cargarClientes({
+        nombre: nombre,
+        idCategoria: categoria === "" ? null : Number(categoria),
+        idMetodoEntrega:
+          metodoEntrega === "" ? null : Number(metodoEntrega),
+      });
+    }, 400);
+
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [nombre, categoria, metodoEntrega]);
 
   async function limpiarFiltros() {
     setNombre("");
     setCategoria("");
     setMetodoEntrega("");
+    // El useEffect del debounce se encargará de recargar
+  }
 
-    try {
-      setCargando(true);
-      setError("");
+  // -------------------- HELPERS DATALIST --------------------
+  function resolverIdPersona(texto) {
+    if (!texto) return "";
+    const encontrada = personas.find((p) => p.NombrePersona === texto);
+    return encontrada ? encontrada.IdPersona.toString() : "";
+  }
 
-      const datos = await buscarClientes({
-        nombre: "",
-        idCategoria: null,
-        idMetodoEntrega: null,
-      });
-      setClientes(datos);
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setCargando(false);
-    }
+  function resolverIdCiudad(texto) {
+    if (!texto) return "";
+    const encontrada = ciudades.find((c) => c.NombreCiudad === texto);
+    return encontrada ? encontrada.IdCiudad.toString() : "";
+  }
+
+  function nombreDePersona(id) {
+    if (!id) return "";
+    const encontrada = personas.find(
+      (p) => p.IdPersona.toString() === id.toString()
+    );
+    return encontrada ? encontrada.NombrePersona : "";
+  }
+
+  function nombreDeCiudad(id) {
+    if (!id) return "";
+    const encontrada = ciudades.find(
+      (c) => c.IdCiudad.toString() === id.toString()
+    );
+    return encontrada ? encontrada.NombreCiudad : "";
   }
 
   // -------------------- VER DETALLE --------------------
@@ -164,6 +204,9 @@ function Clientes() {
   // -------------------- CREAR --------------------
   function abrirModalCrear() {
     setFormulario(FORMULARIO_VACIO);
+    setBusquedaContacto("");
+    setBusquedaCiudadEntrega("");
+    setBusquedaCiudadPostal("");
     setModoEdicion(false);
     setIdEditando(null);
     setErrorFormulario("");
@@ -191,6 +234,11 @@ function Clientes() {
         idEditadoPor: "1361",
       });
 
+      // Pre-llenar los datalists con el nombre actual
+      setBusquedaContacto(nombreDePersona(detalle.IdContactoPrimario));
+      setBusquedaCiudadEntrega(nombreDeCiudad(detalle.IdCiudadEntrega));
+      setBusquedaCiudadPostal("");
+
       setModoEdicion(true);
       setIdEditando(cliente.IdCliente);
       setErrorFormulario("");
@@ -203,16 +251,19 @@ function Clientes() {
   function cerrarModalFormulario() {
     setModalFormularioAbierto(false);
     setFormulario(FORMULARIO_VACIO);
+    setBusquedaContacto("");
+    setBusquedaCiudadEntrega("");
+    setBusquedaCiudadPostal("");
     setModoEdicion(false);
     setIdEditando(null);
     setErrorFormulario("");
   }
 
   function actualizarCampo(nombreCampo, valor) {
-    setFormulario({
-      ...formulario,
+    setFormulario((prev) => ({
+      ...prev,
       [nombreCampo]: valor,
-    });
+    }));
   }
 
   async function guardarCliente(evento) {
@@ -233,11 +284,15 @@ function Clientes() {
         return;
       }
       if (!formulario.idContactoPrimario) {
-        setErrorFormulario("El contacto primario es obligatorio.");
+        setErrorFormulario(
+          "Debe seleccionar un contacto primario válido."
+        );
         return;
       }
       if (!formulario.idCiudadEntrega) {
-        setErrorFormulario("La ciudad de entrega es obligatoria.");
+        setErrorFormulario(
+          "Debe seleccionar una ciudad de entrega válida."
+        );
         return;
       }
     }
@@ -383,7 +438,7 @@ function Clientes() {
         <div className="grupo-filtro grupo-boton">
           <button
             className="boton-secundario"
-            onClick={cargarClientes}
+            onClick={() => cargarClientes()}
           >
             Buscar
           </button>
@@ -698,22 +753,27 @@ function Clientes() {
               </select>
             </div>
 
+            {/* Contacto primario: input + datalist */}
             <div className="campo-formulario">
               <label>Contacto primario {!modoEdicion && "*"}</label>
-              <select
-                value={formulario.idContactoPrimario}
-                onChange={(e) =>
-                  actualizarCampo("idContactoPrimario", e.target.value)
-                }
+              <input
+                type="text"
+                list="lista-personas"
+                value={busquedaContacto}
+                onChange={(e) => {
+                  const texto = e.target.value;
+                  setBusquedaContacto(texto);
+                  const id = resolverIdPersona(texto);
+                  actualizarCampo("idContactoPrimario", id);
+                }}
+                placeholder="Escriba para buscar..."
                 required={!modoEdicion}
-              >
-                <option value="">Seleccione...</option>
-                {personas.map((p) => (
-                  <option key={p.IdPersona} value={p.IdPersona}>
-                    {p.NombrePersona}
-                  </option>
+              />
+              <datalist id="lista-personas">
+                {personas.slice(0, 200).map((p) => (
+                  <option key={p.IdPersona} value={p.NombrePersona} />
                 ))}
-              </select>
+              </datalist>
             </div>
 
             <div className="campo-formulario">
@@ -736,39 +796,44 @@ function Clientes() {
               </select>
             </div>
 
+            {/* Ciudad de entrega: input + datalist */}
             <div className="campo-formulario">
               <label>Ciudad de entrega {!modoEdicion && "*"}</label>
-              <select
-                value={formulario.idCiudadEntrega}
-                onChange={(e) =>
-                  actualizarCampo("idCiudadEntrega", e.target.value)
-                }
+              <input
+                type="text"
+                list="lista-ciudades"
+                value={busquedaCiudadEntrega}
+                onChange={(e) => {
+                  const texto = e.target.value;
+                  setBusquedaCiudadEntrega(texto);
+                  const id = resolverIdCiudad(texto);
+                  actualizarCampo("idCiudadEntrega", id);
+                }}
+                placeholder="Escriba para buscar..."
                 required={!modoEdicion}
-              >
-                <option value="">Seleccione...</option>
-                {ciudades.map((c) => (
-                  <option key={c.IdCiudad} value={c.IdCiudad}>
-                    {c.NombreCiudad}
-                  </option>
+              />
+              <datalist id="lista-ciudades">
+                {ciudades.slice(0, 500).map((c) => (
+                  <option key={c.IdCiudad} value={c.NombreCiudad} />
                 ))}
-              </select>
+              </datalist>
             </div>
 
+            {/* Ciudad postal: input + datalist */}
             <div className="campo-formulario">
               <label>Ciudad postal</label>
-              <select
-                value={formulario.idCiudadPostal}
-                onChange={(e) =>
-                  actualizarCampo("idCiudadPostal", e.target.value)
-                }
-              >
-                <option value="">Igual a la de entrega</option>
-                {ciudades.map((c) => (
-                  <option key={c.IdCiudad} value={c.IdCiudad}>
-                    {c.NombreCiudad}
-                  </option>
-                ))}
-              </select>
+              <input
+                type="text"
+                list="lista-ciudades"
+                value={busquedaCiudadPostal}
+                onChange={(e) => {
+                  const texto = e.target.value;
+                  setBusquedaCiudadPostal(texto);
+                  const id = resolverIdCiudad(texto);
+                  actualizarCampo("idCiudadPostal", id);
+                }}
+                placeholder="Igual a la de entrega"
+              />
             </div>
 
             <div className="campo-formulario">

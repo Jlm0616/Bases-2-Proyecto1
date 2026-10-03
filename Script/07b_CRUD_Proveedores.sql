@@ -81,9 +81,15 @@ CREATE OR ALTER PROCEDURE Prov_sp_ActualizarProveedor
     @CategoriaID          INT,
     @MetodoEntregaID      INT,
     @LastEditedBy         INT,
-    @PhoneNumber          NVARCHAR(20)  = 'Sin definir',
-    @DeliveryAddressLine1 NVARCHAR(60)  = 'Sin definir',
-    @DeliveryPostalCode   NVARCHAR(10)  = '00000'
+    @PrimaryContactID     INT             = NULL,
+    @AlternateContactID   INT             = NULL,
+    @DeliveryCityID       INT             = NULL,
+    @PostalCityID         INT             = NULL,
+    @PhoneNumber          NVARCHAR(20)    = 'Sin definir',
+    @DeliveryAddressLine1 NVARCHAR(60)    = 'Sin definir',
+    @DeliveryPostalCode   NVARCHAR(10)    = '00000',
+    @PostalAddressLine1   NVARCHAR(60)    = 'Sin definir',
+    @PostalPostalCode     NVARCHAR(10)    = '00000'
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -101,14 +107,20 @@ BEGIN
 
         UPDATE Prov_Proveedores
         SET
-            SupplierName          = @NombreProveedor,
-            SupplierCategoryID    = @CategoriaID,
-            DeliveryMethodID      = @MetodoEntregaID,
-            PhoneNumber           = @PhoneNumber,
-            FaxNumber             = @PhoneNumber,
-            DeliveryAddressLine1  = @DeliveryAddressLine1,
-            DeliveryPostalCode    = @DeliveryPostalCode,
-            LastEditedBy          = @LastEditedBy
+            SupplierName             = @NombreProveedor,
+            SupplierCategoryID       = @CategoriaID,
+            DeliveryMethodID         = @MetodoEntregaID,
+            PrimaryContactPersonID   = ISNULL(@PrimaryContactID, PrimaryContactPersonID),
+            AlternateContactPersonID = ISNULL(@AlternateContactID, AlternateContactPersonID),
+            DeliveryCityID           = ISNULL(@DeliveryCityID, DeliveryCityID),
+            PostalCityID             = ISNULL(@PostalCityID, PostalCityID),
+            PhoneNumber              = @PhoneNumber,
+            FaxNumber                = @PhoneNumber,
+            DeliveryAddressLine1     = @DeliveryAddressLine1,
+            DeliveryPostalCode       = @DeliveryPostalCode,
+            PostalAddressLine1       = @PostalAddressLine1,
+            PostalPostalCode         = @PostalPostalCode,
+            LastEditedBy             = @LastEditedBy
         OUTPUT INSERTED.SupplierID INTO @Actualizados
         WHERE SupplierID = @SupplierID;
 

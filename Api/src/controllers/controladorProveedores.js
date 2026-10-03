@@ -80,12 +80,12 @@ async function insertarProveedor(req, res) {
       .input('MetodoEntregaID', sql.Int, idMetodoEntrega)
       .input('DeliveryCityID', sql.Int, idCiudadEntrega)
       .input('LastEditedBy', sql.Int, idEditadoPor)
-      .input('PostalCityID', sql.Int, idCiudadPostal)
-      .input('PhoneNumber', sql.NVarChar(20), telefono)
-      .input('DeliveryAddressLine1', sql.NVarChar(60), direccionEntregaLinea1)
-      .input('DeliveryPostalCode', sql.NVarChar(10), codigoPostalEntrega)
-      .input('PostalAddressLine1', sql.NVarChar(60), direccionPostalLinea1)
-      .input('PostalPostalCode', sql.NVarChar(10), codigoPostal)
+      .input('PostalCityID', sql.Int, idCiudadPostal || null)
+      .input('PhoneNumber', sql.NVarChar(20), telefono || 'Sin definir')
+      .input('DeliveryAddressLine1', sql.NVarChar(60), direccionEntregaLinea1 || 'Sin definir')
+      .input('DeliveryPostalCode', sql.NVarChar(10), codigoPostalEntrega || '00000')
+      .input('PostalAddressLine1', sql.NVarChar(60), direccionPostalLinea1 || 'Sin definir')
+      .input('PostalPostalCode', sql.NVarChar(10), codigoPostal || '00000')
       .output('NuevoID', sql.Int);
 
     const resultado = await solicitud.execute('Prov_sp_InsertarProveedor');
@@ -114,9 +114,15 @@ async function actualizarProveedor(req, res) {
       idCategoria,
       idMetodoEntrega,
       idEditadoPor,
+      idContactoPrimario,
+      idContactoAlternativo,
+      idCiudadEntrega,
+      idCiudadPostal,
       telefono,
       direccionEntregaLinea1,
-      codigoPostalEntrega
+      codigoPostalEntrega,
+      direccionPostalLinea1,
+      codigoPostal
     } = req.body;
 
     const conexion = await conectarBD();
@@ -128,9 +134,15 @@ async function actualizarProveedor(req, res) {
       .input('CategoriaID', sql.Int, idCategoria)
       .input('MetodoEntregaID', sql.Int, idMetodoEntrega)
       .input('LastEditedBy', sql.Int, idEditadoPor)
-      .input('PhoneNumber', sql.NVarChar(20), telefono)
-      .input('DeliveryAddressLine1', sql.NVarChar(60), direccionEntregaLinea1)
-      .input('DeliveryPostalCode', sql.NVarChar(10), codigoPostalEntrega)
+      .input('PrimaryContactID', sql.Int, idContactoPrimario || null)
+      .input('AlternateContactID', sql.Int, idContactoAlternativo || null)
+      .input('DeliveryCityID', sql.Int, idCiudadEntrega || null)
+      .input('PostalCityID', sql.Int, idCiudadPostal || null)
+      .input('PhoneNumber', sql.NVarChar(20), telefono || 'Sin definir')
+      .input('DeliveryAddressLine1', sql.NVarChar(60), direccionEntregaLinea1 || 'Sin definir')
+      .input('DeliveryPostalCode', sql.NVarChar(10), codigoPostalEntrega || '00000')
+      .input('PostalAddressLine1', sql.NVarChar(60), direccionPostalLinea1 || 'Sin definir')
+      .input('PostalPostalCode', sql.NVarChar(10), codigoPostal || '00000')
       .execute('Prov_sp_ActualizarProveedor');
 
     res.json(resultado.recordset[0]);
