@@ -7,21 +7,50 @@ async function listarVentas(req, res) {
       fechaInicio,
       fechaFin,
       montoMinimo,
-      montoMaximo
+      montoMaximo,
+      page = 1,
+      pageSize = 50,
     } = { ...(req.body || {}), ...(req.query || {}) };
+
+    const pageNumber = Math.max(1, Number(page) || 1);
+    const pageSizeNumber = Math.min(
+      500,
+      Math.max(1, Number(pageSize) || 50)
+    );
 
     const conexion = await conectarBD();
 
+    // Consulta paginada
     const resultado = await conexion
       .request()
-      .input('NombreCliente', sql.NVarChar(100), nombreCliente)
-      .input('FechaInicio', sql.Date, fechaInicio)
-      .input('FechaFin', sql.Date, fechaFin)
-      .input('MontoMinimo', sql.Decimal(18, 2), montoMinimo)
-      .input('MontoMaximo', sql.Decimal(18, 2), montoMaximo)
+      .input('NombreCliente', sql.NVarChar(100), nombreCliente || null)
+      .input('FechaInicio', sql.Date, fechaInicio || null)
+      .input('FechaFin', sql.Date, fechaFin || null)
+      .input('MontoMinimo', sql.Decimal(18, 2), montoMinimo || null)
+      .input('MontoMaximo', sql.Decimal(18, 2), montoMaximo || null)
+      .input('PageNumber', sql.Int, pageNumber)
+      .input('PageSize', sql.Int, pageSizeNumber)
       .execute('Vta_sp_ListarVentas');
 
-    res.json(resultado.recordset);
+    // Total de filas
+    const resultadoTotal = await conexion
+      .request()
+      .input('NombreCliente', sql.NVarChar(100), nombreCliente || null)
+      .input('FechaInicio', sql.Date, fechaInicio || null)
+      .input('FechaFin', sql.Date, fechaFin || null)
+      .input('MontoMinimo', sql.Decimal(18, 2), montoMinimo || null)
+      .input('MontoMaximo', sql.Decimal(18, 2), montoMaximo || null)
+      .execute('Vta_sp_ContarVentas');
+
+    const total = resultadoTotal.recordset[0]?.Total ?? 0;
+
+    res.json({
+      datos: resultado.recordset,
+      total: total,
+      page: pageNumber,
+      pageSize: pageSizeNumber,
+      totalPages: Math.ceil(total / pageSizeNumber),
+    });
 
   } catch (error) {
     console.error('Error al listar ventas:', error);
@@ -88,7 +117,7 @@ async function insertarVenta(req, res) {
         linea.idProducto,
         linea.cantidad,
         linea.precioUnitario,
-        linea.idTipoEmpaque
+        linea.idTipoEmpaque || null
       );
     }
 
@@ -99,11 +128,11 @@ async function insertarVenta(req, res) {
       .input('ContactPersonID', sql.Int, idPersonaContacto)
       .input('SalespersonPersonID', sql.Int, idVendedor)
       .input('LastEditedBy', sql.Int, idEditadoPor)
-      .input('DeliveryMethodID', sql.Int, idMetodoEntrega)
-      .input('AccountsPersonID', sql.Int, idPersonaCuentas)
-      .input('PackedByPersonID', sql.Int, idPersonaEmpacadora)
-      .input('CustomerPONumber', sql.NVarChar(20), numeroOrdenCompra)
-      .input('DeliveryInstructions', sql.NVarChar(100), instruccionesEntrega)
+      .input('DeliveryMethodID', sql.Int, idMetodoEntrega || 1)
+      .input('AccountsPersonID', sql.Int, idPersonaCuentas || null)
+      .input('PackedByPersonID', sql.Int, idPersonaEmpacadora || null)
+      .input('CustomerPONumber', sql.NVarChar(20), numeroOrdenCompra || null)
+      .input('DeliveryInstructions', sql.NVarChar(100), instruccionesEntrega || null)
       .input('Lineas', tablaLineas)
       .output('NuevoID', sql.Int);
 
@@ -139,8 +168,8 @@ async function actualizarVenta(req, res) {
     const resultado = await conexion
       .request()
       .input('InvoiceID', sql.Int, idVenta)
-      .input('DeliveryInstructions', sql.NVarChar(100), instruccionesEntrega)
-      .input('CustomerPONumber', sql.NVarChar(20), numeroOrdenCompra)
+      .input('DeliveryInstructions', sql.NVarChar(100), instruccionesEntrega || null)
+      .input('CustomerPONumber', sql.NVarChar(20), numeroOrdenCompra || null)
       .input('LastEditedBy', sql.Int, idEditadoPor)
       .execute('Vta_sp_ActualizarVenta');
 
