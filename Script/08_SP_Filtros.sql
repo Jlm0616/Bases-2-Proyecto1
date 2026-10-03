@@ -39,3 +39,62 @@ BEGIN
     ORDER BY DM.DeliveryMethodName ASC;
 END
 GO
+
+-- ============================================
+-- SP: Listar personas
+-- Uso: cargar opciones de contactos y usuarios
+-- Orden por defecto: nombre de la persona ascendente
+-- ============================================
+
+CREATE OR ALTER PROCEDURE Flt_sp_ListarPersonas
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        P.PersonID    AS IdPersona,
+        P.FullName    AS NombrePersona
+    FROM Gen_Personas AS P
+    ORDER BY P.FullName ASC;
+END
+GO
+
+
+-- ============================================
+-- SP: Listar ciudades
+-- Uso: cargar opciones de ciudad de entrega y ciudad postal
+-- Orden por defecto: nombre de la ciudad ascendente
+-- ============================================
+
+CREATE OR ALTER PROCEDURE Flt_sp_ListarCiudades
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        C.CityID      AS IdCiudad,
+        C.CityName    AS NombreCiudad
+    FROM Gen_Ciudades AS C
+    ORDER BY C.CityName ASC;
+END
+GO
+
+
+-- ============================================
+-- SP: Listar grupos de compra
+-- Uso: cargar opciones de grupo de compra del cliente
+-- Orden por defecto: nombre del grupo ascendente
+-- ============================================
+
+CREATE OR ALTER PROCEDURE Flt_sp_ListarGruposCompra
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        G.BuyingGroupID      AS IdGrupoCompra,
+        G.BuyingGroupName    AS NombreGrupoCompra
+    FROM Cli_GruposCompra AS G
+    ORDER BY G.BuyingGroupName ASC;
+END
+GO

@@ -76,9 +76,69 @@ async function listarGruposProductos(req, res) {
   }
 }
 
+async function listarPersonas(req, res) {
+  try {
+    const conexion = await conectarBD();
+
+    const resultado = await conexion
+      .request()
+      .execute("Flt_sp_ListarPersonas");
+
+    res.json(resultado.recordset);
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      mensaje: "Error al listar personas",
+      error: error.message,
+    });
+  }
+}
+
+async function listarCiudades(req, res) {
+  try {
+    const conexion = await conectarBD();
+
+    const resultado = await conexion
+      .request()
+      .execute("Flt_sp_ListarCiudades");
+
+    res.json(resultado.recordset);
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      mensaje: "Error al listar ciudades",
+      error: error.message,
+    });
+  }
+}
+
+async function listarGruposCompra(req, res) {
+  try {
+    const conexion = await conectarBD();
+
+    const resultado = await conexion
+      .request()
+      .execute("Flt_sp_ListarGruposCompra");
+
+    res.json(resultado.recordset);
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      mensaje: "Error al listar grupos de compra",
+      error: error.message,
+    });
+  }
+}
+
 module.exports = {
   listarCategoriasCliente,
   listarMetodosEntrega,
   listarCategoriasProveedor,
   listarGruposProductos,
+  listarPersonas,
+  listarCiudades,
+  listarGruposCompra,
 };
