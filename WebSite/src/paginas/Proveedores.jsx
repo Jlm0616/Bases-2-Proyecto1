@@ -439,8 +439,8 @@ function Proveedores() {
           >
             <option value="">Todas</option>
             {categorias.map((c) => (
-              <option key={c.IdCategoria} value={c.IdCategoria}>
-                {c.NombreCategoria}
+              <option key={c.IdCategoriaProveedor} value={c.IdCategoriaProveedor}>
+                {c.NombreCategoriaProveedor}
               </option>
             ))}
           </select>
@@ -820,8 +820,8 @@ function Proveedores() {
               >
                 <option value="">Seleccione...</option>
                 {categorias.map((c) => (
-                  <option key={c.IdCategoria} value={c.IdCategoria}>
-                    {c.NombreCategoria}
+                  <option key={c.IdCategoriaProveedor} value={c.IdCategoriaProveedor}>
+                    {c.NombreCategoriaProveedor}
                   </option>
                 ))}
               </select>

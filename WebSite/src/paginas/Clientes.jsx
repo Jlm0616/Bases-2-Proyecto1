@@ -447,8 +447,8 @@ function Clientes() {
           >
             <option value="">Todas</option>
             {categorias.map((c) => (
-              <option key={c.IdCategoria} value={c.IdCategoria}>
-                {c.NombreCategoria}
+              <option key={c.IdCategoriaCliente} value={c.IdCategoriaCliente}>
+                {c.NombreCategoriaCliente}
               </option>
             ))}
           </select>
@@ -843,8 +843,8 @@ function Clientes() {
               >
                 <option value="">Seleccione...</option>
                 {categorias.map((c) => (
-                  <option key={c.IdCategoria} value={c.IdCategoria}>
-                    {c.NombreCategoria}
+                  <option key={c.IdCategoriaCliente} value={c.IdCategoriaCliente}>
+                    {c.NombreCategoriaCliente}
                   </option>
                 ))}
               </select>
