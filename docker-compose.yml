@@ -12,7 +12,7 @@ services:
 
     environment:
       DB_USER: sa
-      DB_PASSWORD: Sql0512!
+      DB_PASSWORD: ${DB_PASSWORD}
       DB_SERVER: sqlserverlinux
       DB_PORT: 1433
       DB_DATABASE: WideWorldImporters
