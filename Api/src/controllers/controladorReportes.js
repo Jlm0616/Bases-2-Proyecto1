@@ -5,7 +5,7 @@ async function montosProveedores(req, res) {
     const {
       nombreProveedor,
       categoria
-    } = { ...(req.body || {}), ...(req.query || {}) };
+    } = req.body;
 
     const conexion = await conectarBD();
 
@@ -18,10 +18,10 @@ async function montosProveedores(req, res) {
     res.json(resultado.recordset);
 
   } catch (error) {
-    console.error('Error en reporte de montos de proveedores:', error);
+    console.error(error);
 
     res.status(500).json({
-      mensaje: 'Error en reporte de montos de proveedores',
+      mensaje: 'Error al obtener montos de proveedores',
       error: error.message
     });
   }
@@ -32,7 +32,7 @@ async function montosClientes(req, res) {
     const {
       nombreCliente,
       categoria
-    } = { ...(req.body || {}), ...(req.query || {}) };
+    } = req.body;
 
     const conexion = await conectarBD();
 
@@ -45,10 +45,10 @@ async function montosClientes(req, res) {
     res.json(resultado.recordset);
 
   } catch (error) {
-    console.error('Error en reporte de montos de clientes:', error);
+    console.error(error);
 
     res.status(500).json({
-      mensaje: 'Error en reporte de montos de clientes',
+      mensaje: 'Error al obtener montos de clientes',
       error: error.message
     });
   }
@@ -56,22 +56,22 @@ async function montosClientes(req, res) {
 
 async function top5ProductosGanancia(req, res) {
   try {
-    const { año } = { ...(req.body || {}), ...(req.query || {}) };
+    const { anio } = req.body;
 
     const conexion = await conectarBD();
 
     const resultado = await conexion
       .request()
-      .input('Anio', sql.Int, año)
+      .input('Anio', sql.Int, anio)
       .execute('Rpt_sp_Top5ProductosPorGanancia');
 
     res.json(resultado.recordset);
 
   } catch (error) {
-    console.error('Error en top 5 de productos:', error);
+    console.error(error);
 
     res.status(500).json({
-      mensaje: 'Error en top 5 de productos',
+      mensaje: 'Error al obtener top de productos',
       error: error.message
     });
   }
@@ -80,26 +80,26 @@ async function top5ProductosGanancia(req, res) {
 async function top5ClientesFacturas(req, res) {
   try {
     const {
-      añoInicio,
-      añoFin
-    } = { ...(req.body || {}), ...(req.query || {}) };
+      anioInicio,
+      anioFin
+    } = req.body;
 
     const conexion = await conectarBD();
 
     const resultado = await conexion
       .request()
-      .input('AnioInicio', sql.Int, añoInicio)
-      .input('AnioFin', sql.Int, añoFin)
-      .execute('Rpt_sp_Top5ClientesPorFacturas');
+      .input("AnioInicio", sql.Int, anioInicio)
+      .input("AnioFin", sql.Int, anioFin)
+      .execute("Rpt_sp_Top5ClientesPorFacturas");
 
     res.json(resultado.recordset);
 
   } catch (error) {
-    console.error('Error en top 5 de clientes:', error);
+    console.error(error);
 
     res.status(500).json({
-      mensaje: 'Error en top 5 de clientes',
-      error: error.message
+      mensaje: "Error al obtener top de clientes",
+      error: error.message,
     });
   }
 }
@@ -107,25 +107,25 @@ async function top5ClientesFacturas(req, res) {
 async function top5ProveedoresOrdenes(req, res) {
   try {
     const {
-      añoInicio,
-      añoFin
-    } = { ...(req.body || {}), ...(req.query || {}) };
+      anioInicio,
+      anioFin
+    } = req.body;
 
     const conexion = await conectarBD();
 
     const resultado = await conexion
       .request()
-      .input('AnioInicio', sql.Int, añoInicio)
-      .input('AnioFin', sql.Int, añoFin)
+      .input('AnioInicio', sql.Int, anioInicio)
+      .input('AnioFin', sql.Int, anioFin)
       .execute('Rpt_sp_Top5ProveedoresPorOrdenes');
 
     res.json(resultado.recordset);
 
   } catch (error) {
-    console.error('Error en top 5 de proveedores:', error);
+    console.error(error);
 
     res.status(500).json({
-      mensaje: 'Error en top 5 de proveedores',
+      mensaje: 'Error al obtener top de proveedores',
       error: error.message
     });
   }
@@ -142,10 +142,10 @@ async function matrizVentasPorCategoria(req, res) {
     res.json(resultado.recordset);
 
   } catch (error) {
-    console.error('Error en matriz de ventas por categoría:', error);
+    console.error(error);
 
     res.status(500).json({
-      mensaje: 'Error en matriz de ventas por categoría',
+      mensaje: 'Error al obtener matriz de ventas',
       error: error.message
     });
   }
@@ -154,16 +154,16 @@ async function matrizVentasPorCategoria(req, res) {
 async function seguimientoComprasCliente(req, res) {
   try {
     const {
-      año,
+      anio,
       mes,
       categoria
-    } = { ...(req.body || {}), ...(req.query || {}) };
+    } = req.body;
 
     const conexion = await conectarBD();
 
     const resultado = await conexion
       .request()
-      .input('Anio', sql.Int, año)
+      .input('Anio', sql.Int, anio)
       .input('Mes', sql.Int, mes)
       .input('Categoria', sql.NVarChar(100), categoria)
       .execute('Rpt_sp_SeguimientoComprasCliente');
@@ -171,10 +171,10 @@ async function seguimientoComprasCliente(req, res) {
     res.json(resultado.recordset);
 
   } catch (error) {
-    console.error('Error en seguimiento de compras de clientes:', error);
+    console.error(error);
 
     res.status(500).json({
-      mensaje: 'Error en seguimiento de compras de clientes',
+      mensaje: 'Error al obtener seguimiento de clientes',
       error: error.message
     });
   }
@@ -183,16 +183,16 @@ async function seguimientoComprasCliente(req, res) {
 async function seguimientoComprasProveedor(req, res) {
   try {
     const {
-      año,
+      anio,
       mes,
       categoria
-    } = { ...(req.body || {}), ...(req.query || {}) };
+    } = req.body;
 
     const conexion = await conectarBD();
 
     const resultado = await conexion
       .request()
-      .input('Anio', sql.Int, año)
+      .input('Anio', sql.Int, anio)
       .input('Mes', sql.Int, mes)
       .input('Categoria', sql.NVarChar(100), categoria)
       .execute('Rpt_sp_SeguimientoComprasProveedor');
@@ -200,10 +200,10 @@ async function seguimientoComprasProveedor(req, res) {
     res.json(resultado.recordset);
 
   } catch (error) {
-    console.error('Error en seguimiento de compras de proveedores:', error);
+    console.error(error);
 
     res.status(500).json({
-      mensaje: 'Error en seguimiento de compras de proveedores',
+      mensaje: 'Error al obtener seguimiento de proveedores',
       error: error.message
     });
   }
@@ -213,26 +213,26 @@ async function rotacionInventario(req, res) {
   try {
     const {
       categoria,
-      año,
+      anio,
       proveedor
-    } = { ...(req.body || {}), ...(req.query || {}) };
+    } = req.body;
 
     const conexion = await conectarBD();
 
     const resultado = await conexion
       .request()
       .input('Categoria', sql.NVarChar(100), categoria)
-      .input('Anio', sql.Int, año)
+      .input('Anio', sql.Int, anio)
       .input('Proveedor', sql.NVarChar(100), proveedor)
       .execute('Rpt_sp_RotacionInventario');
 
     res.json(resultado.recordset);
 
   } catch (error) {
-    console.error('Error en reporte de rotación de inventario:', error);
+    console.error(error);
 
     res.status(500).json({
-      mensaje: 'Error en reporte de rotación de inventario',
+      mensaje: 'Error al obtener rotación de inventario',
       error: error.message
     });
   }
@@ -241,18 +241,18 @@ async function rotacionInventario(req, res) {
 async function metodoEnvioFavoritoPorZona(req, res) {
   try {
     const {
-      año,
+      anio,
       mes,
       categoriaCliente,
       categoriaProducto,
       producto
-    } = { ...(req.body || {}), ...(req.query || {}) };
+    } = req.body;
 
     const conexion = await conectarBD();
 
     const resultado = await conexion
       .request()
-      .input('Anio', sql.Int, año)
+      .input('Anio', sql.Int, anio)
       .input('Mes', sql.Int, mes)
       .input('CategoriaCliente', sql.NVarChar(100), categoriaCliente)
       .input('CategoriaProducto', sql.NVarChar(100), categoriaProducto)
@@ -262,10 +262,10 @@ async function metodoEnvioFavoritoPorZona(req, res) {
     res.json(resultado.recordset);
 
   } catch (error) {
-    console.error('Error en reporte de método de envío favorito:', error);
+    console.error(error);
 
     res.status(500).json({
-      mensaje: 'Error en reporte de método de envío favorito',
+      mensaje: 'Error al obtener método de envío favorito',
       error: error.message
     });
   }

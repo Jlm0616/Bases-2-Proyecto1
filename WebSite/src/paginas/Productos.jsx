@@ -59,6 +59,10 @@ function Productos() {
   const [cargando, setCargando] = useState(false);
   const [error, setError] = useState("");
 
+  // Paginación
+  const [paginaActual, setPaginaActual] = useState(1);
+  const [tamanoPagina, setTamanoPagina] = useState(25);
+
   // Modal detalle
   const [modalDetalleAbierto, setModalDetalleAbierto] = useState(false);
   const [detalleProducto, setDetalleProducto] = useState(null);
@@ -89,11 +93,41 @@ function Productos() {
 
       const datos = await buscarProductos(filtros);
       setProductos(datos);
+      setPaginaActual(1);
     } catch (error) {
       setError(error.message);
     } finally {
       setCargando(false);
     }
+  }
+
+  const totalPaginas = Math.ceil(productos.length / tamanoPagina);
+  const indiceInicial = (paginaActual - 1) * tamanoPagina;
+  const indiceFinal = indiceInicial + tamanoPagina;
+  const productosPaginados = productos.slice(indiceInicial, indiceFinal);
+
+  function irPagina(nuevaPagina) {
+    if (nuevaPagina < 1 || nuevaPagina > totalPaginas) return;
+    setPaginaActual(nuevaPagina);
+  }
+
+  function cambiarTamanoPagina(nuevoTamano) {
+    setTamanoPagina(nuevoTamano);
+    setPaginaActual(1);
+  }
+
+  function generarPaginas() {
+    const paginas = [];
+    const maxBotones = 5;
+    let inicio = Math.max(1, paginaActual - 2);
+    let fin = Math.min(totalPaginas, inicio + maxBotones - 1);
+    if (fin - inicio + 1 < maxBotones) {
+      inicio = Math.max(1, fin - maxBotones + 1);
+    }
+    for (let i = inicio; i <= fin; i++) {
+      paginas.push(i);
+    }
+    return paginas;
   }
 
   async function cargarCatalogos() {
@@ -476,7 +510,7 @@ function Productos() {
 
               <tbody>
                 {productos.length > 0 ? (
-                  productos.map((producto) => (
+                  productosPaginados.map((producto) => (
                     <tr key={producto.IdProducto}>
                       <td>{producto.NombreProducto}</td>
                       <td>{producto.GrupoProducto || "—"}</td>
@@ -522,6 +556,74 @@ function Productos() {
                 )}
               </tbody>
             </table>
+
+            {totalPaginas > 1 && (
+              <div className="paginacion-productos">
+                <div className="paginacion-info-productos">
+                  Mostrando {indiceInicial + 1} a{" "}
+                  {Math.min(indiceFinal, productos.length)} de {productos.length}
+                </div>
+
+                <div className="paginacion-controles-productos">
+                  <button
+                    className="boton-pagina-productos"
+                    onClick={() => irPagina(1)}
+                    disabled={paginaActual === 1}
+                  >
+                    «
+                  </button>
+
+                  <button
+                    className="boton-pagina-productos"
+                    onClick={() => irPagina(paginaActual - 1)}
+                    disabled={paginaActual === 1}
+                  >
+                    ‹ Anterior
+                  </button>
+
+                  {generarPaginas().map((num) => (
+                    <button
+                      key={num}
+                      className={`boton-pagina-productos ${
+                        num === paginaActual ? "pagina-activa-productos" : ""
+                      }`}
+                      onClick={() => irPagina(num)}
+                    >
+                      {num}
+                    </button>
+                  ))}
+
+                  <button
+                    className="boton-pagina-productos"
+                    onClick={() => irPagina(paginaActual + 1)}
+                    disabled={paginaActual === totalPaginas}
+                  >
+                    Siguiente ›
+                  </button>
+
+                  <button
+                    className="boton-pagina-productos"
+                    onClick={() => irPagina(totalPaginas)}
+                    disabled={paginaActual === totalPaginas}
+                  >
+                    »
+                  </button>
+                </div>
+
+                <div className="paginacion-tamano-productos">
+                  <label>Por página:</label>
+                  <select
+                    value={tamanoPagina}
+                    onChange={(e) => cambiarTamanoPagina(Number(e.target.value))}
+                  >
+                    <option value={25}>25</option>
+                    <option value={50}>50</option>
+                    <option value={100}>100</option>
+                    <option value={250}>250</option>
+                  </select>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </section>

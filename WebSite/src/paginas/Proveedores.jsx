@@ -51,6 +51,10 @@ function Proveedores() {
   const [cargando, setCargando] = useState(false);
   const [error, setError] = useState("");
 
+  // Paginación
+  const [paginaActual, setPaginaActual] = useState(1);
+  const [tamanoPagina, setTamanoPagina] = useState(25);
+
   // Modal detalle
   const [modalDetalleAbierto, setModalDetalleAbierto] = useState(false);
   const [detalleProveedor, setDetalleProveedor] = useState(null);
@@ -81,11 +85,41 @@ function Proveedores() {
 
       const datos = await buscarProveedores(filtros);
       setProveedores(datos);
+      setPaginaActual(1);
     } catch (error) {
       setError(error.message);
     } finally {
       setCargando(false);
     }
+  }
+
+  const totalPaginas = Math.ceil(proveedores.length / tamanoPagina);
+  const indiceInicial = (paginaActual - 1) * tamanoPagina;
+  const indiceFinal = indiceInicial + tamanoPagina;
+  const proveedoresPaginados = proveedores.slice(indiceInicial, indiceFinal);
+
+  function irPagina(nuevaPagina) {
+    if (nuevaPagina < 1 || nuevaPagina > totalPaginas) return;
+    setPaginaActual(nuevaPagina);
+  }
+
+  function cambiarTamanoPagina(nuevoTamano) {
+    setTamanoPagina(nuevoTamano);
+    setPaginaActual(1);
+  }
+
+  function generarPaginas() {
+    const paginas = [];
+    const maxBotones = 5;
+    let inicio = Math.max(1, paginaActual - 2);
+    let fin = Math.min(totalPaginas, inicio + maxBotones - 1);
+    if (fin - inicio + 1 < maxBotones) {
+      inicio = Math.max(1, fin - maxBotones + 1);
+    }
+    for (let i = inicio; i <= fin; i++) {
+      paginas.push(i);
+    }
+    return paginas;
   }
 
   async function cargarCatalogos() {
@@ -458,7 +492,7 @@ function Proveedores() {
 
               <tbody>
                 {proveedores.length > 0 ? (
-                  proveedores.map((proveedor) => (
+                  proveedoresPaginados.map((proveedor) => (
                     <tr key={proveedor.IdProveedor}>
                       <td>{proveedor.NombreProveedor}</td>
                       <td>{proveedor.CategoriaProveedor}</td>
@@ -504,6 +538,74 @@ function Proveedores() {
                 )}
               </tbody>
             </table>
+
+            {totalPaginas > 1 && (
+              <div className="paginacion-proveedores">
+                <div className="paginacion-info-proveedores">
+                  Mostrando {indiceInicial + 1} a{" "}
+                  {Math.min(indiceFinal, proveedores.length)} de {proveedores.length}
+                </div>
+
+                <div className="paginacion-controles-proveedores">
+                  <button
+                    className="boton-pagina-proveedores"
+                    onClick={() => irPagina(1)}
+                    disabled={paginaActual === 1}
+                  >
+                    «
+                  </button>
+
+                  <button
+                    className="boton-pagina-proveedores"
+                    onClick={() => irPagina(paginaActual - 1)}
+                    disabled={paginaActual === 1}
+                  >
+                    ‹ Anterior
+                  </button>
+
+                  {generarPaginas().map((num) => (
+                    <button
+                      key={num}
+                      className={`boton-pagina-proveedores ${
+                        num === paginaActual ? "pagina-activa-proveedores" : ""
+                      }`}
+                      onClick={() => irPagina(num)}
+                    >
+                      {num}
+                    </button>
+                  ))}
+
+                  <button
+                    className="boton-pagina-proveedores"
+                    onClick={() => irPagina(paginaActual + 1)}
+                    disabled={paginaActual === totalPaginas}
+                  >
+                    Siguiente ›
+                  </button>
+
+                  <button
+                    className="boton-pagina-proveedores"
+                    onClick={() => irPagina(totalPaginas)}
+                    disabled={paginaActual === totalPaginas}
+                  >
+                    »
+                  </button>
+                </div>
+
+                <div className="paginacion-tamano-proveedores">
+                  <label>Por página:</label>
+                  <select
+                    value={tamanoPagina}
+                    onChange={(e) => cambiarTamanoPagina(Number(e.target.value))}
+                  >
+                    <option value={25}>25</option>
+                    <option value={50}>50</option>
+                    <option value={100}>100</option>
+                    <option value={250}>250</option>
+                  </select>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </section>

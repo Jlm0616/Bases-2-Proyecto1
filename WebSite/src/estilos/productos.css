@@ -513,3 +513,86 @@
   opacity: 0.6;
   cursor: not-allowed;
 }
+
+.paginacion-productos {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #e5e7eb;
+  flex-wrap: wrap;
+}
+
+.paginacion-info-productos {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.paginacion-controles-productos {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.boton-pagina-productos {
+  min-width: 36px;
+  height: 36px;
+  padding: 0 10px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  background-color: white;
+  color: #374151;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.boton-pagina-productos:hover:not(:disabled):not(
+  .pagina-activa-productos
+) {
+  background-color: #f3f4f6;
+  border-color: #2563eb;
+}
+
+.boton-pagina-productos:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.boton-pagina-productos.pagina-activa-productos {
+  background-color: #2563eb;
+  color: white;
+  border-color: #2563eb;
+}
+
+.boton-pagina-productos.pagina-activa-productos:hover {
+  background-color: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
+.paginacion-tamano-productos {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.paginacion-tamano-productos select {
+  height: 36px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 0 8px;
+  background-color: white;
+  outline: none;
+  cursor: pointer;
+}
+
+@media (max-width: 700px) {
+  .paginacion-productos {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
