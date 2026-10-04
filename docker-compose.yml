@@ -1,0 +1,44 @@
+services:
+
+  api:
+    build:
+      context: ./Api
+      dockerfile: Dockerfile
+
+    container_name: bases2-api
+
+    ports:
+      - "3000:3000"
+
+    environment:
+      DB_USER: sa
+      DB_PASSWORD: Sql0512!
+      DB_SERVER: sqlserverlinux
+      DB_PORT: 1433
+      DB_DATABASE: WideWorldImporters
+      PORT: 3000
+
+    networks:
+      - bases2-red
+
+
+  website:
+    build:
+      context: ./WebSite
+      dockerfile: Dockerfile
+
+    container_name: bases2-website
+
+    ports:
+      - "8080:80"
+
+    depends_on:
+      - api
+
+    networks:
+      - bases2-red
+
+
+networks:
+  bases2-red:
+    external: true
