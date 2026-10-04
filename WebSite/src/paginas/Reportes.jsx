@@ -8,6 +8,8 @@ import {
   obtenerProveedores,
   obtenerProductos,
   obtenerCategoriasCliente,
+  obtenerCategoriasProveedor,
+  obtenerClientes,
 } from "../servicios/filtros";
 
 import {
@@ -39,6 +41,8 @@ function Reportes() {
   const [proveedores, setProveedores] = useState([]);
   const [productos, setProductos] = useState([]);
   const [categoriasCliente, setCategoriasCliente] = useState([]);
+  const [categoriasProveedor, setCategoriasProveedor] = useState([]);
+  const [clientes, setClientes] = useState([]);
 
   const [nombreProveedor, setNombreProveedor] = useState("");
   const [nombreCliente, setNombreCliente] = useState("");
@@ -130,6 +134,8 @@ function Reportes() {
         datosProveedores,
         datosProductos,
         datosCategoriasCliente,
+        datosCategoriasProveedor,
+        datosClientes,
       ] = await Promise.all([
         obtenerAniosVentas(),
         obtenerAniosCompras(),
@@ -138,6 +144,8 @@ function Reportes() {
         obtenerProveedores(),
         obtenerProductos(),
         obtenerCategoriasCliente(),
+        obtenerCategoriasProveedor(),
+        obtenerClientes(),
       ]);
 
       setAniosVentas(datosAniosVentas);
@@ -147,6 +155,8 @@ function Reportes() {
       setProveedores(datosProveedores);
       setProductos(datosProductos);
       setCategoriasCliente(datosCategoriasCliente);
+      setCategoriasProveedor(datosCategoriasProveedor);
+      setClientes(datosClientes);
     } catch (error) {
       setError(error.message);
     }
@@ -313,6 +323,25 @@ function Reportes() {
     return ["7", "8", "9", "10"].includes(reporteSeleccionado);
   }
 
+  function formatearFecha(valor) {
+    if (!valor) return "";
+
+    const fecha = new Date(valor);
+
+    return fecha.toLocaleDateString("es-CR", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
+  }
+
+  const columnasFecha = [
+    "PrimeraFacturaDelMes",
+    "UltimaFacturaDelMes",
+    "PrimeraOrdenDelMes",
+    "UltimaOrdenDelMes",
+  ];
+
   const columnas =
     resultados.length > 0
       ? Object.keys(resultados[0])
@@ -422,27 +451,45 @@ function Reportes() {
               <div className="grupo-reporte">
                 <label>Proveedor</label>
 
-                <input
-                  type="text"
+                <select
                   value={nombreProveedor}
                   onChange={(evento) =>
                     setNombreProveedor(evento.target.value)
                   }
-                  placeholder="Nombre del proveedor"
-                />
+                >
+                  <option value="">Todos los proveedores</option>
+
+                  {proveedores.map((proveedor) => (
+                    <option
+                      key={proveedor.IdProveedor}
+                      value={proveedor.NombreProveedor}
+                    >
+                      {proveedor.NombreProveedor}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div className="grupo-reporte">
                 <label>Categoría</label>
 
-                <input
-                  type="text"
+                <select
                   value={categoria}
                   onChange={(evento) =>
                     setCategoria(evento.target.value)
                   }
-                  placeholder="Categoría"
-                />
+                >
+                  <option value="">Todas las categorías</option>
+
+                  {categoriasProveedor.map((elemento) => (
+                    <option
+                      key={elemento.IdCategoriaProveedor}
+                      value={elemento.NombreCategoriaProveedor}
+                    >
+                      {elemento.NombreCategoriaProveedor}
+                    </option>
+                  ))}
+                </select>
               </div>
             </>
           )}
@@ -452,27 +499,45 @@ function Reportes() {
               <div className="grupo-reporte">
                 <label>Cliente</label>
 
-                <input
-                  type="text"
+                <select
                   value={nombreCliente}
                   onChange={(evento) =>
                     setNombreCliente(evento.target.value)
                   }
-                  placeholder="Nombre del cliente"
-                />
+                >
+                  <option value="">Todos los clientes</option>
+
+                  {clientes.map((cliente) => (
+                    <option
+                      key={cliente.IdCliente}
+                      value={cliente.NombreCliente}
+                    >
+                      {cliente.NombreCliente}
+                    </option>
+                  ))}
+                </select>
               </div>
 
               <div className="grupo-reporte">
                 <label>Categoría</label>
 
-                <input
-                  type="text"
+                <select
                   value={categoria}
                   onChange={(evento) =>
                     setCategoria(evento.target.value)
                   }
-                  placeholder="Categoría"
-                />
+                >
+                  <option value="">Todas las categorías</option>
+
+                  {categoriasCliente.map((elemento) => (
+                    <option
+                      key={elemento.IdCategoriaCliente}
+                      value={elemento.NombreCategoriaCliente}
+                    >
+                      {elemento.NombreCategoriaCliente}
+                    </option>
+                  ))}
+                </select>
               </div>
             </>
           )}
@@ -766,6 +831,8 @@ function Reportes() {
                         {fila[columna] === null ||
                         fila[columna] === undefined
                           ? ""
+                          : columnasFecha.includes(columna)
+                          ? formatearFecha(fila[columna])
                           : String(fila[columna])}
                       </td>
                     ))}

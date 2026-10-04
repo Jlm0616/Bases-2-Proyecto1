@@ -13,10 +13,10 @@ BEGIN
     SET NOCOUNT ON;
 
     SELECT
-        CC.CustomerCategoryID     AS IdCategoria,
-        CC.CustomerCategoryName   AS NombreCategoria
-    FROM Cli_CategoriasCliente AS CC
-    ORDER BY CC.CustomerCategoryName ASC;
+        CustomerCategoryID AS IdCategoriaCliente,
+        CustomerCategoryName AS NombreCategoriaCliente
+    FROM Cli_CategoriasCliente
+    ORDER BY CustomerCategoryName;
 END
 GO
 
@@ -111,10 +111,10 @@ BEGIN
     SET NOCOUNT ON;
 
     SELECT
-        PC.SupplierCategoryID     AS IdCategoria,
-        PC.SupplierCategoryName   AS NombreCategoria
-    FROM Prov_CategoriasProveedor AS PC
-    ORDER BY PC.SupplierCategoryName ASC;
+        SupplierCategoryID AS IdCategoriaProveedor,
+        SupplierCategoryName AS NombreCategoriaProveedor
+    FROM Prov_CategoriasProveedor
+    ORDER BY SupplierCategoryName;
 END
 GO
 
@@ -257,5 +257,25 @@ BEGIN
         SI.UnitPrice       AS PrecioUnitario
     FROM Inv_Articulos AS SI
     ORDER BY SI.StockItemName ASC;
+END
+GO
+
+
+-- ============================================
+-- SP: Listar clientes
+-- Uso: cargar opciones del filtro de cliente
+-- Orden por defecto: nombre del cliente ascendente
+-- ============================================
+
+CREATE OR ALTER PROCEDURE Flt_sp_ListarClientes
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        CustomerID AS IdCliente,
+        CustomerName AS NombreCliente
+    FROM Cli_Clientes
+    ORDER BY CustomerName;
 END
 GO

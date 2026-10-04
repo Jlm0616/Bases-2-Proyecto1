@@ -125,3 +125,39 @@ export async function obtenerSubcategoriasProducto() {
 
   return datos;
 }
+
+/**
+ * Obtiene las categorías de proveedores disponibles
+ * @returns {Promise<Object>} Lista de categorías de proveedores
+ */
+export async function obtenerCategoriasProveedor() {
+  const respuesta = await fetch(
+    `${URL_API}/filtros/categorias-proveedores`
+  );
+
+  const datos = await respuesta.json();
+
+  if (!respuesta.ok) {
+    throw new Error("Error al obtener categorías de proveedor");
+  }
+
+  return datos;
+}
+
+/**
+ * Obtiene la lista de clientes para filtros
+ * @returns {Promise<Object>} Lista de clientes
+ */
+export async function obtenerClientes() {
+  const respuesta = await fetch(
+    `${URL_API}/filtros/clientes`
+  );
+
+  const datos = await respuesta.json();
+
+  if (!respuesta.ok) {
+    throw new Error("Error al obtener clientes");
+  }
+
+  return datos;
+}

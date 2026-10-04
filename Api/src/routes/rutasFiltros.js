@@ -18,6 +18,7 @@ const {
   listarProveedores,
   listarProductos,
   listarSubcategoriasProducto,
+  listarClientes,
 } = require("../controllers/controladorFiltros");
 
 const router = express.Router();
@@ -36,5 +37,6 @@ router.get("/categorias-producto", listarCategoriasProducto);
 router.get("/proveedores", listarProveedores);
 router.get("/productos", listarProductos);
 router.get("/subcategorias-producto", listarSubcategoriasProducto);
+router.get("/clientes", listarClientes);
 
 module.exports = router;

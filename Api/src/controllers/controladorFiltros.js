@@ -325,6 +325,31 @@ async function listarSubcategoriasProducto(req, res) {
   }
 }
 
+/**
+ * Lista los clientes disponibles para filtros
+ * @param {Object} req - Objeto de solicitud Express
+ * @param {Object} res - Objeto de respuesta Express
+ * @returns {Promise<void>} Devuelve array de clientes
+ */
+async function listarClientes(req, res) {
+  try {
+    const conexion = await conectarBD();
+
+    const resultado = await conexion
+      .request()
+      .execute("Flt_sp_ListarClientes");
+
+    res.json(resultado.recordset);
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      mensaje: "Error al listar clientes",
+      error: error.message,
+    });
+  }
+}
+
 module.exports = {
   listarCategoriasCliente,
   listarMetodosEntrega,
@@ -339,4 +364,5 @@ module.exports = {
   listarProveedores,
   listarProductos,
   listarSubcategoriasProducto,
+  listarClientes,
 };
