@@ -1,5 +1,14 @@
 const { sql, conectarBD } = require('../config/db');
 
+/**
+ * Obtiene los montos de proveedores con filtros opcionales
+ * @param {Object} req - Objeto de solicitud Express
+ * @param {Object} req.body - Cuerpo de la solicitud
+ * @param {string} [req.body.nombreProveedor] - Nombre del proveedor para filtrar
+ * @param {string} [req.body.categoria] - Categoría para filtrar
+ * @param {Object} res - Objeto de respuesta Express
+ * @returns {Promise<void>} Devuelve array de montos de proveedores
+ */
 async function montosProveedores(req, res) {
   try {
     const {
@@ -27,6 +36,15 @@ async function montosProveedores(req, res) {
   }
 }
 
+/**
+ * Obtiene los montos de clientes con filtros opcionales
+ * @param {Object} req - Objeto de solicitud Express
+ * @param {Object} req.body - Cuerpo de la solicitud
+ * @param {string} [req.body.nombreCliente] - Nombre del cliente para filtrar
+ * @param {string} [req.body.categoria] - Categoría para filtrar
+ * @param {Object} res - Objeto de respuesta Express
+ * @returns {Promise<void>} Devuelve array de montos de clientes
+ */
 async function montosClientes(req, res) {
   try {
     const {
@@ -54,6 +72,14 @@ async function montosClientes(req, res) {
   }
 }
 
+/**
+ * Obtiene el top 5 de productos por ganancia en un año específico
+ * @param {Object} req - Objeto de solicitud Express
+ * @param {Object} req.body - Cuerpo de la solicitud
+ * @param {number} req.body.anio - Año para filtrar
+ * @param {Object} res - Objeto de respuesta Express
+ * @returns {Promise<void>} Devuelve array de los top 5 productos por ganancia
+ */
 async function top5ProductosGanancia(req, res) {
   try {
     const { anio } = req.body;
@@ -77,6 +103,15 @@ async function top5ProductosGanancia(req, res) {
   }
 }
 
+/**
+ * Obtiene el top 5 de clientes por facturas en un rango de años
+ * @param {Object} req - Objeto de solicitud Express
+ * @param {Object} req.body - Cuerpo de la solicitud
+ * @param {number} req.body.anioInicio - Año de inicio del rango
+ * @param {number} req.body.anioFin - Año de fin del rango
+ * @param {Object} res - Objeto de respuesta Express
+ * @returns {Promise<void>} Devuelve array de los top 5 clientes por facturas
+ */
 async function top5ClientesFacturas(req, res) {
   try {
     const {
@@ -104,6 +139,15 @@ async function top5ClientesFacturas(req, res) {
   }
 }
 
+/**
+ * Obtiene el top 5 de proveedores por órdenes en un rango de años
+ * @param {Object} req - Objeto de solicitud Express
+ * @param {Object} req.body - Cuerpo de la solicitud
+ * @param {number} req.body.anioInicio - Año de inicio del rango
+ * @param {number} req.body.anioFin - Año de fin del rango
+ * @param {Object} res - Objeto de respuesta Express
+ * @returns {Promise<void>} Devuelve array de los top 5 proveedores por órdenes
+ */
 async function top5ProveedoresOrdenes(req, res) {
   try {
     const {
@@ -131,6 +175,12 @@ async function top5ProveedoresOrdenes(req, res) {
   }
 }
 
+/**
+ * Obtiene la matriz de ventas por categoría
+ * @param {Object} req - Objeto de solicitud Express
+ * @param {Object} res - Objeto de respuesta Express
+ * @returns {Promise<void>} Devuelve matriz de ventas por categoría
+ */
 async function matrizVentasPorCategoria(req, res) {
   try {
     const conexion = await conectarBD();
@@ -151,6 +201,16 @@ async function matrizVentasPorCategoria(req, res) {
   }
 }
 
+/**
+ * Obtiene el seguimiento de compras de un cliente por año, mes y categoría
+ * @param {Object} req - Objeto de solicitud Express
+ * @param {Object} req.body - Cuerpo de la solicitud
+ * @param {number} req.body.anio - Año para filtrar
+ * @param {number} req.body.mes - Mes para filtrar
+ * @param {string} [req.body.categoria] - Categoría para filtrar
+ * @param {Object} res - Objeto de respuesta Express
+ * @returns {Promise<void>} Devuelve array de seguimiento de compras del cliente
+ */
 async function seguimientoComprasCliente(req, res) {
   try {
     const {
@@ -180,6 +240,16 @@ async function seguimientoComprasCliente(req, res) {
   }
 }
 
+/**
+ * Obtiene el seguimiento de compras de un proveedor por año, mes y categoría
+ * @param {Object} req - Objeto de solicitud Express
+ * @param {Object} req.body - Cuerpo de la solicitud
+ * @param {number} req.body.anio - Año para filtrar
+ * @param {number} req.body.mes - Mes para filtrar
+ * @param {string} [req.body.categoria] - Categoría para filtrar
+ * @param {Object} res - Objeto de respuesta Express
+ * @returns {Promise<void>} Devuelve array de seguimiento de compras del proveedor
+ */
 async function seguimientoComprasProveedor(req, res) {
   try {
     const {
@@ -209,6 +279,16 @@ async function seguimientoComprasProveedor(req, res) {
   }
 }
 
+/**
+ * Obtiene la rotación de inventario con filtros opcionales
+ * @param {Object} req - Objeto de solicitud Express
+ * @param {Object} req.body - Cuerpo de la solicitud
+ * @param {string} [req.body.categoria] - Categoría para filtrar
+ * @param {number} [req.body.anio] - Año para filtrar
+ * @param {string} [req.body.proveedor] - Proveedor para filtrar
+ * @param {Object} res - Objeto de respuesta Express
+ * @returns {Promise<void>} Devuelve array de rotación de inventario
+ */
 async function rotacionInventario(req, res) {
   try {
     const {
@@ -238,6 +318,18 @@ async function rotacionInventario(req, res) {
   }
 }
 
+/**
+ * Obtiene el método de envío favorito por zona con filtros opcionales
+ * @param {Object} req - Objeto de solicitud Express
+ * @param {Object} req.body - Cuerpo de la solicitud
+ * @param {number} [req.body.anio] - Año para filtrar
+ * @param {number} [req.body.mes] - Mes para filtrar
+ * @param {string} [req.body.categoriaCliente] - Categoría del cliente para filtrar
+ * @param {string} [req.body.categoriaProducto] - Categoría del producto para filtrar
+ * @param {string} [req.body.producto] - Producto para filtrar
+ * @param {Object} res - Objeto de respuesta Express
+ * @returns {Promise<void>} Devuelve array de métodos de envío favoritos por zona
+ */
 async function metodoEnvioFavoritoPorZona(req, res) {
   try {
     const {

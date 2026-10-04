@@ -1,3 +1,7 @@
+/**
+ * Barra superior con información del panel administrativo y usuario
+ * @returns {JSX.Element} El componente renderizado
+ */
 function BarraSuperior() {
   return (
     <header className="barra-superior">

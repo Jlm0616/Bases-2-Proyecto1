@@ -340,3 +340,107 @@
     align-items: stretch;
   }
 }
+
+/* ============================================
+   ESTILO MODERNO - REPORTES
+   ============================================ */
+
+.encabezado-reportes h2 {
+  font-size: 28px;
+  font-weight: 750;
+  letter-spacing: -0.03em;
+  color: var(--color-texto);
+}
+
+.encabezado-reportes p {
+  color: var(--color-texto-secundario);
+}
+
+.selector-reporte,
+.filtros-reportes,
+.resultados-reportes,
+.sin-resultados-reporte {
+  background-color: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: 16px;
+  box-shadow: var(--sombra-suave);
+}
+
+.grupo-reporte label {
+  color: #475569;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.grupo-reporte input,
+.grupo-reporte select {
+  height: 44px;
+  border: 1px solid #dbe2ea;
+  border-radius: 10px;
+  padding: 0 13px;
+  background-color: white;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+.grupo-reporte input:focus,
+.grupo-reporte select:focus {
+  border-color: var(--color-principal);
+  box-shadow:
+    0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.boton-consultar-reporte {
+  height: 44px;
+  border-radius: 10px;
+  background-color: var(--color-principal);
+  box-shadow:
+    0 4px 12px rgba(37, 99, 235, 0.16);
+}
+
+.boton-consultar-reporte:hover {
+  background-color: var(--color-principal-hover);
+}
+
+.boton-limpiar-reporte {
+  height: 44px;
+  border-radius: 10px;
+}
+
+.tabla-reportes {
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.tabla-reportes th {
+  background-color: #f8fafc;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.035em;
+  padding: 13px 14px;
+}
+
+.tabla-reportes td {
+  color: #334155;
+  padding: 14px;
+  border-bottom: 1px solid #edf2f7;
+}
+
+.tabla-reportes tbody tr:hover {
+  background-color: #f8fbff;
+}
+
+.boton-pagina-reportes.pagina-activa-reportes {
+  background-color: var(--color-principal);
+  border-color: var(--color-principal);
+}
+
+.boton-pagina-reportes:hover:not(:disabled):not(
+  .pagina-activa-reportes
+) {
+  background-color: #eff6ff;
+  border-color: var(--color-principal);
+}

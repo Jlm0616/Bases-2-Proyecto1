@@ -1,3 +1,7 @@
+/**
+ * Módulo de configuración de conexión a SQL Server
+ * @returns {Object} Objeto con sql y conectarBD
+ */
 const sql = require('mssql');
 require('dotenv').config();
 

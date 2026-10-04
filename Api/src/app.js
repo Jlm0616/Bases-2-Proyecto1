@@ -1,3 +1,7 @@
+/**
+ * Punto de entrada de la aplicación Express
+ * Configura middleware, rutas y inicia el servidor
+ */
 const express = require('express');
 const cors = require('cors');
 require('dotenv').config();

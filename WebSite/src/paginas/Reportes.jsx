@@ -24,6 +24,10 @@ import {
 
 import "../estilos/reportes.css";
 
+/**
+ * Consulta de reportes estadísticos del sistema
+ * @returns {JSX.Element} La página renderizada
+ */
 function Reportes() {
   const [reporteSeleccionado, setReporteSeleccionado] = useState("");
 

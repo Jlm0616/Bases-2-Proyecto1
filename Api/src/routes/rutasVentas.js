@@ -1,3 +1,7 @@
+/**
+ * Rutas para ventas
+ * @param {Object} router - Objeto router de Express
+ */
 const express = require('express');
 const router = express.Router();
 

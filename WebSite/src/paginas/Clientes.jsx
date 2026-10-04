@@ -30,6 +30,10 @@ const FORMULARIO_VACIO = {
   idEditadoPor: "1361",
 };
 
+/**
+ * Administración de clientes del sistema
+ * @returns {JSX.Element} La página renderizada
+ */
 function Clientes() {
   // Filtros
   const [nombre, setNombre] = useState("");

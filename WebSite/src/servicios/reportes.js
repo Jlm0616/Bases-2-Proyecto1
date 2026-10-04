@@ -1,5 +1,11 @@
 import URL_API from "./api";
 
+/**
+ * Procesa la respuesta de la API y maneja errores
+ * @param {Response} respuesta - Objeto de respuesta de fetch
+ * @param {string} mensajeError - Mensaje de error personalizado
+ * @returns {Promise<Object>} Datos de la respuesta en formato JSON
+ */
 async function procesarRespuesta(respuesta, mensajeError) {
   const datos = await respuesta.json();
 
@@ -10,6 +16,11 @@ async function procesarRespuesta(respuesta, mensajeError) {
   return datos;
 }
 
+/**
+ * Obtiene los montos totales por proveedor
+ * @param {Object} filtros - Filtros para el reporte (fechas, categorías, etc.)
+ * @returns {Promise<Object>} Montos acumulados por proveedor
+ */
 export async function obtenerMontosProveedores(filtros) {
   const respuesta = await fetch(
     `${URL_API}/reportes/montos-proveedores`,
@@ -28,6 +39,11 @@ export async function obtenerMontosProveedores(filtros) {
   );
 }
 
+/**
+ * Obtiene los montos totales por cliente
+ * @param {Object} filtros - Filtros para el reporte (fechas, categorías, etc.)
+ * @returns {Promise<Object>} Montos acumulados por cliente
+ */
 export async function obtenerMontosClientes(filtros) {
   const respuesta = await fetch(
     `${URL_API}/reportes/montos-clientes`,
@@ -46,6 +62,11 @@ export async function obtenerMontosClientes(filtros) {
   );
 }
 
+/**
+ * Obtiene los productos más vendidos
+ * @param {Object} filtros - Filtros para el reporte (fechas, categorías, etc.)
+ * @returns {Promise<Object>} Lista de productos ordenados por ventas
+ */
 export async function obtenerTopProductos(filtros) {
   const respuesta = await fetch(
     `${URL_API}/reportes/top-productos`,
@@ -64,6 +85,11 @@ export async function obtenerTopProductos(filtros) {
   );
 }
 
+/**
+ * Obtiene los clientes con mayor volumen de compras
+ * @param {Object} filtros - Filtros para el reporte (fechas, categorías, etc.)
+ * @returns {Promise<Object>} Lista de clientes ordenados por volumen de compras
+ */
 export async function obtenerTopClientes(filtros) {
   const respuesta = await fetch(
     `${URL_API}/reportes/top-clientes`,
@@ -82,6 +108,11 @@ export async function obtenerTopClientes(filtros) {
   );
 }
 
+/**
+ * Obtiene los proveedores con mayor volumen de ventas
+ * @param {Object} filtros - Filtros para el reporte (fechas, categorías, etc.)
+ * @returns {Promise<Object>} Lista de proveedores ordenados por volumen de ventas
+ */
 export async function obtenerTopProveedores(filtros) {
   const respuesta = await fetch(
     `${URL_API}/reportes/top-proveedores`,
@@ -100,6 +131,10 @@ export async function obtenerTopProveedores(filtros) {
   );
 }
 
+/**
+ * Obtiene la matriz de ventas por categorías
+ * @returns {Promise<Object>} Matriz de ventas organizada por categorías
+ */
 export async function obtenerMatrizVentas() {
   const respuesta = await fetch(
     `${URL_API}/reportes/matriz-ventas-categorias`
@@ -111,6 +146,11 @@ export async function obtenerMatrizVentas() {
   );
 }
 
+/**
+ * Obtiene el seguimiento de clientes en el tiempo
+ * @param {Object} filtros - Filtros para el reporte (fechas, categorías, etc.)
+ * @returns {Promise<Object>} Datos de seguimiento de clientes por período
+ */
 export async function obtenerSeguimientoClientes(filtros) {
   const respuesta = await fetch(
     `${URL_API}/reportes/seguimiento-clientes`,
@@ -129,6 +169,11 @@ export async function obtenerSeguimientoClientes(filtros) {
   );
 }
 
+/**
+ * Obtiene el seguimiento de proveedores en el tiempo
+ * @param {Object} filtros - Filtros para el reporte (fechas, categorías, etc.)
+ * @returns {Promise<Object>} Datos de seguimiento de proveedores por período
+ */
 export async function obtenerSeguimientoProveedores(filtros) {
   const respuesta = await fetch(
     `${URL_API}/reportes/seguimiento-proveedores`,
@@ -147,6 +192,11 @@ export async function obtenerSeguimientoProveedores(filtros) {
   );
 }
 
+/**
+ * Obtiene la rotación de inventario de productos
+ * @param {Object} filtros - Filtros para el reporte (fechas, categorías, etc.)
+ * @returns {Promise<Object>} Datos de rotación de inventario por producto
+ */
 export async function obtenerRotacionInventario(filtros) {
   const respuesta = await fetch(
     `${URL_API}/reportes/rotacion-inventario`,
@@ -165,6 +215,11 @@ export async function obtenerRotacionInventario(filtros) {
   );
 }
 
+/**
+ * Obtiene el método de envío favorito según los filtros
+ * @param {Object} filtros - Filtros para el reporte (fechas, categorías, etc.)
+ * @returns {Promise<Object>} Datos de métodos de envío más utilizados
+ */
 export async function obtenerMetodoEnvioFavorito(filtros) {
   const respuesta = await fetch(
     `${URL_API}/reportes/metodo-envio-favorito`,

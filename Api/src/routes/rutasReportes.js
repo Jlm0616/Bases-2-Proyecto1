@@ -1,3 +1,7 @@
+/**
+ * Rutas para reportes
+ * @param {Object} router - Objeto router de Express
+ */
 const express = require('express');
 const router = express.Router();
 

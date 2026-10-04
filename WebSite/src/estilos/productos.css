@@ -1,6 +1,7 @@
 /* ============================================
-   PRODUCTOS - TEMA VERDE
+   PRODUCTOS - ESTILO MODERNO
    ============================================ */
+
 .contenido-productos {
   padding: 32px;
 }
@@ -14,39 +15,51 @@
 }
 
 .encabezado-productos h2 {
-  font-size: 26px;
+  font-size: 28px;
+  font-weight: 750;
+  letter-spacing: -0.03em;
+  color: var(--color-texto);
   margin-bottom: 6px;
 }
 
 .encabezado-productos p {
-  color: #6b7280;
+  color: var(--color-texto-secundario);
 }
 
 .boton-principal-prod {
+  background-color: var(--color-principal);
   border: none;
-  background-color: #16a34a;
+  border-radius: 10px;
   color: white;
   padding: 11px 18px;
-  border-radius: 8px;
-  cursor: pointer;
   font-weight: 600;
+  box-shadow:
+    0 4px 12px rgba(37, 99, 235, 0.18);
 }
 
 .boton-principal-prod:hover {
-  background-color: #15803d;
+  background-color: var(--color-principal-hover);
+}
+
+.seccion-filtros-prod,
+.seccion-tabla-prod {
+  background-color: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: 16px;
+  box-shadow: var(--sombra-suave);
 }
 
 .seccion-filtros-prod {
-  background-color: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
   padding: 22px;
   margin-bottom: 24px;
-
   display: grid;
   grid-template-columns: 2fr 1fr auto auto;
   gap: 18px;
   align-items: end;
+}
+
+.seccion-tabla-prod {
+  padding: 24px;
 }
 
 .grupo-filtro-prod {
@@ -56,25 +69,28 @@
 }
 
 .grupo-filtro-prod label {
-  font-size: 14px;
-  font-weight: 600;
-  color: #374151;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 650;
 }
 
 .grupo-filtro-prod input,
 .grupo-filtro-prod select {
-  width: 100%;
-  height: 42px;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  padding: 0 12px;
+  height: 44px;
+  border: 1px solid #dbe2ea;
+  border-radius: 10px;
+  padding: 0 13px;
   background-color: white;
-  outline: none;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
 }
 
 .grupo-filtro-prod input:focus,
 .grupo-filtro-prod select:focus {
-  border-color: #16a34a;
+  border-color: var(--color-principal);
+  box-shadow:
+    0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
 .grupo-boton-prod {
@@ -82,25 +98,17 @@
 }
 
 .boton-secundario-prod {
-  height: 42px;
-  padding: 0 16px;
-  border-radius: 8px;
-  border: 1px solid #d1d5db;
+  height: 44px;
+  padding: 0 17px;
+  border-radius: 10px;
+  border: 1px solid var(--color-borde);
   background-color: white;
-  color: #374151;
-  cursor: pointer;
+  color: #475569;
   font-weight: 600;
 }
 
 .boton-secundario-prod:hover {
-  background-color: #f3f4f6;
-}
-
-.seccion-tabla-prod {
-  background-color: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 24px;
+  background-color: #f8fafc;
 }
 
 .titulo-tabla-prod {
@@ -111,19 +119,22 @@
 }
 
 .titulo-tabla-prod h3 {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
   margin-bottom: 4px;
 }
 
 .titulo-tabla-prod p {
-  color: #6b7280;
-  font-size: 14px;
+  color: var(--color-texto-secundario);
+  font-size: 13px;
 }
 
 .cantidad-prod {
-  background-color: #dcfce7;
-  color: #166534;
+  background-color: var(--color-principal-suave);
+  color: var(--color-principal);
+  border-radius: 999px;
   padding: 7px 12px;
-  border-radius: 20px;
   font-size: 13px;
   font-weight: 600;
 }
@@ -134,24 +145,30 @@
 
 .tabla-prod {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
 .tabla-prod th {
-  text-align: left;
-  padding: 12px;
-  font-size: 13px;
-  color: #6b7280;
-  border-bottom: 1px solid #e5e7eb;
+  background-color: #f8fafc;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.035em;
+  padding: 13px 14px;
+  border-bottom: 1px solid var(--color-borde);
 }
 
 .tabla-prod td {
-  padding: 14px 12px;
-  border-bottom: 1px solid #f1f5f9;
+  padding: 14px;
+  color: #334155;
+  border-bottom: 1px solid #edf2f7;
+  font-size: 14px;
 }
 
 .tabla-prod tbody tr:hover {
-  background-color: #f0fdf4;
+  background-color: #f8fbff;
 }
 
 .acciones-prod {
@@ -161,38 +178,38 @@
 
 .acciones-prod button {
   border: none;
-  padding: 7px 11px;
-  border-radius: 6px;
+  padding: 8px 12px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 13px;
   font-weight: 600;
 }
 
 .boton-ver-prod {
-  background-color: #dcfce7;
-  color: #166534;
+  background-color: #eff6ff;
+  color: #1d4ed8;
 }
 
 .boton-ver-prod:hover {
-  background-color: #bbf7d0;
+  background-color: #dbeafe;
 }
 
 .boton-editar-prod {
-  background-color: #fef3c7;
-  color: #92400e;
+  background-color: #fffbeb;
+  color: #b45309;
 }
 
 .boton-editar-prod:hover {
-  background-color: #fde68a;
+  background-color: #fef3c7;
 }
 
 .boton-eliminar-prod {
-  background-color: #fee2e2;
-  color: #b91c1c;
+  background-color: #fef2f2;
+  color: #dc2626;
 }
 
 .boton-eliminar-prod:hover {
-  background-color: #fecaca;
+  background-color: #fee2e2;
 }
 
 @media (max-width: 1000px) {
@@ -223,14 +240,14 @@
 .sin-resultados-prod {
   text-align: center;
   padding: 30px;
-  color: #6b7280;
+  color: var(--color-texto-secundario);
 }
 
 .mensaje-error-prod {
-  background-color: #fee2e2;
-  color: #b91c1c;
+  background-color: var(--color-peligro-suave);
+  color: var(--color-peligro);
   padding: 12px 16px;
-  border-radius: 8px;
+  border-radius: 10px;
   margin-bottom: 16px;
   font-size: 14px;
 }
@@ -238,68 +255,76 @@
 .mensaje-cargando-prod {
   text-align: center;
   padding: 30px;
-  color: #6b7280;
+  color: var(--color-texto-secundario);
 }
 
-/* ============================================
-   MODAL (compartido)
-   ============================================ */
 .modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.56);
+  backdrop-filter: blur(3px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  padding: 20px;
+  padding: 24px;
 }
 
 .modal-contenido {
-  background-color: white;
-  border-radius: 12px;
-  padding: 28px;
-  max-width: 720px;
   width: 100%;
+  max-width: 760px;
   max-height: 90vh;
   overflow-y: auto;
+  background-color: white;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: 18px;
+  padding: 30px;
   position: relative;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--sombra-modal);
+  animation: aparecerModal 0.18s ease-out;
+}
+
+@keyframes aparecerModal {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .modal-cerrar {
   position: absolute;
-  top: 12px;
-  right: 16px;
-  background: none;
+  top: 14px;
+  right: 14px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: none;
-  font-size: 28px;
-  line-height: 1;
+  border-radius: 9px;
+  background-color: #f8fafc;
+  color: #64748b;
+  font-size: 22px;
   cursor: pointer;
-  color: #6b7280;
-  padding: 4px 8px;
-  border-radius: 6px;
 }
 
 .modal-cerrar:hover {
-  background-color: #f3f4f6;
-  color: #111827;
+  background-color: #eef2f7;
+  color: #0f172a;
 }
 
-/* ============================================
-   DETALLE DEL PRODUCTO (tema verde)
-   ============================================ */
 .detalle-prod h3 {
   margin-bottom: 6px;
   font-size: 22px;
-  color: #111827;
+  color: var(--color-texto);
 }
 
 .detalle-prod .subtitulo-prod {
-  color: #6b7280;
+  color: var(--color-texto-secundario);
   font-size: 14px;
   margin-bottom: 20px;
 }
@@ -320,7 +345,7 @@
 
 .detalle-prod .campo-etiqueta-prod {
   font-size: 12px;
-  color: #6b7280;
+  color: var(--color-texto-secundario);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -328,12 +353,12 @@
 
 .detalle-prod .campo-valor-prod {
   font-size: 14px;
-  color: #111827;
+  color: var(--color-texto);
   word-break: break-word;
 }
 
 .detalle-prod .campo-valor-prod a {
-  color: #166534;
+  color: var(--color-principal);
   text-decoration: none;
 }
 
@@ -351,13 +376,10 @@
   }
 }
 
-/* ============================================
-   FORMULARIO DEL PRODUCTO (tema verde)
-   ============================================ */
 .formulario-prod h3 {
   margin-bottom: 20px;
   font-size: 22px;
-  color: #111827;
+  color: var(--color-texto);
 }
 
 .formulario-prod .formulario-grid-prod {
@@ -379,23 +401,28 @@
 .formulario-prod label {
   font-size: 13px;
   font-weight: 600;
-  color: #374151;
+  color: var(--color-texto);
 }
 
 .formulario-prod input,
 .formulario-prod select {
-  height: 40px;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  padding: 0 12px;
+  height: 44px;
+  border: 1px solid #dbe2ea;
+  border-radius: 10px;
+  padding: 0 13px;
   background-color: white;
   font-size: 14px;
   outline: none;
+  transition:
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
 }
 
 .formulario-prod input:focus,
 .formulario-prod select:focus {
-  border-color: #16a34a;
+  border-color: var(--color-principal);
+  box-shadow:
+    0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
 .formulario-prod .botones-formulario-prod {
@@ -404,37 +431,37 @@
   gap: 12px;
   margin-top: 24px;
   padding-top: 20px;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid var(--color-borde);
 }
 
 .formulario-prod .boton-cancelar-prod {
-  height: 42px;
+  height: 44px;
   padding: 0 18px;
-  border-radius: 8px;
-  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  border: 1px solid var(--color-borde);
   background-color: white;
-  color: #374151;
+  color: var(--color-texto);
   cursor: pointer;
   font-weight: 600;
 }
 
 .formulario-prod .boton-cancelar-prod:hover {
-  background-color: #f3f4f6;
+  background-color: var(--color-superficie-secundaria);
 }
 
 .formulario-prod .boton-guardar-prod {
-  height: 42px;
+  height: 44px;
   padding: 0 18px;
-  border-radius: 8px;
+  border-radius: 10px;
   border: none;
-  background-color: #16a34a;
+  background-color: var(--color-principal);
   color: white;
   cursor: pointer;
   font-weight: 600;
 }
 
 .formulario-prod .boton-guardar-prod:hover {
-  background-color: #15803d;
+  background-color: var(--color-principal-hover);
 }
 
 .formulario-prod .boton-guardar-prod:disabled {
@@ -448,9 +475,6 @@
   }
 }
 
-/* ============================================
-   MODAL ELIMINAR PRODUCTO
-   ============================================ */
 .confirmar-eliminar-prod {
   text-align: center;
   padding: 8px 0;
@@ -459,18 +483,18 @@
 .confirmar-eliminar-prod h3 {
   font-size: 20px;
   margin-bottom: 12px;
-  color: #111827;
+  color: var(--color-texto);
 }
 
 .confirmar-eliminar-prod p {
-  color: #6b7280;
+  color: var(--color-texto-secundario);
   font-size: 14px;
   margin-bottom: 24px;
 }
 
 .confirmar-eliminar-prod .nombre-eliminar-prod {
   font-weight: 600;
-  color: #111827;
+  color: var(--color-texto);
 }
 
 .botones-eliminar-prod {
@@ -480,26 +504,26 @@
 }
 
 .boton-cancelar-eliminar-prod {
-  height: 42px;
+  height: 44px;
   padding: 0 20px;
-  border-radius: 8px;
-  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  border: 1px solid var(--color-borde);
   background-color: white;
-  color: #374151;
+  color: var(--color-texto);
   cursor: pointer;
   font-weight: 600;
 }
 
 .boton-cancelar-eliminar-prod:hover {
-  background-color: #f3f4f6;
+  background-color: var(--color-superficie-secundaria);
 }
 
 .boton-confirmar-eliminar-prod {
-  height: 42px;
+  height: 44px;
   padding: 0 20px;
-  border-radius: 8px;
+  border-radius: 10px;
   border: none;
-  background-color: #dc2626;
+  background-color: var(--color-peligro);
   color: white;
   cursor: pointer;
   font-weight: 600;
@@ -521,13 +545,13 @@
   gap: 16px;
   margin-top: 20px;
   padding-top: 20px;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid var(--color-borde);
   flex-wrap: wrap;
 }
 
 .paginacion-info-productos {
   font-size: 13px;
-  color: #6b7280;
+  color: var(--color-texto-secundario);
 }
 
 .paginacion-controles-productos {
@@ -540,10 +564,10 @@
   min-width: 36px;
   height: 36px;
   padding: 0 10px;
-  border-radius: 6px;
-  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  border: 1px solid var(--color-borde);
   background-color: white;
-  color: #374151;
+  color: var(--color-texto);
   cursor: pointer;
   font-size: 13px;
   font-weight: 600;
@@ -552,8 +576,8 @@
 .boton-pagina-productos:hover:not(:disabled):not(
   .pagina-activa-productos
 ) {
-  background-color: #f3f4f6;
-  border-color: #2563eb;
+  background-color: var(--color-superficie-secundaria);
+  border-color: var(--color-principal);
 }
 
 .boton-pagina-productos:disabled {
@@ -562,14 +586,14 @@
 }
 
 .boton-pagina-productos.pagina-activa-productos {
-  background-color: #2563eb;
+  background-color: var(--color-principal);
   color: white;
-  border-color: #2563eb;
+  border-color: var(--color-principal);
 }
 
 .boton-pagina-productos.pagina-activa-productos:hover {
-  background-color: #1d4ed8;
-  border-color: #1d4ed8;
+  background-color: var(--color-principal-hover);
+  border-color: var(--color-principal-hover);
 }
 
 .paginacion-tamano-productos {
@@ -577,13 +601,13 @@
   align-items: center;
   gap: 8px;
   font-size: 13px;
-  color: #6b7280;
+  color: var(--color-texto-secundario);
 }
 
 .paginacion-tamano-productos select {
   height: 36px;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
+  border: 1px solid var(--color-borde);
+  border-radius: 8px;
   padding: 0 8px;
   background-color: white;
   outline: none;

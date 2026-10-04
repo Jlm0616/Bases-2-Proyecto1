@@ -32,6 +32,10 @@ const FORMULARIO_VACIO = {
   ],
 };
 
+/**
+ * Administración de ventas del sistema
+ * @returns {JSX.Element} La página renderizada
+ */
 function Ventas() {
   // Filtros
   const [nombreCliente, setNombreCliente] = useState("");
@@ -805,6 +809,7 @@ function Ventas() {
       <Modal
         isOpen={modalFormularioAbierto}
         onClose={cerrarModalFormulario}
+        ancho="extra"
       >
         <form
           className="formulario-vta"

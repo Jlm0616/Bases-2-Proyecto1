@@ -1,3 +1,7 @@
+/**
+ * Rutas para filtros
+ * @param {Object} router - Objeto router de Express
+ */
 const express = require("express");
 
 const {

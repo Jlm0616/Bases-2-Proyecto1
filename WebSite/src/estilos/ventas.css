@@ -1,5 +1,5 @@
 /* ============================================
-   VENTAS - TEMA PÚRPURA
+   VENTAS
    ============================================ */
 .contenido-ventas {
   padding: 32px;
@@ -14,37 +14,40 @@
 }
 
 .encabezado-ventas h2 {
-  font-size: 26px;
+  font-size: 28px;
+  font-weight: 750;
+  letter-spacing: -0.03em;
   margin-bottom: 6px;
 }
 
 .encabezado-ventas p {
-  color: #6b7280;
+  color: var(--color-texto-secundario);
 }
 
 .boton-principal-vta {
   border: none;
-  background-color: #9333ea;
+  background-color: var(--color-principal);
   color: white;
   padding: 11px 18px;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
   font-weight: 600;
 }
 
 .boton-principal-vta:hover {
-  background-color: #7e22ce;
+  background-color: var(--color-principal-hover);
 }
 
 /* ============================================
    FILTROS (5 columnas: nombre, fecha ini, fecha fin, monto min, monto max)
    ============================================ */
 .seccion-filtros-vta {
-  background-color: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
+  background-color: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: 16px;
   padding: 22px;
   margin-bottom: 24px;
+  box-shadow: var(--sombra-suave);
 
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
@@ -61,24 +64,26 @@
 .grupo-filtro-vta label {
   font-size: 13px;
   font-weight: 600;
-  color: #374151;
+  color: var(--color-texto);
 }
 
 .grupo-filtro-vta input,
 .grupo-filtro-vta select {
   width: 100%;
-  height: 42px;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  padding: 0 12px;
+  height: 44px;
+  border: 1px solid #dbe2ea;
+  border-radius: 10px;
+  padding: 0 13px;
   background-color: white;
   outline: none;
   font-size: 14px;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
 }
 
 .grupo-filtro-vta input:focus,
 .grupo-filtro-vta select:focus {
-  border-color: #9333ea;
+  border-color: var(--color-principal);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
 .grupo-botones-vta {
@@ -87,30 +92,31 @@
   grid-column: 1 / -1;
   justify-content: flex-end;
   padding-top: 8px;
-  border-top: 1px solid #f1f5f9;
+  border-top: 1px solid var(--color-borde);
   margin-top: 6px;
 }
 
 .boton-secundario-vta {
-  height: 42px;
+  height: 44px;
   padding: 0 16px;
-  border-radius: 8px;
-  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  border: 1px solid var(--color-borde);
   background-color: white;
-  color: #374151;
+  color: var(--color-texto);
   cursor: pointer;
   font-weight: 600;
 }
 
 .boton-secundario-vta:hover {
-  background-color: #f3f4f6;
+  background-color: var(--color-superficie-secundaria);
 }
 
 .seccion-tabla-vta {
-  background-color: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
+  background-color: var(--color-superficie);
+  border: 1px solid var(--color-borde);
+  border-radius: 16px;
   padding: 24px;
+  box-shadow: var(--sombra-suave);
 }
 
 .titulo-tabla-vta {
@@ -125,13 +131,13 @@
 }
 
 .titulo-tabla-vta p {
-  color: #6b7280;
+  color: var(--color-texto-secundario);
   font-size: 14px;
 }
 
 .cantidad-vta {
-  background-color: #f3e8ff;
-  color: #6b21a8;
+  background-color: var(--color-principal-suave);
+  color: var(--color-principal);
   padding: 7px 12px;
   border-radius: 20px;
   font-size: 13px;
@@ -151,17 +157,26 @@
   text-align: left;
   padding: 12px;
   font-size: 13px;
-  color: #6b7280;
-  border-bottom: 1px solid #e5e7eb;
+  color: #64748b;
+  background-color: #f8fafc;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.035em;
+  border-bottom: 1px solid var(--color-borde);
 }
 
 .tabla-vta td {
   padding: 14px 12px;
-  border-bottom: 1px solid #f1f5f9;
+  color: #334155;
+  border-bottom: 1px solid #edf2f7;
+}
+
+.tabla-vta tbody tr {
+  transition: background-color 0.15s ease;
 }
 
 .tabla-vta tbody tr:hover {
-  background-color: #faf5ff;
+  background-color: #f8fbff;
 }
 
 .acciones-vta {
@@ -179,17 +194,17 @@
 }
 
 .boton-ver-vta {
-  background-color: #f3e8ff;
-  color: #6b21a8;
+  background-color: #eff6ff;
+  color: #1d4ed8;
 }
 
 .boton-ver-vta:hover {
-  background-color: #e9d5ff;
+  background-color: #dbeafe;
 }
 
 .boton-editar-vta {
-  background-color: #fef3c7;
-  color: #92400e;
+  background-color: #fffbeb;
+  color: #b45309;
 }
 
 .boton-editar-vta:hover {
@@ -197,8 +212,8 @@
 }
 
 .boton-eliminar-vta {
-  background-color: #fee2e2;
-  color: #b91c1c;
+  background-color: #fef2f2;
+  color: #dc2626;
 }
 
 .boton-eliminar-vta:hover {
@@ -233,14 +248,14 @@
 .sin-resultados-vta {
   text-align: center;
   padding: 30px;
-  color: #6b7280;
+  color: var(--color-texto-secundario);
 }
 
 .mensaje-error-vta {
-  background-color: #fee2e2;
-  color: #b91c1c;
+  background-color: var(--color-peligro-suave);
+  color: var(--color-peligro);
   padding: 12px 16px;
-  border-radius: 8px;
+  border-radius: 10px;
   margin-bottom: 16px;
   font-size: 14px;
 }
@@ -248,7 +263,7 @@
 .mensaje-cargando-vta {
   text-align: center;
   padding: 30px;
-  color: #6b7280;
+  color: var(--color-texto-secundario);
 }
 
 /* ============================================
@@ -256,28 +271,39 @@
    ============================================ */
 .modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(0, 0, 0, 0.5);
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.56);
+  backdrop-filter: blur(3px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  padding: 20px;
+  padding: 24px;
 }
 
 .modal-contenido {
   background-color: white;
-  border-radius: 12px;
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  border-radius: 18px;
   padding: 28px;
   max-width: 720px;
   width: 100%;
   max-height: 90vh;
   overflow-y: auto;
   position: relative;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--sombra-modal);
+  animation: aparecerModal 0.18s ease-out;
+}
+
+@keyframes aparecerModal {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.99);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 .modal-contenido.modal-grande {
@@ -286,21 +312,24 @@
 
 .modal-cerrar {
   position: absolute;
-  top: 12px;
-  right: 16px;
-  background: none;
+  top: 14px;
+  right: 14px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: none;
-  font-size: 28px;
-  line-height: 1;
+  border-radius: 9px;
+  background-color: #f8fafc;
+  color: #64748b;
+  font-size: 22px;
   cursor: pointer;
-  color: #6b7280;
-  padding: 4px 8px;
-  border-radius: 6px;
 }
 
 .modal-cerrar:hover {
-  background-color: #f3f4f6;
-  color: #111827;
+  background-color: #eef2f7;
+  color: #0f172a;
 }
 
 /* ============================================
@@ -309,17 +338,17 @@
 .detalle-vta h3 {
   margin-bottom: 6px;
   font-size: 22px;
-  color: #111827;
+  color: var(--color-texto);
 }
 
 .detalle-vta .subtitulo-vta {
-  color: #6b7280;
+  color: var(--color-texto-secundario);
   font-size: 14px;
   margin-bottom: 20px;
 }
 
 .detalle-vta .seccion-encabezado-vta {
-  background-color: #faf5ff;
+  background-color: var(--color-principal-suave);
   border-radius: 10px;
   padding: 18px;
   margin-bottom: 20px;
@@ -339,7 +368,7 @@
 
 .detalle-vta .campo-etiqueta-vta {
   font-size: 12px;
-  color: #6b7280;
+  color: var(--color-texto-secundario);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -347,17 +376,17 @@
 
 .detalle-vta .campo-valor-vta {
   font-size: 14px;
-  color: #111827;
+  color: var(--color-texto);
   word-break: break-word;
 }
 
 .detalle-vta .titulo-lineas-vta {
   font-size: 16px;
   font-weight: 600;
-  color: #111827;
+  color: var(--color-texto);
   margin-top: 8px;
   margin-bottom: 12px;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid var(--color-borde);
   padding-top: 20px;
 }
 
@@ -371,8 +400,8 @@
   text-align: left;
   padding: 10px;
   font-size: 12px;
-  color: #6b7280;
-  background-color: #f3e8ff;
+  color: #64748b;
+  background-color: #f8fafc;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.03em;
@@ -390,8 +419,8 @@
 
 .detalle-vta .tabla-lineas-vta td {
   padding: 10px;
-  border-bottom: 1px solid #f1f5f9;
-  color: #111827;
+  border-bottom: 1px solid #edf2f7;
+  color: #334155;
 }
 
 @media (max-width: 600px) {
@@ -406,7 +435,7 @@
 .formulario-vta h3 {
   margin-bottom: 20px;
   font-size: 22px;
-  color: #111827;
+  color: var(--color-texto);
 }
 
 .formulario-vta .formulario-grid-vta {
@@ -429,38 +458,40 @@
 .formulario-vta label {
   font-size: 13px;
   font-weight: 600;
-  color: #374151;
+  color: var(--color-texto);
 }
 
 .formulario-vta input,
 .formulario-vta select,
 .formulario-vta textarea {
-  height: 40px;
-  border: 1px solid #d1d5db;
-  border-radius: 8px;
-  padding: 0 12px;
+  height: 44px;
+  border: 1px solid #dbe2ea;
+  border-radius: 10px;
+  padding: 0 13px;
   background-color: white;
   font-size: 14px;
   outline: none;
   font-family: inherit;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
 }
 
 .formulario-vta textarea {
   height: auto;
-  min-height: 60px;
-  padding: 10px 12px;
+  min-height: 80px;
+  padding: 10px 13px;
   resize: vertical;
 }
 
 .formulario-vta input:focus,
 .formulario-vta select:focus,
 .formulario-vta textarea:focus {
-  border-color: #9333ea;
+  border-color: var(--color-principal);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
 /* Sección de líneas */
 .seccion-lineas-vta {
-  background-color: #faf5ff;
+  background-color: var(--color-principal-suave);
   border-radius: 10px;
   padding: 18px;
   margin-bottom: 20px;
@@ -481,7 +512,7 @@
 
 .boton-agregar-linea-vta {
   border: none;
-  background-color: #9333ea;
+  background-color: var(--color-principal);
   color: white;
   padding: 8px 14px;
   border-radius: 6px;
@@ -491,7 +522,7 @@
 }
 
 .boton-agregar-linea-vta:hover {
-  background-color: #7e22ce;
+  background-color: var(--color-principal-hover);
 }
 
 .fila-linea-vta {
@@ -507,12 +538,12 @@
 }
 
 .boton-eliminar-linea-vta {
-  height: 40px;
+  height: 44px;
   padding: 0 12px;
-  border-radius: 8px;
+  border-radius: 10px;
   border: none;
-  background-color: #fee2e2;
-  color: #b91c1c;
+  background-color: var(--color-peligro-suave);
+  color: var(--color-peligro);
   cursor: pointer;
   font-weight: 600;
   font-size: 13px;
@@ -533,37 +564,37 @@
   gap: 12px;
   margin-top: 24px;
   padding-top: 20px;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid var(--color-borde);
 }
 
 .formulario-vta .boton-cancelar-vta {
-  height: 42px;
+  height: 44px;
   padding: 0 18px;
-  border-radius: 8px;
-  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  border: 1px solid var(--color-borde);
   background-color: white;
-  color: #374151;
+  color: var(--color-texto);
   cursor: pointer;
   font-weight: 600;
 }
 
 .formulario-vta .boton-cancelar-vta:hover {
-  background-color: #f3f4f6;
+  background-color: var(--color-superficie-secundaria);
 }
 
 .formulario-vta .boton-guardar-vta {
-  height: 42px;
+  height: 44px;
   padding: 0 18px;
-  border-radius: 8px;
+  border-radius: 10px;
   border: none;
-  background-color: #9333ea;
+  background-color: var(--color-principal);
   color: white;
   cursor: pointer;
   font-weight: 600;
 }
 
 .formulario-vta .boton-guardar-vta:hover {
-  background-color: #7e22ce;
+  background-color: var(--color-principal-hover);
 }
 
 .formulario-vta .boton-guardar-vta:disabled {
@@ -592,18 +623,18 @@
 .confirmar-eliminar-vta h3 {
   font-size: 20px;
   margin-bottom: 12px;
-  color: #111827;
+  color: var(--color-texto);
 }
 
 .confirmar-eliminar-vta p {
-  color: #6b7280;
+  color: var(--color-texto-secundario);
   font-size: 14px;
   margin-bottom: 24px;
 }
 
 .confirmar-eliminar-vta .nombre-eliminar-vta {
   font-weight: 600;
-  color: #111827;
+  color: var(--color-texto);
 }
 
 .botones-eliminar-vta {
@@ -613,26 +644,26 @@
 }
 
 .boton-cancelar-eliminar-vta {
-  height: 42px;
+  height: 44px;
   padding: 0 20px;
-  border-radius: 8px;
-  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  border: 1px solid var(--color-borde);
   background-color: white;
-  color: #374151;
+  color: var(--color-texto);
   cursor: pointer;
   font-weight: 600;
 }
 
 .boton-cancelar-eliminar-vta:hover {
-  background-color: #f3f4f6;
+  background-color: var(--color-superficie-secundaria);
 }
 
 .boton-confirmar-eliminar-vta {
-  height: 42px;
+  height: 44px;
   padding: 0 20px;
-  border-radius: 8px;
+  border-radius: 10px;
   border: none;
-  background-color: #dc2626;
+  background-color: var(--color-peligro);
   color: white;
   cursor: pointer;
   font-weight: 600;
@@ -657,13 +688,13 @@
   gap: 16px;
   margin-top: 20px;
   padding-top: 20px;
-  border-top: 1px solid #e5e7eb;
+  border-top: 1px solid var(--color-borde);
   flex-wrap: wrap;
 }
 
 .paginacion-info-vta {
   font-size: 13px;
-  color: #6b7280;
+  color: var(--color-texto-secundario);
 }
 
 .paginacion-controles-vta {
@@ -676,10 +707,10 @@
   min-width: 36px;
   height: 36px;
   padding: 0 10px;
-  border-radius: 6px;
-  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  border: 1px solid var(--color-borde);
   background-color: white;
-  color: #374151;
+  color: var(--color-texto);
   cursor: pointer;
   font-size: 13px;
   font-weight: 600;
@@ -687,8 +718,8 @@
 
 /* Hover SOLO para botones que NO están activos */
 .boton-pagina-vta:hover:not(:disabled):not(.pagina-activa-vta) {
-  background-color: #f3f4f6;
-  border-color: #9333ea;
+  background-color: var(--color-superficie-secundaria);
+  border-color: var(--color-principal);
 }
 
 .boton-pagina-vta:disabled {
@@ -697,15 +728,15 @@
 }
 
 .boton-pagina-vta.pagina-activa-vta {
-  background-color: #9333ea;
+  background-color: var(--color-principal);
   color: white;
-  border-color: #9333ea;
+  border-color: var(--color-principal);
 }
 
 /* Hover del botón activo → más oscuro (no blanco) */
 .boton-pagina-vta.pagina-activa-vta:hover:not(:disabled) {
-  background-color: #7e22ce;
-  border-color: #7e22ce;
+  background-color: var(--color-principal-hover);
+  border-color: var(--color-principal-hover);
   color: white;
 }
 
@@ -714,13 +745,13 @@
   align-items: center;
   gap: 8px;
   font-size: 13px;
-  color: #6b7280;
+  color: var(--color-texto-secundario);
 }
 
 .paginacion-tamano-vta select {
   height: 36px;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
+  border: 1px solid var(--color-borde);
+  border-radius: 8px;
   padding: 0 8px;
   background-color: white;
   outline: none;

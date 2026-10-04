@@ -1,11 +1,20 @@
 const { sql, conectarBD } = require('../config/db');
 
+/**
+ * Lista proveedores con filtros opcionales
+ * @param {Object} req - Objeto de solicitud Express
+ * @param {Object} req.body - Cuerpo de la solicitud
+ * @param {string} [req.body.nombre] - Nombre del proveedor para filtrar
+ * @param {number} [req.body.idCategoria] - ID de categoría para filtrar
+ * @param {Object} res - Objeto de respuesta Express
+ * @returns {Promise<void>} Devuelve array de proveedores
+ */
 async function listarProveedores(req, res) {
   try {
     const {
       nombre = null,
       idCategoria = null
-    } = { ...(req.body || {}), ...(req.query || {}) };
+    } = req.body;
 
     const conexion = await conectarBD();
 
@@ -27,6 +36,14 @@ async function listarProveedores(req, res) {
   }
 }
 
+/**
+ * Obtiene el detalle de un proveedor específico
+ * @param {Object} req - Objeto de solicitud Express
+ * @param {Object} req.params - Parámetros de la URL
+ * @param {string} req.params.id - ID del proveedor
+ * @param {Object} res - Objeto de respuesta Express
+ * @returns {Promise<void>} Devuelve el detalle del proveedor
+ */
 async function detalleProveedor(req, res) {
   try {
     const idProveedor = req.params.id;
@@ -50,6 +67,26 @@ async function detalleProveedor(req, res) {
   }
 }
 
+/**
+ * Inserta un nuevo proveedor en el sistema
+ * @param {Object} req - Objeto de solicitud Express
+ * @param {Object} req.body - Cuerpo de la solicitud con datos del proveedor
+ * @param {string} req.body.nombreProveedor - Nombre del proveedor
+ * @param {number} req.body.idCategoria - ID de categoría del proveedor
+ * @param {number} req.body.idContactoPrimario - ID de persona de contacto primario
+ * @param {number} req.body.idContactoAlternativo - ID de persona de contacto alternativo
+ * @param {number} req.body.idMetodoEntrega - ID de método de entrega
+ * @param {number} req.body.idCiudadEntrega - ID de ciudad de entrega
+ * @param {number} req.body.idEditadoPor - ID de usuario que edita
+ * @param {number} [req.body.idCiudadPostal] - ID de ciudad postal
+ * @param {string} [req.body.telefono] - Teléfono del proveedor
+ * @param {string} [req.body.direccionEntregaLinea1] - Dirección de entrega
+ * @param {string} [req.body.codigoPostalEntrega] - Código postal de entrega
+ * @param {string} [req.body.direccionPostalLinea1] - Dirección postal
+ * @param {string} [req.body.codigoPostal] - Código postal
+ * @param {Object} res - Objeto de respuesta Express
+ * @returns {Promise<void>} Devuelve el ID del nuevo proveedor
+ */
 async function insertarProveedor(req, res) {
   try {
     const {
@@ -80,7 +117,7 @@ async function insertarProveedor(req, res) {
       .input('MetodoEntregaID', sql.Int, idMetodoEntrega)
       .input('DeliveryCityID', sql.Int, idCiudadEntrega)
       .input('LastEditedBy', sql.Int, idEditadoPor)
-      .input('PostalCityID', sql.Int, idCiudadPostal || null)
+      .input('PostalCityID', sql.Int, idCiudadPostal)
       .input('PhoneNumber', sql.NVarChar(20), telefono || 'Sin definir')
       .input('DeliveryAddressLine1', sql.NVarChar(60), direccionEntregaLinea1 || 'Sin definir')
       .input('DeliveryPostalCode', sql.NVarChar(10), codigoPostalEntrega || '00000')
@@ -105,6 +142,28 @@ async function insertarProveedor(req, res) {
   }
 }
 
+/**
+ * Actualiza un proveedor existente
+ * @param {Object} req - Objeto de solicitud Express
+ * @param {Object} req.params - Parámetros de la URL
+ * @param {string} req.params.id - ID del proveedor a actualizar
+ * @param {Object} req.body - Cuerpo de la solicitud con datos a actualizar
+ * @param {string} req.body.nombreProveedor - Nombre del proveedor
+ * @param {number} req.body.idCategoria - ID de categoría del proveedor
+ * @param {number} req.body.idMetodoEntrega - ID de método de entrega
+ * @param {number} req.body.idEditadoPor - ID de usuario que edita
+ * @param {number} [req.body.idContactoPrimario] - ID de persona de contacto primario
+ * @param {number} [req.body.idContactoAlternativo] - ID de persona de contacto alternativo
+ * @param {number} [req.body.idCiudadEntrega] - ID de ciudad de entrega
+ * @param {number} [req.body.idCiudadPostal] - ID de ciudad postal
+ * @param {string} [req.body.telefono] - Teléfono del proveedor
+ * @param {string} [req.body.direccionEntregaLinea1] - Dirección de entrega
+ * @param {string} [req.body.codigoPostalEntrega] - Código postal de entrega
+ * @param {string} [req.body.direccionPostalLinea1] - Dirección postal
+ * @param {string} [req.body.codigoPostal] - Código postal
+ * @param {Object} res - Objeto de respuesta Express
+ * @returns {Promise<void>} Devuelve el proveedor actualizado
+ */
 async function actualizarProveedor(req, res) {
   try {
     const idProveedor = req.params.id;
@@ -134,10 +193,10 @@ async function actualizarProveedor(req, res) {
       .input('CategoriaID', sql.Int, idCategoria)
       .input('MetodoEntregaID', sql.Int, idMetodoEntrega)
       .input('LastEditedBy', sql.Int, idEditadoPor)
-      .input('PrimaryContactID', sql.Int, idContactoPrimario || null)
-      .input('AlternateContactID', sql.Int, idContactoAlternativo || null)
-      .input('DeliveryCityID', sql.Int, idCiudadEntrega || null)
-      .input('PostalCityID', sql.Int, idCiudadPostal || null)
+      .input('PrimaryContactID', sql.Int, idContactoPrimario)
+      .input('AlternateContactID', sql.Int, idContactoAlternativo)
+      .input('DeliveryCityID', sql.Int, idCiudadEntrega)
+      .input('PostalCityID', sql.Int, idCiudadPostal)
       .input('PhoneNumber', sql.NVarChar(20), telefono || 'Sin definir')
       .input('DeliveryAddressLine1', sql.NVarChar(60), direccionEntregaLinea1 || 'Sin definir')
       .input('DeliveryPostalCode', sql.NVarChar(10), codigoPostalEntrega || '00000')
@@ -157,6 +216,14 @@ async function actualizarProveedor(req, res) {
   }
 }
 
+/**
+ * Elimina un proveedor del sistema
+ * @param {Object} req - Objeto de solicitud Express
+ * @param {Object} req.params - Parámetros de la URL
+ * @param {string} req.params.id - ID del proveedor a eliminar
+ * @param {Object} res - Objeto de respuesta Express
+ * @returns {Promise<void>} Devuelve el resultado de la eliminación
+ */
 async function eliminarProveedor(req, res) {
   try {
     const idProveedor = req.params.id;

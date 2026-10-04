@@ -1,5 +1,9 @@
 import URL_API from "./api";
 
+/**
+ * Obtiene los años disponibles para reportes de ventas
+ * @returns {Promise<Object>} Lista de años con registros de ventas
+ */
 export async function obtenerAniosVentas() {
   const respuesta = await fetch(
     `${URL_API}/filtros/anios-ventas`
@@ -14,6 +18,10 @@ export async function obtenerAniosVentas() {
   return datos;
 }
 
+/**
+ * Obtiene los años disponibles para reportes de compras
+ * @returns {Promise<Object>} Lista de años con registros de compras
+ */
 export async function obtenerAniosCompras() {
   const respuesta = await fetch(
     `${URL_API}/filtros/anios-compras`
@@ -28,6 +36,10 @@ export async function obtenerAniosCompras() {
   return datos;
 }
 
+/**
+ * Obtiene las categorías de productos disponibles
+ * @returns {Promise<Object>} Lista de categorías de productos
+ */
 export async function obtenerCategoriasProducto() {
   const respuesta = await fetch(
     `${URL_API}/filtros/categorias-producto`
@@ -42,6 +54,10 @@ export async function obtenerCategoriasProducto() {
   return datos;
 }
 
+/**
+ * Obtiene la lista de proveedores para filtros
+ * @returns {Promise<Object>} Lista de proveedores
+ */
 export async function obtenerProveedores() {
   const respuesta = await fetch(
     `${URL_API}/filtros/proveedores`
@@ -56,6 +72,10 @@ export async function obtenerProveedores() {
   return datos;
 }
 
+/**
+ * Obtiene la lista de productos para filtros
+ * @returns {Promise<Object>} Lista de productos
+ */
 export async function obtenerProductos() {
   const respuesta = await fetch(
     `${URL_API}/filtros/productos`
@@ -70,6 +90,10 @@ export async function obtenerProductos() {
   return datos;
 }
 
+/**
+ * Obtiene las categorías de clientes disponibles
+ * @returns {Promise<Object>} Lista de categorías de clientes
+ */
 export async function obtenerCategoriasCliente() {
   const respuesta = await fetch(
     `${URL_API}/filtros/categorias-clientes`

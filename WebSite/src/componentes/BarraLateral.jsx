@@ -1,6 +1,10 @@
 import { NavLink } from "react-router-dom";
 import "../estilos/barraLateral.css";
 
+/**
+ * Barra lateral de navegación para la aplicación
+ * @returns {JSX.Element} El componente renderizado
+ */
 function BarraLateral() {
   return (
     <aside className="barra-lateral">

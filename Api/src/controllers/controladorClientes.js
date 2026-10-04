@@ -1,12 +1,22 @@
 const { sql, conectarBD } = require('../config/db');
 
+/**
+ * Lista clientes con filtros opcionales
+ * @param {Object} req - Objeto de solicitud Express
+ * @param {Object} req.body - Cuerpo de la solicitud
+ * @param {string} [req.body.nombre] - Nombre del cliente para filtrar
+ * @param {number} [req.body.idCategoria] - ID de categoría para filtrar
+ * @param {number} [req.body.idMetodoEntrega] - ID de método de entrega para filtrar
+ * @param {Object} res - Objeto de respuesta Express
+ * @returns {Promise<void>} Devuelve array de clientes
+ */
 async function listarClientes(req, res) {
   try {
     const {
       nombre = null,
       idCategoria = null,
       idMetodoEntrega = null
-    } = { ...(req.body || {}), ...(req.query || {}) };
+    } = req.body;
 
     const conexion = await conectarBD();
 
@@ -29,6 +39,14 @@ async function listarClientes(req, res) {
   }
 }
 
+/**
+ * Obtiene el detalle de un cliente específico
+ * @param {Object} req - Objeto de solicitud Express
+ * @param {Object} req.params - Parámetros de la URL
+ * @param {string} req.params.id - ID del cliente
+ * @param {Object} res - Objeto de respuesta Express
+ * @returns {Promise<void>} Devuelve el detalle del cliente
+ */
 async function detalleCliente(req, res) {
   try {
     const idCliente = req.params.id;
@@ -52,6 +70,26 @@ async function detalleCliente(req, res) {
   }
 }
 
+/**
+ * Inserta un nuevo cliente en el sistema
+ * @param {Object} req - Objeto de solicitud Express
+ * @param {Object} req.body - Cuerpo de la solicitud con datos del cliente
+ * @param {string} req.body.nombreCliente - Nombre del cliente
+ * @param {number} req.body.idCategoria - ID de categoría del cliente
+ * @param {number} req.body.idMetodoEntrega - ID de método de entrega
+ * @param {number} req.body.idContactoPrimario - ID de persona de contacto
+ * @param {number} req.body.idCiudadEntrega - ID de ciudad de entrega
+ * @param {number} req.body.idEditadoPor - ID de usuario que edita
+ * @param {number} [req.body.idCiudadPostal] - ID de ciudad postal
+ * @param {number} [req.body.idGrupoCompra] - ID de grupo de compra
+ * @param {string} [req.body.telefono] - Teléfono del cliente
+ * @param {string} [req.body.direccionEntregaLinea1] - Dirección de entrega
+ * @param {string} [req.body.codigoPostalEntrega] - Código postal de entrega
+ * @param {string} [req.body.direccionPostalLinea1] - Dirección postal
+ * @param {string} [req.body.codigoPostal] - Código postal
+ * @param {Object} res - Objeto de respuesta Express
+ * @returns {Promise<void>} Devuelve el ID del nuevo cliente
+ */
 async function insertarCliente(req, res) {
   try {
     const {
@@ -81,8 +119,8 @@ async function insertarCliente(req, res) {
       .input('PrimaryContactID', sql.Int, idContactoPrimario)
       .input('DeliveryCityID', sql.Int, idCiudadEntrega)
       .input('LastEditedBy', sql.Int, idEditadoPor)
-      .input('PostalCityID', sql.Int, idCiudadPostal || null)
-      .input('BuyingGroupID', sql.Int, idGrupoCompra || null)
+      .input('PostalCityID', sql.Int, idCiudadPostal)
+      .input('BuyingGroupID', sql.Int, idGrupoCompra)
       .input('PhoneNumber', sql.NVarChar(20), telefono || 'Sin definir')
       .input('DeliveryAddressLine1', sql.NVarChar(60), direccionEntregaLinea1 || 'Sin definir')
       .input('DeliveryPostalCode', sql.NVarChar(10), codigoPostalEntrega || '00000')
@@ -107,6 +145,28 @@ async function insertarCliente(req, res) {
   }
 }
 
+/**
+ * Actualiza un cliente existente
+ * @param {Object} req - Objeto de solicitud Express
+ * @param {Object} req.params - Parámetros de la URL
+ * @param {string} req.params.id - ID del cliente a actualizar
+ * @param {Object} req.body - Cuerpo de la solicitud con datos a actualizar
+ * @param {string} req.body.nombreCliente - Nombre del cliente
+ * @param {number} req.body.idCategoria - ID de categoría del cliente
+ * @param {number} req.body.idMetodoEntrega - ID de método de entrega
+ * @param {number} req.body.idEditadoPor - ID de usuario que edita
+ * @param {number} [req.body.idContactoPrimario] - ID de persona de contacto
+ * @param {number} [req.body.idCiudadEntrega] - ID de ciudad de entrega
+ * @param {number} [req.body.idCiudadPostal] - ID de ciudad postal
+ * @param {number} [req.body.idGrupoCompra] - ID de grupo de compra
+ * @param {string} [req.body.telefono] - Teléfono del cliente
+ * @param {string} [req.body.direccionEntregaLinea1] - Dirección de entrega
+ * @param {string} [req.body.codigoPostalEntrega] - Código postal de entrega
+ * @param {string} [req.body.direccionPostalLinea1] - Dirección postal
+ * @param {string} [req.body.codigoPostal] - Código postal
+ * @param {Object} res - Objeto de respuesta Express
+ * @returns {Promise<void>} Devuelve el cliente actualizado
+ */
 async function actualizarCliente(req, res) {
   try {
     const idCliente = req.params.id;
@@ -136,10 +196,10 @@ async function actualizarCliente(req, res) {
       .input('CategoriaID', sql.Int, idCategoria)
       .input('MetodoEntregaID', sql.Int, idMetodoEntrega)
       .input('LastEditedBy', sql.Int, idEditadoPor)
-      .input('PrimaryContactID', sql.Int, idContactoPrimario || null)
-      .input('DeliveryCityID', sql.Int, idCiudadEntrega || null)
-      .input('PostalCityID', sql.Int, idCiudadPostal || null)
-      .input('BuyingGroupID', sql.Int, idGrupoCompra || null)
+      .input('PrimaryContactID', sql.Int, idContactoPrimario)
+      .input('DeliveryCityID', sql.Int, idCiudadEntrega)
+      .input('PostalCityID', sql.Int, idCiudadPostal)
+      .input('BuyingGroupID', sql.Int, idGrupoCompra)
       .input('PhoneNumber', sql.NVarChar(20), telefono || 'Sin definir')
       .input('DeliveryAddressLine1', sql.NVarChar(60), direccionEntregaLinea1 || 'Sin definir')
       .input('DeliveryPostalCode', sql.NVarChar(10), codigoPostalEntrega || '00000')
@@ -159,6 +219,14 @@ async function actualizarCliente(req, res) {
   }
 }
 
+/**
+ * Elimina un cliente del sistema
+ * @param {Object} req - Objeto de solicitud Express
+ * @param {Object} req.params - Parámetros de la URL
+ * @param {string} req.params.id - ID del cliente a eliminar
+ * @param {Object} res - Objeto de respuesta Express
+ * @returns {Promise<void>} Devuelve el resultado de la eliminación
+ */
 async function eliminarCliente(req, res) {
   try {
     const idCliente = req.params.id;

@@ -42,6 +42,10 @@ const TIPOS_EMPAQUE = [
   { id: 10, nombre: "Bag" },
 ];
 
+/**
+ * Administración de productos del sistema
+ * @returns {JSX.Element} La página renderizada
+ */
 function Productos() {
   // Filtros
   const [nombre, setNombre] = useState("");

@@ -1,5 +1,11 @@
 const { conectarBD } = require("../config/db");
 
+/**
+ * Lista las categorías de clientes disponibles para filtros
+ * @param {Object} req - Objeto de solicitud Express
+ * @param {Object} res - Objeto de respuesta Express
+ * @returns {Promise<void>} Devuelve array de categorías de clientes
+ */
 async function listarCategoriasCliente(req, res) {
   try {
     const conexion = await conectarBD();
@@ -19,6 +25,12 @@ async function listarCategoriasCliente(req, res) {
   }
 }
 
+/**
+ * Lista los métodos de entrega disponibles para filtros
+ * @param {Object} req - Objeto de solicitud Express
+ * @param {Object} res - Objeto de respuesta Express
+ * @returns {Promise<void>} Devuelve array de métodos de entrega
+ */
 async function listarMetodosEntrega(req, res) {
   try {
     const conexion = await conectarBD();
@@ -38,6 +50,12 @@ async function listarMetodosEntrega(req, res) {
   }
 }
 
+/**
+ * Lista las categorías de proveedores disponibles para filtros
+ * @param {Object} req - Objeto de solicitud Express
+ * @param {Object} res - Objeto de respuesta Express
+ * @returns {Promise<void>} Devuelve array de categorías de proveedores
+ */
 async function listarCategoriasProveedor(req, res) {
   try {
     const conexion = await conectarBD();
@@ -57,6 +75,12 @@ async function listarCategoriasProveedor(req, res) {
   }
 }
 
+/**
+ * Lista los grupos de productos disponibles para filtros
+ * @param {Object} req - Objeto de solicitud Express
+ * @param {Object} res - Objeto de respuesta Express
+ * @returns {Promise<void>} Devuelve array de grupos de productos
+ */
 async function listarGruposProductos(req, res) {
   try {
     const conexion = await conectarBD();
@@ -76,6 +100,12 @@ async function listarGruposProductos(req, res) {
   }
 }
 
+/**
+ * Lista las personas disponibles para filtros
+ * @param {Object} req - Objeto de solicitud Express
+ * @param {Object} res - Objeto de respuesta Express
+ * @returns {Promise<void>} Devuelve array de personas
+ */
 async function listarPersonas(req, res) {
   try {
     const conexion = await conectarBD();
@@ -95,6 +125,12 @@ async function listarPersonas(req, res) {
   }
 }
 
+/**
+ * Lista las ciudades disponibles para filtros
+ * @param {Object} req - Objeto de solicitud Express
+ * @param {Object} res - Objeto de respuesta Express
+ * @returns {Promise<void>} Devuelve array de ciudades
+ */
 async function listarCiudades(req, res) {
   try {
     const conexion = await conectarBD();
@@ -114,6 +150,12 @@ async function listarCiudades(req, res) {
   }
 }
 
+/**
+ * Lista los grupos de compra disponibles para filtros
+ * @param {Object} req - Objeto de solicitud Express
+ * @param {Object} res - Objeto de respuesta Express
+ * @returns {Promise<void>} Devuelve array de grupos de compra
+ */
 async function listarGruposCompra(req, res) {
   try {
     const conexion = await conectarBD();
@@ -133,6 +175,12 @@ async function listarGruposCompra(req, res) {
   }
 }
 
+/**
+ * Lista los años de ventas disponibles para filtros
+ * @param {Object} req - Objeto de solicitud Express
+ * @param {Object} res - Objeto de respuesta Express
+ * @returns {Promise<void>} Devuelve array de años de ventas
+ */
 async function listarAniosVentas(req, res) {
   try {
     const conexion = await conectarBD();
@@ -152,6 +200,12 @@ async function listarAniosVentas(req, res) {
   }
 }
 
+/**
+ * Lista los años de compras disponibles para filtros
+ * @param {Object} req - Objeto de solicitud Express
+ * @param {Object} res - Objeto de respuesta Express
+ * @returns {Promise<void>} Devuelve array de años de compras
+ */
 async function listarAniosCompras(req, res) {
   try {
     const conexion = await conectarBD();
@@ -171,6 +225,12 @@ async function listarAniosCompras(req, res) {
   }
 }
 
+/**
+ * Lista las categorías de productos disponibles para filtros
+ * @param {Object} req - Objeto de solicitud Express
+ * @param {Object} res - Objeto de respuesta Express
+ * @returns {Promise<void>} Devuelve array de categorías de productos
+ */
 async function listarCategoriasProducto(req, res) {
   try {
     const conexion = await conectarBD();
@@ -190,6 +250,12 @@ async function listarCategoriasProducto(req, res) {
   }
 }
 
+/**
+ * Lista los proveedores disponibles para filtros
+ * @param {Object} req - Objeto de solicitud Express
+ * @param {Object} res - Objeto de respuesta Express
+ * @returns {Promise<void>} Devuelve array de proveedores
+ */
 async function listarProveedores(req, res) {
   try {
     const conexion = await conectarBD();
@@ -209,6 +275,12 @@ async function listarProveedores(req, res) {
   }
 }
 
+/**
+ * Lista los productos disponibles para filtros
+ * @param {Object} req - Objeto de solicitud Express
+ * @param {Object} res - Objeto de respuesta Express
+ * @returns {Promise<void>} Devuelve array de productos
+ */
 async function listarProductos(req, res) {
   try {
     const conexion = await conectarBD();

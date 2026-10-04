@@ -29,6 +29,10 @@ const FORMULARIO_VACIO = {
   idEditadoPor: "1361",
 };
 
+/**
+ * Administración de proveedores del sistema
+ * @returns {JSX.Element} La página renderizada
+ */
 function Proveedores() {
   // Filtros
   const [nombre, setNombre] = useState("");

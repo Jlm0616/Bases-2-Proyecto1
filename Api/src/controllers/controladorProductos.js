@@ -1,11 +1,20 @@
 const { sql, conectarBD } = require('../config/db');
 
+/**
+ * Lista productos con filtros opcionales
+ * @param {Object} req - Objeto de solicitud Express
+ * @param {Object} req.body - Cuerpo de la solicitud
+ * @param {string} [req.body.nombre] - Nombre del producto para filtrar
+ * @param {number} [req.body.idGrupo] - ID de grupo para filtrar
+ * @param {Object} res - Objeto de respuesta Express
+ * @returns {Promise<void>} Devuelve array de productos
+ */
 async function listarProductos(req, res) {
   try {
     const {
       nombre = null,
       idGrupo = null
-    } = { ...(req.body || {}), ...(req.query || {}) };
+    } = req.body;
 
     const conexion = await conectarBD();
 
@@ -27,6 +36,14 @@ async function listarProductos(req, res) {
   }
 }
 
+/**
+ * Obtiene el detalle de un producto específico
+ * @param {Object} req - Objeto de solicitud Express
+ * @param {Object} req.params - Parámetros de la URL
+ * @param {string} req.params.id - ID del producto
+ * @param {Object} res - Objeto de respuesta Express
+ * @returns {Promise<void>} Devuelve el detalle del producto
+ */
 async function detalleProducto(req, res) {
   try {
     const idProducto = req.params.id;
@@ -50,6 +67,28 @@ async function detalleProducto(req, res) {
   }
 }
 
+/**
+ * Inserta un nuevo producto en el sistema
+ * @param {Object} req - Objeto de solicitud Express
+ * @param {Object} req.body - Cuerpo de la solicitud con datos del producto
+ * @param {string} req.body.nombreProducto - Nombre del producto
+ * @param {number} req.body.idProveedor - ID del proveedor
+ * @param {number} req.body.idEmpaqueUnidad - ID de empaque unidad
+ * @param {number} req.body.idEmpaqueExterior - ID de empaque exterior
+ * @param {number} req.body.idEditadoPor - ID de usuario que edita
+ * @param {number} req.body.idColor - ID de color
+ * @param {string} req.body.marca - Marca del producto
+ * @param {string} req.body.talla - Talla del producto
+ * @param {number} [req.body.diasEntrega] - Días de entrega
+ * @param {number} [req.body.cantidadPorEmpaque] - Cantidad por empaque
+ * @param {number} [req.body.esRefrigerado] - Indica si es refrigerado
+ * @param {number} [req.body.impuesto] - Tasa de impuesto
+ * @param {number} [req.body.precioUnitario] - Precio unitario
+ * @param {number} [req.body.precioVenta] - Precio de venta
+ * @param {number} [req.body.peso] - Peso del producto
+ * @param {Object} res - Objeto de respuesta Express
+ * @returns {Promise<void>} Devuelve el ID del nuevo producto
+ */
 async function insertarProducto(req, res) {
   try {
     const {
@@ -80,9 +119,9 @@ async function insertarProducto(req, res) {
       .input('UnitPackageID', sql.Int, idEmpaqueUnidad)
       .input('OuterPackageID', sql.Int, idEmpaqueExterior)
       .input('LastEditedBy', sql.Int, idEditadoPor)
-      .input('ColorID', sql.Int, idColor || null)
-      .input('Marca', sql.NVarChar(50), marca || null)
-      .input('Talla', sql.NVarChar(20), talla || null)
+      .input('ColorID', sql.Int, idColor)
+      .input('Marca', sql.NVarChar(50), marca)
+      .input('Talla', sql.NVarChar(20), talla)
       .input('LeadTimeDays', sql.Int, diasEntrega || 7)
       .input('QuantityPerOuter', sql.Int, cantidadPorEmpaque || 1)
       .input('IsChillerStock', sql.Bit, esRefrigerado || 0)
@@ -109,6 +148,29 @@ async function insertarProducto(req, res) {
   }
 }
 
+/**
+ * Actualiza un producto existente
+ * @param {Object} req - Objeto de solicitud Express
+ * @param {Object} req.params - Parámetros de la URL
+ * @param {string} req.params.id - ID del producto a actualizar
+ * @param {Object} req.body - Cuerpo de la solicitud con datos a actualizar
+ * @param {string} req.body.nombreProducto - Nombre del producto
+ * @param {number} req.body.idProveedor - ID del proveedor
+ * @param {number} req.body.idEmpaqueUnidad - ID de empaque unidad
+ * @param {number} req.body.idEmpaqueExterior - ID de empaque exterior
+ * @param {number} req.body.precioUnitario - Precio unitario
+ * @param {number} req.body.precioVenta - Precio de venta
+ * @param {number} req.body.impuesto - Tasa de impuesto
+ * @param {number} req.body.idEditadoPor - ID de usuario que edita
+ * @param {number} req.body.idColor - ID de color
+ * @param {string} req.body.marca - Marca del producto
+ * @param {string} req.body.talla - Talla del producto
+ * @param {number} [req.body.diasEntrega] - Días de entrega
+ * @param {number} [req.body.cantidadPorEmpaque] - Cantidad por empaque
+ * @param {number} [req.body.peso] - Peso del producto
+ * @param {Object} res - Objeto de respuesta Express
+ * @returns {Promise<void>} Devuelve el producto actualizado
+ */
 async function actualizarProducto(req, res) {
   try {
     const idProducto = req.params.id;
@@ -137,15 +199,15 @@ async function actualizarProducto(req, res) {
       .input('StockItemID', sql.Int, idProducto)
       .input('NombreProducto', sql.NVarChar(100), nombreProducto)
       .input('SupplierID', sql.Int, idProveedor)
-      .input('UnitPackageID', sql.Int, idEmpaqueUnidad || null)
-      .input('OuterPackageID', sql.Int, idEmpaqueExterior || null)
+      .input('UnitPackageID', sql.Int, idEmpaqueUnidad)
+      .input('OuterPackageID', sql.Int, idEmpaqueExterior)
       .input('UnitPrice', sql.Decimal(18, 2), precioUnitario || 0)
       .input('PrecioVenta', sql.Decimal(18, 2), precioVenta || null)
       .input('TaxRate', sql.Decimal(18, 3), impuesto || 15)
       .input('LastEditedBy', sql.Int, idEditadoPor)
-      .input('ColorID', sql.Int, idColor || null)
-      .input('Marca', sql.NVarChar(50), marca || null)
-      .input('Talla', sql.NVarChar(20), talla || null)
+      .input('ColorID', sql.Int, idColor)
+      .input('Marca', sql.NVarChar(50), marca)
+      .input('Talla', sql.NVarChar(20), talla)
       .input('LeadTimeDays', sql.Int, diasEntrega || null)
       .input('QuantityPerOuter', sql.Int, cantidadPorEmpaque || null)
       .input('Peso', sql.Decimal(18, 3), peso || null)
@@ -163,6 +225,14 @@ async function actualizarProducto(req, res) {
   }
 }
 
+/**
+ * Elimina un producto del sistema
+ * @param {Object} req - Objeto de solicitud Express
+ * @param {Object} req.params - Parámetros de la URL
+ * @param {string} req.params.id - ID del producto a eliminar
+ * @param {Object} res - Objeto de respuesta Express
+ * @returns {Promise<void>} Devuelve el resultado de la eliminación
+ */
 async function eliminarProducto(req, res) {
   try {
     const idProducto = req.params.id;

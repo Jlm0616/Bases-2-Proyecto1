@@ -1,47 +1,106 @@
 .barra-lateral {
-  width: 250px;
+  width: 260px;
   height: 100vh;
-  background-color: #111827;
+
+  background:
+    linear-gradient(
+      180deg,
+      #111827 0%,
+      #0f172a 100%
+    );
+
   color: white;
+
   position: fixed;
   left: 0;
   top: 0;
-  padding: 25px 18px;
+
+  padding: 24px 16px;
+
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+
+  z-index: 200;
 }
 
 .logo {
-  padding: 0 12px 30px 12px;
-  border-bottom: 1px solid #374151;
+  padding: 4px 14px 26px;
+
+  border-bottom:
+    1px solid rgba(255, 255, 255, 0.08);
 }
 
 .logo h2 {
-  font-size: 22px;
+  font-size: 21px;
+  font-weight: 750;
+  letter-spacing: -0.03em;
 }
 
 .logo span {
-  color: #9ca3af;
-  font-size: 14px;
+  display: block;
+
+  margin-top: 3px;
+
+  color: #94a3b8;
+  font-size: 13px;
 }
 
 .menu {
-  margin-top: 25px;
+  margin-top: 22px;
+
   display: flex;
   flex-direction: column;
-  gap: 8px;
+
+  gap: 5px;
 }
 
 .menu a {
-  padding: 12px 14px;
-  border-radius: 8px;
-  color: #d1d5db;
+  position: relative;
+
+  padding: 11px 14px;
+
+  border-radius: 9px;
+
+  color: #cbd5e1;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  transition:
+    background-color 0.18s ease,
+    color 0.18s ease;
 }
 
 .menu a:hover {
-  background-color: #1f2937;
+  background-color: rgba(255, 255, 255, 0.07);
   color: white;
 }
 
 .menu a.activo {
-  background-color: #2563eb;
+  background:
+    linear-gradient(
+      135deg,
+      #2563eb,
+      #3b82f6
+    );
+
   color: white;
+
+  box-shadow:
+    0 6px 18px rgba(37, 99, 235, 0.25);
+}
+
+.menu a.activo::before {
+  content: "";
+
+  position: absolute;
+
+  left: -16px;
+  top: 9px;
+  bottom: 9px;
+
+  width: 3px;
+
+  border-radius: 0 4px 4px 0;
+
+  background-color: #60a5fa;
 }
