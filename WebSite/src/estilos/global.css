@@ -208,3 +208,13 @@ a {
   background-color: #eef2f7;
   color: #0f172a;
 }
+
+a {
+  color: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+a:hover {
+  color: #2563eb;
+}

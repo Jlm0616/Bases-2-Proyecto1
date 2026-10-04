@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   buscarVentas,
   obtenerDetalleVenta,
@@ -703,7 +704,13 @@ function Ventas() {
                 <div className="campo-vta">
                   <span className="campo-etiqueta-vta">Cliente</span>
                   <span className="campo-valor-vta">
-                    {detalleVenta.encabezado.NombreCliente || "—"}
+                    {detalleVenta.encabezado.NombreCliente ? (
+                      <Link to="/clientes">
+                        {detalleVenta.encabezado.NombreCliente}
+                      </Link>
+                    ) : (
+                      "—"
+                    )}
                   </span>
                 </div>
 
@@ -784,7 +791,15 @@ function Ventas() {
                 {detalleVenta.detalle && detalleVenta.detalle.length > 0 ? (
                   detalleVenta.detalle.map((linea, idx) => (
                     <tr key={idx}>
-                      <td>{linea.NombreProducto}</td>
+                      <td>
+                        {linea.NombreProducto ? (
+                          <Link to="/productos">
+                            {linea.NombreProducto}
+                          </Link>
+                        ) : (
+                          "—"
+                        )}
+                      </td>
                       <td>{linea.Cantidad}</td>
                       <td>{formatearMoneda(linea.PrecioUnitario)}</td>
                       <td>{linea.ImpuestoAplicado}%</td>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import {
   buscarProductos,
   obtenerGruposProductos,
@@ -650,7 +651,13 @@ function Productos() {
               <div className="campo-prod">
                 <span className="campo-etiqueta-prod">Proveedor</span>
                 <span className="campo-valor-prod">
-                  {detalleProducto.NombreProveedor || "—"}
+                  {detalleProducto.IdProveedor ? (
+                    <Link to="/proveedores">
+                      {detalleProducto.NombreProveedor}
+                    </Link>
+                  ) : (
+                    "—"
+                  )}
                 </span>
               </div>
 
