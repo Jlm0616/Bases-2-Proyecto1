@@ -202,12 +202,13 @@ async function matrizVentasPorCategoria(req, res) {
 }
 
 /**
- * Obtiene el seguimiento de compras de un cliente por año, mes y categoría
+ * Obtiene el seguimiento de compras de un cliente por año, mes, categoría y subcategoría
  * @param {Object} req - Objeto de solicitud Express
  * @param {Object} req.body - Cuerpo de la solicitud
  * @param {number} req.body.anio - Año para filtrar
  * @param {number} req.body.mes - Mes para filtrar
  * @param {string} [req.body.categoria] - Categoría para filtrar
+ * @param {string} [req.body.subcategoria] - Subcategoría para filtrar
  * @param {Object} res - Objeto de respuesta Express
  * @returns {Promise<void>} Devuelve array de seguimiento de compras del cliente
  */
@@ -216,17 +217,25 @@ async function seguimientoComprasCliente(req, res) {
     const {
       anio,
       mes,
-      categoria
+      categoria,
+      subcategoria
     } = req.body;
 
     const conexion = await conectarBD();
 
     const resultado = await conexion
       .request()
-      .input('Anio', sql.Int, anio)
-      .input('Mes', sql.Int, mes)
-      .input('Categoria', sql.NVarChar(100), categoria)
-      .execute('Rpt_sp_SeguimientoComprasCliente');
+      .input("Anio", sql.Int, anio)
+      .input("Mes", sql.Int, mes)
+      .input("Categoria", sql.NVarChar(100), categoria)
+      .input(
+        "Subcategoria",
+        sql.NVarChar(100),
+        subcategoria
+      )
+      .execute(
+        "Rpt_sp_SeguimientoComprasCliente"
+      );
 
     res.json(resultado.recordset);
 
@@ -234,19 +243,21 @@ async function seguimientoComprasCliente(req, res) {
     console.error(error);
 
     res.status(500).json({
-      mensaje: 'Error al obtener seguimiento de clientes',
-      error: error.message
+      mensaje:
+        "Error al obtener seguimiento de compras de clientes",
+      error: error.message,
     });
   }
 }
 
 /**
- * Obtiene el seguimiento de compras de un proveedor por año, mes y categoría
+ * Obtiene el seguimiento de compras de un proveedor por año, mes, categoría y subcategoría
  * @param {Object} req - Objeto de solicitud Express
  * @param {Object} req.body - Cuerpo de la solicitud
  * @param {number} req.body.anio - Año para filtrar
  * @param {number} req.body.mes - Mes para filtrar
  * @param {string} [req.body.categoria] - Categoría para filtrar
+ * @param {string} [req.body.subcategoria] - Subcategoría para filtrar
  * @param {Object} res - Objeto de respuesta Express
  * @returns {Promise<void>} Devuelve array de seguimiento de compras del proveedor
  */
@@ -255,17 +266,25 @@ async function seguimientoComprasProveedor(req, res) {
     const {
       anio,
       mes,
-      categoria
+      categoria,
+      subcategoria
     } = req.body;
 
     const conexion = await conectarBD();
 
     const resultado = await conexion
       .request()
-      .input('Anio', sql.Int, anio)
-      .input('Mes', sql.Int, mes)
-      .input('Categoria', sql.NVarChar(100), categoria)
-      .execute('Rpt_sp_SeguimientoComprasProveedor');
+      .input("Anio", sql.Int, anio)
+      .input("Mes", sql.Int, mes)
+      .input("Categoria", sql.NVarChar(100), categoria)
+      .input(
+        "Subcategoria",
+        sql.NVarChar(100),
+        subcategoria
+      )
+      .execute(
+        "Rpt_sp_SeguimientoComprasProveedor"
+      );
 
     res.json(resultado.recordset);
 
@@ -273,8 +292,9 @@ async function seguimientoComprasProveedor(req, res) {
     console.error(error);
 
     res.status(500).json({
-      mensaje: 'Error al obtener seguimiento de proveedores',
-      error: error.message
+      mensaje:
+        "Error al obtener seguimiento de compras de proveedores",
+      error: error.message,
     });
   }
 }

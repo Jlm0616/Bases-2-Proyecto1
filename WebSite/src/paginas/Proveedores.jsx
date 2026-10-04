@@ -11,6 +11,7 @@ import {
   obtenerCiudades,
 } from "../servicios/proveedores";
 import Modal from "../componentes/Modal";
+import MapaUbicacion from "../componentes/MapaUbicacion";
 import "../estilos/proveedores.css";
 
 const FORMULARIO_VACIO = {
@@ -762,6 +763,19 @@ function Proveedores() {
                   {detalleProveedor.UbicacionEntregaMapa || "—"}
                 </span>
               </div>
+            </div>
+
+            <div className="seccion-mapa">
+              <h4>Ubicación de entrega</h4>
+
+              <MapaUbicacion
+                ubicacion={
+                  detalleProveedor.UbicacionEntregaMapa
+                }
+                titulo={
+                  detalleProveedor.NombreProveedor
+                }
+              />
             </div>
           </div>
         ) : null}

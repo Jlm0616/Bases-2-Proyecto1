@@ -107,3 +107,21 @@ export async function obtenerCategoriasCliente() {
 
   return datos;
 }
+
+/**
+ * Obtiene las subcategorías de productos disponibles
+ * @returns {Promise<Object>} Lista de subcategorías de productos
+ */
+export async function obtenerSubcategoriasProducto() {
+  const respuesta = await fetch(
+    `${URL_API}/filtros/subcategorias-producto`
+  );
+
+  const datos = await respuesta.json();
+
+  if (!respuesta.ok) {
+    throw new Error("Error al obtener subcategorías de producto");
+  }
+
+  return datos;
+}

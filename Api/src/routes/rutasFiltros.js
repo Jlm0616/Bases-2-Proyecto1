@@ -17,6 +17,7 @@ const {
   listarCategoriasProducto,
   listarProveedores,
   listarProductos,
+  listarSubcategoriasProducto,
 } = require("../controllers/controladorFiltros");
 
 const router = express.Router();
@@ -34,5 +35,6 @@ router.get("/anios-compras", listarAniosCompras);
 router.get("/categorias-producto", listarCategoriasProducto);
 router.get("/proveedores", listarProveedores);
 router.get("/productos", listarProductos);
+router.get("/subcategorias-producto", listarSubcategoriasProducto);
 
 module.exports = router;

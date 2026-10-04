@@ -300,6 +300,31 @@ async function listarProductos(req, res) {
   }
 }
 
+/**
+ * Lista las subcategorías de productos disponibles para filtros
+ * @param {Object} req - Objeto de solicitud Express
+ * @param {Object} res - Objeto de respuesta Express
+ * @returns {Promise<void>} Devuelve array de subcategorías de productos
+ */
+async function listarSubcategoriasProducto(req, res) {
+  try {
+    const conexion = await conectarBD();
+
+    const resultado = await conexion
+      .request()
+      .execute("Flt_sp_ListarSubcategoriasProducto");
+
+    res.json(resultado.recordset);
+  } catch (error) {
+    console.error(error);
+
+    res.status(500).json({
+      mensaje: "Error al listar subcategorías de producto",
+      error: error.message,
+    });
+  }
+}
+
 module.exports = {
   listarCategoriasCliente,
   listarMetodosEntrega,
@@ -313,4 +338,5 @@ module.exports = {
   listarCategoriasProducto,
   listarProveedores,
   listarProductos,
+  listarSubcategoriasProducto,
 };

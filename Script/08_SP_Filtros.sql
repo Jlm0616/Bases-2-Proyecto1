@@ -180,9 +180,9 @@ GO
 
 
 -- ============================================
--- SP: Listar categorias o grupos de productos
--- Uso: cargar opciones de categoria de producto
--- Orden por defecto: nombre del grupo ascendente
+-- SP: Listar categorias principales de productos
+-- Uso: cargar opciones de categoria
+-- en reportes
 -- ============================================
 
 CREATE OR ALTER PROCEDURE Flt_sp_ListarCategoriasProducto
@@ -191,8 +191,28 @@ BEGIN
     SET NOCOUNT ON;
 
     SELECT
-        SG.StockGroupID     AS IdCategoriaProducto,
-        SG.StockGroupName   AS NombreCategoriaProducto
+        SG.StockGroupID AS IdCategoriaProducto,
+        SG.StockGroupName AS NombreCategoriaProducto
+    FROM Inv_GruposArticulo AS SG
+    ORDER BY SG.StockGroupName ASC;
+END
+GO
+
+
+-- ============================================
+-- SP: Listar subcategorias de productos
+-- Uso: cargar opciones de subcategoria
+-- para los reportes 7 y 8
+-- ============================================
+
+CREATE OR ALTER PROCEDURE Flt_sp_ListarSubcategoriasProducto
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        SG.StockGroupID AS IdSubcategoria,
+        SG.StockGroupName AS NombreSubcategoria
     FROM Inv_GruposArticulo AS SG
     ORDER BY SG.StockGroupName ASC;
 END

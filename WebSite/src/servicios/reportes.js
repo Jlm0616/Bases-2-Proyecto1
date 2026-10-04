@@ -148,7 +148,7 @@ export async function obtenerMatrizVentas() {
 
 /**
  * Obtiene el seguimiento de clientes en el tiempo
- * @param {Object} filtros - Filtros para el reporte (fechas, categorías, etc.)
+ * @param {Object} filtros - Filtros para el reporte (año, mes, categoría, subcategoría)
  * @returns {Promise<Object>} Datos de seguimiento de clientes por período
  */
 export async function obtenerSeguimientoClientes(filtros) {
@@ -171,7 +171,7 @@ export async function obtenerSeguimientoClientes(filtros) {
 
 /**
  * Obtiene el seguimiento de proveedores en el tiempo
- * @param {Object} filtros - Filtros para el reporte (fechas, categorías, etc.)
+ * @param {Object} filtros - Filtros para el reporte (año, mes, categoría, subcategoría)
  * @returns {Promise<Object>} Datos de seguimiento de proveedores por período
  */
 export async function obtenerSeguimientoProveedores(filtros) {

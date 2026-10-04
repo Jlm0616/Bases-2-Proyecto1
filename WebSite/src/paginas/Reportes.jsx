@@ -4,6 +4,7 @@ import {
   obtenerAniosVentas,
   obtenerAniosCompras,
   obtenerCategoriasProducto,
+  obtenerSubcategoriasProducto,
   obtenerProveedores,
   obtenerProductos,
   obtenerCategoriasCliente,
@@ -34,6 +35,7 @@ function Reportes() {
   const [aniosVentas, setAniosVentas] = useState([]);
   const [aniosCompras, setAniosCompras] = useState([]);
   const [categoriasProducto, setCategoriasProducto] = useState([]);
+  const [subcategoriasProducto, setSubcategoriasProducto] = useState([]);
   const [proveedores, setProveedores] = useState([]);
   const [productos, setProductos] = useState([]);
   const [categoriasCliente, setCategoriasCliente] = useState([]);
@@ -48,6 +50,7 @@ function Reportes() {
   const [mes, setMes] = useState("");
 
   const [categoriaProducto, setCategoriaProducto] = useState("");
+  const [subcategoriaProducto, setSubcategoriaProducto] = useState("");
   const [categoriaCliente, setCategoriaCliente] = useState("");
   const [proveedor, setProveedor] = useState("");
   const [producto, setProducto] = useState("");
@@ -123,6 +126,7 @@ function Reportes() {
         datosAniosVentas,
         datosAniosCompras,
         datosCategoriasProducto,
+        datosSubcategoriasProducto,
         datosProveedores,
         datosProductos,
         datosCategoriasCliente,
@@ -130,6 +134,7 @@ function Reportes() {
         obtenerAniosVentas(),
         obtenerAniosCompras(),
         obtenerCategoriasProducto(),
+        obtenerSubcategoriasProducto(),
         obtenerProveedores(),
         obtenerProductos(),
         obtenerCategoriasCliente(),
@@ -138,6 +143,7 @@ function Reportes() {
       setAniosVentas(datosAniosVentas);
       setAniosCompras(datosAniosCompras);
       setCategoriasProducto(datosCategoriasProducto);
+      setSubcategoriasProducto(datosSubcategoriasProducto);
       setProveedores(datosProveedores);
       setProductos(datosProductos);
       setCategoriasCliente(datosCategoriasCliente);
@@ -161,6 +167,7 @@ function Reportes() {
     setMes("");
 
     setCategoriaProducto("");
+    setSubcategoriaProducto("");
     setCategoriaCliente("");
     setProveedor("");
     setProducto("");
@@ -238,6 +245,7 @@ function Reportes() {
             anio: anio === "" ? null : Number(anio),
             mes: mes === "" ? null : Number(mes),
             categoria: categoriaProducto || null,
+            subcategoria: subcategoriaProducto || null,
           });
           break;
 
@@ -246,6 +254,7 @@ function Reportes() {
             anio: anio === "" ? null : Number(anio),
             mes: mes === "" ? null : Number(mes),
             categoria: categoriaProducto || null,
+            subcategoria: subcategoriaProducto || null,
           });
           break;
 
@@ -594,6 +603,30 @@ function Reportes() {
                     value={elemento.NombreCategoriaProducto}
                   >
                     {elemento.NombreCategoriaProducto}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          {["7", "8"].includes(reporteSeleccionado) && (
+            <div className="grupo-reporte">
+              <label>Subcategoría de producto</label>
+
+              <select
+                value={subcategoriaProducto}
+                onChange={(evento) =>
+                  setSubcategoriaProducto(evento.target.value)
+                }
+              >
+                <option value="">Todas</option>
+
+                {subcategoriasProducto.map((elemento) => (
+                  <option
+                    key={elemento.IdSubcategoria}
+                    value={elemento.NombreSubcategoria}
+                  >
+                    {elemento.NombreSubcategoria}
                   </option>
                 ))}
               </select>

@@ -259,11 +259,13 @@ GO
 -- ============================================
 -- REPORTE 7: Seguimiento de compras por cliente (resumen mensual)
 -- FIX: EXISTS en filtro + excluir notas de crédito
+-- UPDATE: Agregado filtro de subcategoría
 -- ============================================
 CREATE OR ALTER PROCEDURE Rpt_sp_SeguimientoComprasCliente
     @Anio       INT           = NULL,
     @Mes        INT           = NULL,
-    @Categoria  NVARCHAR(100) = NULL
+    @Categoria  NVARCHAR(100) = NULL,
+    @Subcategoria NVARCHAR(100) = NULL
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -290,7 +292,14 @@ BEGIN
               FROM Inv_ArticuloGrupo AS AG
               JOIN Inv_GruposArticulo AS SG ON SG.StockGroupID = AG.StockGroupID
               WHERE AG.StockItemID = IL.StockItemID
-                AND SG.StockGroupName LIKE '%' + @Categoria + '%'
+                AND SG.StockGroupName = @Categoria
+          ))
+      AND (@Subcategoria IS NULL OR EXISTS (
+              SELECT 1
+              FROM Inv_ArticuloGrupo AS AG
+              JOIN Inv_GruposArticulo AS SG ON SG.StockGroupID = AG.StockGroupID
+              WHERE AG.StockItemID = IL.StockItemID
+                AND SG.StockGroupName = @Subcategoria
           ))
     GROUP BY C.CustomerID, C.CustomerName, YEAR(I.InvoiceDate), MONTH(I.InvoiceDate)
     ORDER BY C.CustomerName, Anio, Mes;
@@ -300,11 +309,13 @@ GO
 -- ============================================
 -- REPORTE 8: Seguimiento de compras a proveedores (resumen mensual)
 -- FIX: EXISTS en filtro (no JOIN que duplicaba)
+-- UPDATE: Agregado filtro de subcategoría
 -- ============================================
 CREATE OR ALTER PROCEDURE Rpt_sp_SeguimientoComprasProveedor
     @Anio       INT           = NULL,
     @Mes        INT           = NULL,
-    @Categoria  NVARCHAR(100) = NULL
+    @Categoria  NVARCHAR(100) = NULL,
+    @Subcategoria NVARCHAR(100) = NULL
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -330,7 +341,14 @@ BEGIN
               FROM Inv_ArticuloGrupo AS AG
               JOIN Inv_GruposArticulo AS SG ON SG.StockGroupID = AG.StockGroupID
               WHERE AG.StockItemID = POL.StockItemID
-                AND SG.StockGroupName LIKE '%' + @Categoria + '%'
+                AND SG.StockGroupName = @Categoria
+          ))
+      AND (@Subcategoria IS NULL OR EXISTS (
+              SELECT 1
+              FROM Inv_ArticuloGrupo AS AG
+              JOIN Inv_GruposArticulo AS SG ON SG.StockGroupID = AG.StockGroupID
+              WHERE AG.StockItemID = POL.StockItemID
+                AND SG.StockGroupName = @Subcategoria
           ))
     GROUP BY P.SupplierID, P.SupplierName, YEAR(PO.OrderDate), MONTH(PO.OrderDate)
     ORDER BY P.SupplierName, Anio, Mes;
