@@ -149,13 +149,7 @@ export async function obtenerMetodosEntrega() {
 }
 
 export async function obtenerProductos() {
-  const respuesta = await fetch(`${URL_API}/productos/buscar`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ nombre: "", idGrupo: null }),
-  });
+  const respuesta = await fetch(`${URL_API}/filtros/productos`);
 
   const datos = await respuesta.json();
 

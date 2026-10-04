@@ -221,7 +221,8 @@ GO
 
 -- ============================================
 -- SP: Listar productos
--- Uso: cargar opciones de producto en reportes
+-- Uso: cargar opciones de producto en formularios y reportes
+-- Incluye el precio unitario actual del producto
 -- Orden por defecto: nombre del producto ascendente
 -- ============================================
 
@@ -232,7 +233,8 @@ BEGIN
 
     SELECT
         SI.StockItemID     AS IdProducto,
-        SI.StockItemName   AS NombreProducto
+        SI.StockItemName   AS NombreProducto,
+        SI.UnitPrice       AS PrecioUnitario
     FROM Inv_Articulos AS SI
     ORDER BY SI.StockItemName ASC;
 END

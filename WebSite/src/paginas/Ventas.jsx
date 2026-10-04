@@ -23,7 +23,13 @@ const FORMULARIO_VACIO = {
   idPersonaEmpacadora: "",
   numeroOrdenCompra: "",
   instruccionesEntrega: "",
-  lineas: [{ idProducto: "", cantidad: "1", precioUnitario: "0" }],
+  lineas: [
+    {
+      idProducto: "",
+      cantidad: "1",
+      precioUnitario: "",
+    },
+  ],
 };
 
 function Ventas() {
@@ -250,11 +256,15 @@ function Ventas() {
   }
 
   function agregarLinea() {
-    setFormulario((prev) => ({
-      ...prev,
+    setFormulario((anterior) => ({
+      ...anterior,
       lineas: [
-        ...prev.lineas,
-        { idProducto: "", cantidad: "1", precioUnitario: "0" },
+        ...anterior.lineas,
+        {
+          idProducto: "",
+          cantidad: "1",
+          precioUnitario: "",
+        },
       ],
     }));
   }
@@ -271,6 +281,30 @@ function Ventas() {
       const nuevasLineas = [...prev.lineas];
       nuevasLineas[indice] = { ...nuevasLineas[indice], [campo]: valor };
       return { ...prev, lineas: nuevasLineas };
+    });
+  }
+
+  function seleccionarProducto(indice, idProducto) {
+    const productoSeleccionado = productos.find(
+      (producto) =>
+        Number(producto.IdProducto) === Number(idProducto)
+    );
+
+    setFormulario((anterior) => {
+      const nuevasLineas = [...anterior.lineas];
+
+      nuevasLineas[indice] = {
+        ...nuevasLineas[indice],
+        idProducto,
+        precioUnitario: productoSeleccionado
+          ? String(productoSeleccionado.PrecioUnitario)
+          : "",
+      };
+
+      return {
+        ...anterior,
+        lineas: nuevasLineas,
+      };
     });
   }
 
@@ -935,21 +969,20 @@ function Ventas() {
                       <select
                         value={linea.idProducto}
                         onChange={(e) =>
-                          actualizarLinea(
+                          seleccionarProducto(
                             idx,
-                            "idProducto",
                             e.target.value
                           )
                         }
                         required
                       >
                         <option value="">Seleccione...</option>
-                        {productos.map((p) => (
+                        {productos.map((producto) => (
                           <option
-                            key={p.IdProducto}
-                            value={p.IdProducto}
+                            key={producto.IdProducto}
+                            value={producto.IdProducto}
                           >
-                            {p.NombreProducto}
+                            {producto.NombreProducto}
                           </option>
                         ))}
                       </select>
@@ -979,14 +1012,7 @@ function Ventas() {
                         step="0.01"
                         min="0"
                         value={linea.precioUnitario}
-                        onChange={(e) =>
-                          actualizarLinea(
-                            idx,
-                            "precioUnitario",
-                            e.target.value
-                          )
-                        }
-                        required
+                        readOnly
                       />
                     </div>
 
