@@ -31,7 +31,11 @@ BEGIN
     WHERE (@NombreProveedor IS NULL OR P.SupplierName LIKE '%' + @NombreProveedor + '%')
       AND (@Categoria IS NULL OR PC.SupplierCategoryName LIKE '%' + @Categoria + '%')
     GROUP BY ROLLUP (PC.SupplierCategoryName, P.SupplierName)
-    ORDER BY PC.SupplierCategoryName, P.SupplierName;
+    ORDER BY 
+        CASE WHEN PC.SupplierCategoryName IS NULL THEN 1 ELSE 0 END,
+        PC.SupplierCategoryName,
+        CASE WHEN P.SupplierName IS NULL THEN 1 ELSE 0 END,
+        P.SupplierName;
 END
 GO
 
@@ -66,7 +70,11 @@ BEGIN
       AND (@NombreCliente IS NULL OR C.CustomerName LIKE '%' + @NombreCliente + '%')
       AND (@Categoria IS NULL OR CC.CustomerCategoryName LIKE '%' + @Categoria + '%')
     GROUP BY ROLLUP (CC.CustomerCategoryName, C.CustomerName)
-    ORDER BY CC.CustomerCategoryName, C.CustomerName;
+    ORDER BY 
+        CASE WHEN CC.CustomerCategoryName IS NULL THEN 1 ELSE 0 END,
+        CC.CustomerCategoryName,
+        CASE WHEN C.CustomerName IS NULL THEN 1 ELSE 0 END,
+        C.CustomerName;
 END
 GO
 
