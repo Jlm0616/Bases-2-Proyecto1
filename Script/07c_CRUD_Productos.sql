@@ -1,19 +1,34 @@
 USE WideWorldImporters;
 GO
 
--- ============================================
--- 07c - CRUD Productos
--- Procedimientos:
---   Inv_sp_InsertarProducto
---   Inv_sp_ActualizarProducto
---   Inv_sp_EliminarProducto
--- Dependencias: Prov_Proveedores, Gen_Personas,
---               Vta_LineasFactura, Cmp_LineasOrdenCompra
--- ============================================
+-- ============================================================================
+-- Stored Procedure: Inv_sp_InsertarProducto
+-- Descripción: Inserta un nuevo producto en el sistema, creando simultáneamente el registro de inventario correspondiente
+-- Uso: Se utiliza para registrar nuevos productos en el catálogo, con configuración inicial de existencias y parámetros de inventario
+-- Parámetros:
+--   - @NombreProducto: Nombre del producto (obligatorio)
+--   - @SupplierID: Identificador del proveedor (obligatorio)
+--   - @UnitPackageID: Identificador del tipo de empaque unitario (obligatorio)
+--   - @OuterPackageID: Identificador del tipo de empaque exterior (obligatorio)
+--   - @LastEditedBy: Identificador de la persona que realiza la edición (obligatorio)
+--   - @ColorID: Identificador del color (opcional)
+--   - @Marca: Marca del producto (opcional)
+--   - @Talla: Tamaño del producto (opcional)
+--   - @LeadTimeDays: Días de tiempo de entrega (opcional, default 7)
+--   - @QuantityPerOuter: Cantidad por empaque exterior (opcional, default 1)
+--   - @IsChillerStock: Indica si requiere refrigeración (opcional, default 0)
+--   - @TaxRate: Tasa de impuesto (opcional, default 15.000)
+--   - @UnitPrice: Precio unitario de costo (opcional, default 0)
+--   - @PrecioVenta: Precio de venta recomendado (opcional)
+--   - @Peso: Peso típico por unidad (opcional, default 0.000)
+--   - @NuevoID: Parámetro OUTPUT que retorna el ID del producto insertado
+-- Tablas origen: Inv_Articulos, Prov_Proveedores, Gen_Personas, Inv_ExistenciasArticulo
+-- Columnas retornadas:
+--   - NuevoProductoID: Identificador del producto recién insertado
+--   - Resultado: 'OK' si la operación fue exitosa
+-- Notas: Crea automáticamente el registro en Inv_ExistenciasArticulo con valores iniciales
+-- ============================================================================
 
--- ============================================
--- SP: Insertar nuevo producto
--- ============================================
 CREATE OR ALTER PROCEDURE Inv_sp_InsertarProducto
     @NombreProducto     NVARCHAR(100),
     @SupplierID         INT,
@@ -85,13 +100,34 @@ BEGIN
 END
 GO
 
--- ============================================
--- SP: Actualizar producto existente
--- Acepta los mismos campos que Insertar (formulario completo)
--- FIX: también sincroniza LastCostPrice en Inv_ExistenciasArticulo
---      para que el cálculo de LineProfit en ventas use el costo real.
--- NOTA: SearchDetails es una columna computada → no se puede actualizar.
--- ============================================
+
+-- ============================================================================
+-- Stored Procedure: Inv_sp_ActualizarProducto
+-- Descripción: Actualiza los datos de un producto existente, sincronizando el costo en el registro de inventario para cálculos de ganancia
+-- Uso: Se utiliza para modificar la información de productos, actualizando automáticamente el LastCostPrice en Inv_ExistenciasArticulo
+-- Parámetros:
+--   - @StockItemID: Identificador del producto a actualizar (obligatorio)
+--   - @NombreProducto: Nuevo nombre del producto (obligatorio)
+--   - @SupplierID: Nuevo identificador del proveedor (obligatorio)
+--   - @UnitPackageID: Nuevo identificador de empaque unitario (opcional, mantiene valor actual si es NULL)
+--   - @OuterPackageID: Nuevo identificador de empaque exterior (opcional, mantiene valor actual si es NULL)
+--   - @UnitPrice: Nuevo precio unitario de costo (opcional, default 0)
+--   - @PrecioVenta: Nuevo precio de venta recomendado (opcional)
+--   - @TaxRate: Nueva tasa de impuesto (opcional, default 15.000)
+--   - @LastEditedBy: Identificador de la persona que realiza la edición (obligatorio)
+--   - @ColorID: Nuevo identificador de color (opcional, mantiene valor actual si es NULL)
+--   - @Marca: Nueva marca del producto (opcional, mantiene valor actual si es NULL)
+--   - @Talla: Nuevo tamaño del producto (opcional, mantiene valor actual si es NULL)
+--   - @LeadTimeDays: Nuevos días de tiempo de entrega (opcional, mantiene valor actual si es NULL)
+--   - @QuantityPerOuter: Nueva cantidad por empaque exterior (opcional, mantiene valor actual si es NULL)
+--   - @Peso: Nuevo peso típico por unidad (opcional, mantiene valor actual si es NULL)
+-- Tablas origen: Inv_Articulos, Prov_Proveedores, Gen_Personas, Inv_ExistenciasArticulo
+-- Columnas retornadas:
+--   - FilasAfectadas: Cantidad de filas actualizadas (debe ser 1)
+--   - Resultado: 'OK' si la operación fue exitosa
+-- Notas: Sincroniza LastCostPrice en Inv_ExistenciasArticulo para asegurar cálculos correctos de LineProfit en ventas
+-- ============================================================================
+
 CREATE OR ALTER PROCEDURE Inv_sp_ActualizarProducto
     @StockItemID        INT,
     @NombreProducto     NVARCHAR(100),
@@ -180,9 +216,20 @@ BEGIN
 END
 GO
 
--- ============================================
--- SP: Eliminar producto
--- ============================================
+
+-- ============================================================================
+-- Stored Procedure: Inv_sp_EliminarProducto
+-- Descripción: Elimina un producto del sistema junto con su registro de inventario, verificando previamente que no tenga ventas ni compras registradas
+-- Uso: Se utiliza para eliminar productos que no tienen historial de transacciones, garantizando integridad referencial
+-- Parámetros:
+--   - @StockItemID: Identificador del producto a eliminar (obligatorio)
+-- Tablas origen: Inv_Articulos, Inv_ExistenciasArticulo, Vta_LineasFactura, Cmp_LineasOrdenCompra
+-- Columnas retornadas:
+--   - FilasAfectadas: Cantidad de filas eliminadas (debe ser 1)
+--   - Resultado: 'OK' si la operación fue exitosa
+-- Notas: Arroja error si el producto tiene ventas u órdenes de compra registradas para mantener integridad referencial
+-- ============================================================================
+
 CREATE OR ALTER PROCEDURE Inv_sp_EliminarProducto
     @StockItemID INT
 AS

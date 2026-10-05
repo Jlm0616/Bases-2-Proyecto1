@@ -1,20 +1,17 @@
 USE WideWorldImporters;
 GO
 
--- ============================================
--- 07d - CRUD Ventas
--- Objetos:
---   TYPE  TipoLineasFactura
---   SP    Vta_sp_InsertarVenta
---   SP    Vta_sp_ActualizarVenta
---   SP    Vta_sp_EliminarVenta
--- Dependencias: Cli_Clientes, Inv_Articulos,
---               Inv_ExistenciasArticulo, Gen_Personas
--- ============================================
+-- ============================================================================
+-- Table Type: TipoLineasFactura
+-- Descripción: Tipo de tabla (Table-Valued Parameter) para pasar múltiples líneas de factura como parámetro
+-- Uso: Se utiliza como parámetro de entrada en Vta_sp_InsertarVenta para insertar todas las líneas de una venta en una sola operación
+-- Columnas:
+--   - StockItemID: Identificador del producto
+--   - Quantity: Cantidad de unidades del producto
+--   - UnitPrice: Precio unitario de venta
+--   - PackageTypeID: Identificador del tipo de empaque (opcional)
+-- ============================================================================
 
--- ============================================
--- Tipo de tabla para lineas de venta (TVP)
--- ============================================
 IF NOT EXISTS (SELECT 1 FROM sys.types WHERE name = 'TipoLineasFactura' AND is_table_type = 1)
 BEGIN
     CREATE TYPE TipoLineasFactura AS TABLE (
@@ -26,14 +23,30 @@ BEGIN
 END
 GO
 
--- ============================================
--- SP: Insertar nueva venta (encabezado + lineas)
--- FIX   : valida que todos los StockItemID del TVP existan
---         (antes el INNER JOIN descartaba líneas en silencio)
--- FIX   : descuenta QuantityOnHand en Inv_ExistenciasArticulo
--- FIX   : calcula TotalDryItems y TotalChillerItems reales
--- FIX   : valida que los contactos existan en Gen_Personas
--- ============================================
+
+-- ============================================================================
+-- Stored Procedure: Vta_sp_InsertarVenta
+-- Descripción: Inserta una nueva venta con su encabezado y líneas de detalle, actualizando el inventario y calculando totales automáticamente
+-- Uso: Se utiliza para registrar ventas completas, validando existencias, calculando impuestos y ganancias, y descontando stock del inventario
+-- Parámetros:
+--   - @CustomerID: Identificador del cliente (obligatorio)
+--   - @ContactPersonID: Identificador de la persona de contacto (obligatorio)
+--   - @SalespersonPersonID: Identificador del vendedor (obligatorio)
+--   - @LastEditedBy: Identificador de la persona que realiza la edición (obligatorio)
+--   - @DeliveryMethodID: Identificador del método de entrega (opcional, default 1)
+--   - @AccountsPersonID: Identificador de la persona de cuentas (opcional, usa SalespersonPersonID si es NULL)
+--   - @PackedByPersonID: Identificador de la persona que empaca (opcional, usa SalespersonPersonID si es NULL)
+--   - @CustomerPONumber: Número de orden de compra del cliente (opcional)
+--   - @DeliveryInstructions: Instrucciones de entrega (opcional)
+--   - @Lineas: Tabla TipoLineasFactura con las líneas de la venta (obligatorio, READONLY)
+--   - @NuevoID: Parámetro OUTPUT que retorna el ID de la venta insertada
+-- Tablas origen: Vta_Facturas, Vta_LineasFactura, Cli_Clientes, Inv_Articulos, Inv_ExistenciasArticulo, Gen_Personas
+-- Columnas retornadas:
+--   - NuevaVentaID: Identificador de la venta recién insertada
+--   - Resultado: 'OK' si la operación fue exitosa
+-- Notas: Valida stock suficiente, calcula automáticamente TaxAmount, LineProfit y ExtendedPrice, actualiza TotalDryItems y TotalChillerItems
+-- ============================================================================
+
 SET QUOTED_IDENTIFIER ON;
 GO
 
@@ -66,15 +79,12 @@ BEGIN
         IF NOT EXISTS (SELECT 1 FROM @Lineas)
             THROW 50006, 'La venta debe tener al menos una linea de producto.', 1;
 
-        -- [FIX] Validar contactos (opcional, pero recomendado)
         IF NOT EXISTS (SELECT 1 FROM Gen_Personas WHERE PersonID = @ContactPersonID)
             THROW 50007, 'El ContactPersonID especificado no existe.', 1;
 
         IF NOT EXISTS (SELECT 1 FROM Gen_Personas WHERE PersonID = @SalespersonPersonID)
             THROW 50008, 'El SalespersonPersonID especificado no existe.', 1;
 
-        -- [FIX] Validar que TODOS los StockItemID del TVP existan
-        --       (antes: INNER JOIN descartaba líneas inválidas silenciosamente)
         IF EXISTS (
             SELECT 1
             FROM @Lineas AS L
@@ -84,12 +94,9 @@ BEGIN
         )
             THROW 50009, 'Una o más líneas hacen referencia a productos inexistentes.', 1;
 
-        -- [FIX] Validar que no haya cantidades <= 0
         IF EXISTS (SELECT 1 FROM @Lineas WHERE Quantity <= 0)
             THROW 50010, 'Todas las líneas deben tener Quantity mayor a cero.', 1;
 
-        -- [FIX] Validar stock suficiente
-        --       (solo se aplica si decidiste descontar inventario)
         IF EXISTS (
             SELECT 1
             FROM @Lineas AS L
@@ -150,9 +157,6 @@ BEGIN
         JOIN Inv_Articulos AS SI ON SI.StockItemID = L.StockItemID
         LEFT JOIN Inv_ExistenciasArticulo AS H ON H.StockItemID = L.StockItemID;
 
-        -- ============================================
-        -- [FIX] Actualizar TotalDryItems y TotalChillerItems
-        -- ============================================
         UPDATE Vta_Facturas
         SET
             TotalDryItems = (
@@ -169,9 +173,6 @@ BEGIN
             )
         WHERE InvoiceID = @NuevoID;
 
-        -- ============================================
-        -- [FIX] Descontar stock del inventario
-        -- ============================================
         UPDATE H
         SET
             H.QuantityOnHand = H.QuantityOnHand - L.Quantity,
@@ -192,9 +193,23 @@ BEGIN
 END
 GO
 
--- ============================================
--- SP: Actualizar venta (solo datos del encabezado)
--- ============================================
+
+-- ============================================================================
+-- Stored Procedure: Vta_sp_ActualizarVenta
+-- Descripción: Actualiza solo los datos del encabezado de una venta existente (instrucciones de entrega y número de orden de compra)
+-- Uso: Se utiliza para modificar información administrativa de una venta ya registrada, sin afectar las líneas de detalle
+-- Parámetros:
+--   - @InvoiceID: Identificador de la venta a actualizar (obligatorio)
+--   - @DeliveryInstructions: Nuevas instrucciones de entrega (opcional)
+--   - @CustomerPONumber: Nuevo número de orden de compra del cliente (opcional)
+--   - @LastEditedBy: Identificador de la persona que realiza la edición (obligatorio)
+-- Tablas origen: Vta_Facturas, Gen_Personas
+-- Columnas retornadas:
+--   - FilasAfectadas: Cantidad de filas actualizadas (debe ser 1)
+--   - Resultado: 'OK' si la operación fue exitosa
+-- Notas: No modifica las líneas de factura ni el inventario, solo datos administrativos del encabezado
+-- ============================================================================
+
 CREATE OR ALTER PROCEDURE Vta_sp_ActualizarVenta
     @InvoiceID            INT,
     @DeliveryInstructions NVARCHAR(100) = NULL,
@@ -236,11 +251,20 @@ BEGIN
 END
 GO
 
--- ============================================
--- SP: Eliminar venta (lineas primero, luego encabezado)
--- NOTA: por integridad, NO se reingresa el stock al inventario.
---       Si quieres revertir el stock, agregar el UPDATE aquí.
--- ============================================
+
+-- ============================================================================
+-- Stored Procedure: Vta_sp_EliminarVenta
+-- Descripción: Elimina una venta del sistema, eliminando primero las líneas de factura y luego el encabezado
+-- Uso: Se utiliza para eliminar ventas registradas, manteniendo la integridad referencial mediante eliminación en cascada manual
+-- Parámetros:
+--   - @InvoiceID: Identificador de la venta a eliminar (obligatorio)
+-- Tablas origen: Vta_Facturas, Vta_LineasFactura
+-- Columnas retornadas:
+--   - FilasAfectadas: Cantidad de filas eliminadas del encabezado (debe ser 1)
+--   - Resultado: 'OK' si la operación fue exitosa
+-- Notas: Por diseño, NO reingresa el stock al inventario. Si se requiere revertir el stock, se debe agregar el UPDATE correspondiente
+-- ============================================================================
+
 CREATE OR ALTER PROCEDURE Vta_sp_EliminarVenta
     @InvoiceID INT
 AS

@@ -1,9 +1,35 @@
 USE WideWorldImporters;
 GO
 
--- ============================================
--- SP: Listar ventas con filtros acumulativos + paginación
--- ============================================
+-- ============================================================================
+-- 05_SP_Ventas.sql
+-- Stored Procedures de Ventas - Proyecto 1 Bases de Datos 2
+--
+-- Descripción:
+--   Contiene los procedimientos almacenados para la gestión de ventas,
+--   incluyendo listado con filtros, paginación, conteo total y detalle completo.
+-- ============================================================================
+
+-- ============================================================================
+-- Stored Procedure: Vta_sp_ListarVentas
+-- Descripción: Lista ventas con filtros acumulativos y paginación
+-- Uso: Consulta de ventas con filtros de búsqueda flexibles y paginación
+-- Parámetros:
+--   @NombreCliente: Filtro por nombre del cliente (búsqueda parcial, LIKE)
+--   @FechaInicio: Filtro por fecha de factura (desde)
+--   @FechaFin: Filtro por fecha de factura (hasta)
+--   @MontoMinimo: Filtro por monto mínimo de factura
+--   @MontoMaximo: Filtro por monto máximo de factura
+--   @PageNumber: Número de página a mostrar (por defecto: 1)
+--   @PageSize: Cantidad de registros por página (por defecto: 50, máximo: 500)
+-- Ordenamiento: Nombre del cliente ascendente, número de factura ascendente
+-- Columnas retornadas:
+--   - NumeroFactura: Número de la factura
+--   - FechaFactura: Fecha de la factura
+--   - NombreCliente: Nombre del cliente
+--   - MetodoEntrega: Método de entrega
+--   - MontoFactura: Monto total de la factura
+-- ============================================================================
 CREATE OR ALTER PROCEDURE Vta_sp_ListarVentas
     @NombreCliente   NVARCHAR(100)  = NULL,
     @FechaInicio     DATE           = NULL,
@@ -46,10 +72,20 @@ BEGIN
 END
 GO
 
--- ============================================
--- SP: Contar total de ventas (para paginación)
--- Devuelve el total de filas que cumplen los filtros
--- ============================================
+
+-- ============================================================================
+-- Stored Procedure: Vta_sp_ContarVentas
+-- Descripción: Cuenta el total de ventas que cumplen con los filtros
+-- Uso: Calcula el total de registros para implementar paginación
+-- Parámetros:
+--   @NombreCliente: Filtro por nombre del cliente (búsqueda parcial, LIKE)
+--   @FechaInicio: Filtro por fecha de factura (desde)
+--   @FechaFin: Filtro por fecha de factura (hasta)
+--   @MontoMinimo: Filtro por monto mínimo de factura
+--   @MontoMaximo: Filtro por monto máximo de factura
+-- Columnas retornadas:
+--   - Total: Cantidad total de registros que cumplen los filtros
+-- ============================================================================
 CREATE OR ALTER PROCEDURE Vta_sp_ContarVentas
     @NombreCliente   NVARCHAR(100)  = NULL,
     @FechaInicio     DATE           = NULL,
@@ -76,9 +112,30 @@ BEGIN
 END
 GO
 
--- ============================================
--- SP: Detalle de una venta específica (encabezado + líneas)
--- ============================================
+
+-- ============================================================================
+-- Stored Procedure: Vta_sp_DetalleVenta
+-- Descripción: Obtiene el detalle completo de una venta específica
+-- Uso: Cargar datos de una venta para visualización (encabezado + líneas)
+-- Parámetros:
+--   @InvoiceID: Identificador único de la factura a consultar
+-- Columnas retornadas (encabezado):
+--   - NumeroFactura: Número de la factura
+--   - NombreCliente: Nombre del cliente
+--   - MetodoEntrega: Método de entrega
+--   - NumeroOrdenCompra: Número de orden de compra del cliente
+--   - PersonaContacto: Persona de contacto
+--   - NombreVendedor: Nombre del vendedor
+--   - FechaFactura: Fecha de la factura
+--   - InstruccionesEntrega: Instrucciones de entrega
+-- Columnas retornadas (líneas):
+--   - NombreProducto: Nombre del producto
+--   - Cantidad: Cantidad vendida
+--   - PrecioUnitario: Precio unitario
+--   - ImpuestoAplicado: Tasa de impuesto aplicada
+--   - MontoImpuesto: Monto del impuesto
+--   - TotalPorLinea: Total por línea de factura
+-- ============================================================================
 CREATE OR ALTER PROCEDURE Vta_sp_DetalleVenta
     @InvoiceID INT
 AS

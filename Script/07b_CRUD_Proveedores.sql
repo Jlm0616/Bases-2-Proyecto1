@@ -1,18 +1,31 @@
 USE WideWorldImporters;
 GO
 
--- ============================================
--- 07b - CRUD Proveedores
--- Procedimientos:
---   Prov_sp_InsertarProveedor
---   Prov_sp_ActualizarProveedor
---   Prov_sp_EliminarProveedor
--- Dependencias: Gen_Personas, Cmp_OrdenesCompra
--- ============================================
+-- ============================================================================
+-- Stored Procedure: Prov_sp_InsertarProveedor
+-- Descripción: Inserta un nuevo proveedor en el sistema con valores predeterminados para campos opcionales
+-- Uso: Se utiliza para registrar nuevos proveedores en el sistema, estableciendo relaciones con categorías y contactos
+-- Parámetros:
+--   - @NombreProveedor: Nombre del proveedor (obligatorio)
+--   - @CategoriaID: Identificador de la categoría de proveedor (obligatorio)
+--   - @PrimaryContactID: Identificador de la persona de contacto principal (obligatorio)
+--   - @AlternateContactID: Identificador de la persona de contacto alternativo (obligatorio)
+--   - @MetodoEntregaID: Identificador del método de entrega (opcional)
+--   - @DeliveryCityID: Identificador de la ciudad de entrega (obligatorio)
+--   - @LastEditedBy: Identificador de la persona que realiza la edición (obligatorio)
+--   - @PostalCityID: Identificador de la ciudad postal (opcional, usa DeliveryCityID si es NULL)
+--   - @PhoneNumber: Número de teléfono (opcional, default 'Sin definir')
+--   - @DeliveryAddressLine1: Línea de dirección de entrega (opcional, default 'Sin definir')
+--   - @DeliveryPostalCode: Código postal de entrega (opcional, default '00000')
+--   - @PostalAddressLine1: Línea de dirección postal (opcional, default 'Sin definir')
+--   - @PostalPostalCode: Código postal postal (opcional, default '00000')
+--   - @NuevoID: Parámetro OUTPUT que retorna el ID del proveedor insertado
+-- Tablas origen: Prov_Proveedores, Gen_Personas
+-- Columnas retornadas:
+--   - NuevoProveedorID: Identificador del proveedor recién insertado
+--   - Resultado: 'OK' si la operación fue exitosa
+-- ============================================================================
 
--- ============================================
--- SP: Insertar nuevo proveedor
--- ============================================
 CREATE OR ALTER PROCEDURE Prov_sp_InsertarProveedor
     @NombreProveedor      NVARCHAR(100),
     @CategoriaID          INT,
@@ -72,9 +85,32 @@ BEGIN
 END
 GO
 
--- ============================================
--- SP: Actualizar proveedor existente
--- ============================================
+
+-- ============================================================================
+-- Stored Procedure: Prov_sp_ActualizarProveedor
+-- Descripción: Actualiza los datos de un proveedor existente, permitiendo modificar solo los campos proporcionados
+-- Uso: Se utiliza para modificar la información de proveedores registrados, manteniendo los valores existentes para parámetros NULL
+-- Parámetros:
+--   - @SupplierID: Identificador del proveedor a actualizar (obligatorio)
+--   - @NombreProveedor: Nuevo nombre del proveedor (obligatorio)
+--   - @CategoriaID: Nuevo identificador de categoría de proveedor (obligatorio)
+--   - @MetodoEntregaID: Nuevo identificador de método de entrega (obligatorio)
+--   - @LastEditedBy: Identificador de la persona que realiza la edición (obligatorio)
+--   - @PrimaryContactID: Nuevo identificador de contacto principal (opcional, mantiene valor actual si es NULL)
+--   - @AlternateContactID: Nuevo identificador de contacto alternativo (opcional, mantiene valor actual si es NULL)
+--   - @DeliveryCityID: Nuevo identificador de ciudad de entrega (opcional, mantiene valor actual si es NULL)
+--   - @PostalCityID: Nuevo identificador de ciudad postal (opcional, mantiene valor actual si es NULL)
+--   - @PhoneNumber: Nuevo número de teléfono (opcional, default 'Sin definir')
+--   - @DeliveryAddressLine1: Nueva línea de dirección de entrega (opcional, default 'Sin definir')
+--   - @DeliveryPostalCode: Nuevo código postal de entrega (opcional, default '00000')
+--   - @PostalAddressLine1: Nueva línea de dirección postal (opcional, default 'Sin definir')
+--   - @PostalPostalCode: Nuevo código postal postal (opcional, default '00000')
+-- Tablas origen: Prov_Proveedores, Gen_Personas
+-- Columnas retornadas:
+--   - FilasAfectadas: Cantidad de filas actualizadas (debe ser 1)
+--   - Resultado: 'OK' si la operación fue exitosa
+-- ============================================================================
+
 CREATE OR ALTER PROCEDURE Prov_sp_ActualizarProveedor
     @SupplierID           INT,
     @NombreProveedor      NVARCHAR(100),
@@ -136,9 +172,20 @@ BEGIN
 END
 GO
 
--- ============================================
--- SP: Eliminar proveedor
--- ============================================
+
+-- ============================================================================
+-- Stored Procedure: Prov_sp_EliminarProveedor
+-- Descripción: Elimina un proveedor del sistema, verificando previamente que no tenga órdenes de compra registradas
+-- Uso: Se utiliza para eliminar proveedores que no tienen historial de compras, garantizando integridad referencial
+-- Parámetros:
+--   - @SupplierID: Identificador del proveedor a eliminar (obligatorio)
+-- Tablas origen: Prov_Proveedores, Cmp_OrdenesCompra
+-- Columnas retornadas:
+--   - FilasAfectadas: Cantidad de filas eliminadas (debe ser 1)
+--   - Resultado: 'OK' si la operación fue exitosa
+-- Notas: Arroja error si el proveedor tiene órdenes de compra registradas para mantener integridad referencial
+-- ============================================================================
+
 CREATE OR ALTER PROCEDURE Prov_sp_EliminarProveedor
     @SupplierID INT
 AS

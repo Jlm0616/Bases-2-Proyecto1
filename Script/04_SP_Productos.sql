@@ -1,20 +1,39 @@
 USE WideWorldImporters;
 GO
 
--- ============================================
--- 04 - SP Productos
--- Procedimientos:
---   Inv_sp_ListarProductos
---   Inv_sp_DetalleProducto  (con IDs para edición)
--- Dependencias: Inv_Articulos, Inv_ArticuloGrupo,
---               Inv_GruposArticulo, Inv_ExistenciasArticulo,
---               Prov_Proveedores, Inv_Colores, Inv_TiposEmpaque
--- ============================================
+-- ============================================================================
+-- 04_SP_Productos.sql
+-- Stored Procedures de Productos - Proyecto 1 Bases de Datos 2
+--
+-- Descripción:
+--   Contiene los procedimientos almacenados para la gestión de productos,
+--   incluyendo listado con filtros y detalle completo de un producto específico.
+--
+-- Dependencias:
+--   - Inv_Articulos: Tabla principal de productos
+--   - Inv_ArticuloGrupo: Relación productos-grupos
+--   - Inv_GruposArticulo: Grupos de productos
+--   - Inv_ExistenciasArticulo: Existencias en inventario
+--   - Prov_Proveedores: Proveedores
+--   - Inv_Colores: Colores de productos
+--   - Inv_TiposEmpaque: Tipos de empaque
+-- ============================================================================
 
--- ============================================
--- SP: Listar productos con filtros acumulativos
--- FIX: agrupa múltiples grupos por producto con STRING_AGG
--- ============================================
+-- ============================================================================
+-- Stored Procedure: Inv_sp_ListarProductos
+-- Descripción: Lista productos con filtros acumulativos opcionales
+-- Uso: Consulta de productos con filtros de búsqueda flexibles
+-- Nota: Agrupa múltiples grupos por producto usando STRING_AGG
+-- Parámetros:
+--   @Nombre: Filtro por nombre del producto (búsqueda parcial, LIKE)
+--   @GrupoID: Filtro por grupo de producto (exacto)
+-- Ordenamiento: Nombre del producto ascendente
+-- Columnas retornadas:
+--   - IdProducto: Identificador único del producto
+--   - NombreProducto: Nombre del producto
+--   - GrupoProducto: Grupos a los que pertenece el producto (separados por coma)
+--   - CantidadEnInventario: Cantidad disponible en inventario
+-- ============================================================================
 CREATE OR ALTER PROCEDURE Inv_sp_ListarProductos
     @Nombre    NVARCHAR(100) = NULL,
     @GrupoID   INT           = NULL
@@ -44,11 +63,35 @@ BEGIN
 END
 GO
 
--- ============================================
--- SP: Detalle de un producto específico
--- Devuelve IDs + nombres para poder preseleccionar
--- los <select> del formulario de edición.
--- ============================================
+
+-- ============================================================================
+-- Stored Procedure: Inv_sp_DetalleProducto
+-- Descripción: Obtiene el detalle completo de un producto específico
+-- Uso: Cargar datos de un producto para visualización o edición
+-- Parámetros:
+--   @StockItemID: Identificador único del producto a consultar
+-- Columnas retornadas:
+--   - IdProducto: Identificador único del producto
+--   - NombreProducto: Nombre del producto
+--   - IdProveedor: Identificador del proveedor
+--   - NombreProveedor: Nombre del proveedor
+--   - IdColor: Identificador del color
+--   - Color: Nombre del color
+--   - IdUnidadEmpaquetamiento: Identificador de unidad de empaque
+--   - UnidadEmpaquetamiento: Tipo de unidad de empaque
+--   - IdEmpaquetamiento: Identificador de empaque exterior
+--   - Empaquetamiento: Tipo de empaque exterior
+--   - CantidadEmpaquetamiento: Cantidad por empaque exterior
+--   - Marca: Marca del producto
+--   - TallaTamano: Tamaño del producto
+--   - Impuesto: Tasa de impuesto
+--   - PrecioUnitario: Precio unitario
+--   - PrecioVenta: Precio de venta recomendado
+--   - Peso: Peso típico por unidad
+--   - PalabrasClave: Palabras clave para búsqueda
+--   - CantidadDisponible: Cantidad disponible en inventario
+--   - Ubicacion: Ubicación en el almacén
+-- ============================================================================
 CREATE OR ALTER PROCEDURE Inv_sp_DetalleProducto
     @StockItemID INT
 AS
