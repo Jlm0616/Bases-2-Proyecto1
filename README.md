@@ -60,7 +60,6 @@ Bases-2-Proyecto1/
 │       ├── controllers/    # Lógica de cada endpoint
 │       └── routes/         # Definición de rutas
 ├── Script/                 # Scripts SQL
-│   ├── 00_Master.sql
 │   ├── 01_Sinonimos.sql
 │   ├── 02_SP_Clientes.sql
 │   ├── 03_SP_Proveedores.sql
