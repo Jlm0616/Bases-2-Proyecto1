@@ -737,10 +737,10 @@ function Reportes() {
 
                   {categoriasCliente.map((elemento) => (
                     <option
-                      key={elemento.IdCategoria}
-                      value={elemento.NombreCategoria}
+                      key={elemento.IdCategoriaCliente}
+                      value={elemento.NombreCategoriaCliente}
                     >
-                      {elemento.NombreCategoria}
+                      {elemento.NombreCategoriaCliente}
                     </option>
                   ))}
                 </select>
