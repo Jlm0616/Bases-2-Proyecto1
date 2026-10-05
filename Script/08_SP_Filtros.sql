@@ -33,10 +33,10 @@ BEGIN
     SET NOCOUNT ON;
 
     SELECT
-        DM.DeliveryMethodID       AS IdMetodoEntrega,
-        DM.DeliveryMethodName     AS NombreMetodoEntrega
-    FROM Gen_MetodosEntrega AS DM
-    ORDER BY DM.DeliveryMethodName ASC;
+        DeliveryMethodID AS IdMetodoEntrega,
+        DeliveryMethodName AS NombreMetodoEntrega
+    FROM Gen_MetodosEntrega
+    ORDER BY DeliveryMethodName ASC;
 END
 GO
 
@@ -52,10 +52,10 @@ BEGIN
     SET NOCOUNT ON;
 
     SELECT
-        P.PersonID    AS IdPersona,
-        P.FullName    AS NombrePersona
-    FROM Gen_Personas AS P
-    ORDER BY P.FullName ASC;
+        PersonID AS IdPersona,
+        FullName AS NombrePersona
+    FROM Gen_Personas
+    ORDER BY FullName ASC;
 END
 GO
 
@@ -72,10 +72,10 @@ BEGIN
     SET NOCOUNT ON;
 
     SELECT
-        C.CityID      AS IdCiudad,
-        C.CityName    AS NombreCiudad
-    FROM Gen_Ciudades AS C
-    ORDER BY C.CityName ASC;
+        CityID AS IdCiudad,
+        CityName AS NombreCiudad
+    FROM Gen_Ciudades
+    ORDER BY CityName ASC;
 END
 GO
 
@@ -92,10 +92,10 @@ BEGIN
     SET NOCOUNT ON;
 
     SELECT
-        G.BuyingGroupID      AS IdGrupoCompra,
-        G.BuyingGroupName    AS NombreGrupoCompra
-    FROM Cli_GruposCompra AS G
-    ORDER BY G.BuyingGroupName ASC;
+        BuyingGroupID AS IdGrupoCompra,
+        BuyingGroupName AS NombreGrupoCompra
+    FROM Cli_GruposCompra
+    ORDER BY BuyingGroupName ASC;
 END
 GO
 
@@ -131,10 +131,10 @@ BEGIN
     SET NOCOUNT ON;
 
     SELECT
-        SG.StockGroupID      AS IdGrupo,
-        SG.StockGroupName    AS NombreGrupo
-    FROM Inv_GruposArticulo AS SG
-    ORDER BY SG.StockGroupName ASC;
+        StockGroupID AS IdGrupo,
+        StockGroupName AS NombreGrupo
+    FROM Inv_GruposArticulo
+    ORDER BY StockGroupName ASC;
 END
 GO
 
@@ -153,8 +153,8 @@ BEGIN
     SET NOCOUNT ON;
 
     SELECT DISTINCT
-        YEAR(I.InvoiceDate) AS Anio
-    FROM Vta_Facturas AS I
+        YEAR(InvoiceDate) AS Anio
+    FROM Vta_Facturas
     ORDER BY Anio ASC;
 END
 GO
@@ -172,8 +172,8 @@ BEGIN
     SET NOCOUNT ON;
 
     SELECT DISTINCT
-        YEAR(PO.OrderDate) AS Anio
-    FROM Cmp_OrdenesCompra AS PO
+        YEAR(OrderDate) AS Anio
+    FROM Cmp_OrdenesCompra
     ORDER BY Anio ASC;
 END
 GO
@@ -191,10 +191,10 @@ BEGIN
     SET NOCOUNT ON;
 
     SELECT
-        SG.StockGroupID AS IdCategoriaProducto,
-        SG.StockGroupName AS NombreCategoriaProducto
-    FROM Inv_GruposArticulo AS SG
-    ORDER BY SG.StockGroupName ASC;
+        StockGroupID AS IdCategoriaProducto,
+        StockGroupName AS NombreCategoriaProducto
+    FROM Inv_GruposArticulo
+    ORDER BY StockGroupName ASC;
 END
 GO
 
@@ -211,10 +211,10 @@ BEGIN
     SET NOCOUNT ON;
 
     SELECT
-        SG.StockGroupID AS IdSubcategoria,
-        SG.StockGroupName AS NombreSubcategoria
-    FROM Inv_GruposArticulo AS SG
-    ORDER BY SG.StockGroupName ASC;
+        StockGroupID AS IdSubcategoria,
+        StockGroupName AS NombreSubcategoria
+    FROM Inv_GruposArticulo
+    ORDER BY StockGroupName ASC;
 END
 GO
 
@@ -231,10 +231,10 @@ BEGIN
     SET NOCOUNT ON;
 
     SELECT
-        S.SupplierID     AS IdProveedor,
-        S.SupplierName   AS NombreProveedor
-    FROM Prov_Proveedores AS S
-    ORDER BY S.SupplierName ASC;
+        SupplierID AS IdProveedor,
+        SupplierName AS NombreProveedor
+    FROM Prov_Proveedores
+    ORDER BY SupplierName ASC;
 END
 GO
 
@@ -252,11 +252,11 @@ BEGIN
     SET NOCOUNT ON;
 
     SELECT
-        SI.StockItemID     AS IdProducto,
-        SI.StockItemName   AS NombreProducto,
-        SI.UnitPrice       AS PrecioUnitario
-    FROM Inv_Articulos AS SI
-    ORDER BY SI.StockItemName ASC;
+        StockItemID AS IdProducto,
+        StockItemName AS NombreProducto,
+        UnitPrice AS PrecioUnitario
+    FROM Inv_Articulos
+    ORDER BY StockItemName ASC;
 END
 GO
 
