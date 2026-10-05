@@ -110,7 +110,6 @@ Credenciales de conexión:
 En SSMS, ejecutar en orden:
 
 ```
-Script/00_Master.sql
 Script/01_Sinonimos.sql
 Script/02_SP_Clientes.sql
 Script/03_SP_Proveedores.sql
