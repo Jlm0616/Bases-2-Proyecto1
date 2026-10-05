@@ -243,7 +243,7 @@ Todos los objetivos planteados en el enunciado fueron alcanzados.
 
 ## Video de demostración
 
-Enlace al video en YouTube: [Ver video](https://www.youtube.com/watch?v=PENDIENTE)
+Enlace al video en YouTube: [Ver video](https://youtu.be/F2EW7h7jgBE)
 
 El video incluye una explicación del uso de la aplicación, el funcionamiento técnico (SQL, API, Frontend) y los detalles destacados del proyecto.
 
